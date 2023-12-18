@@ -1,5 +1,4 @@
 <template>
-    <div id="nav-container">
 <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
@@ -40,10 +39,13 @@
     </div>
   </div>
 </nav>
-</div>
 </template>
 <style>
     #nav a.router-link-active {
       color: #42b983;
+    }
+    .navbar-nav {
+      display: flex;
+      flex-direction: column;
     }
 </style>

@@ -1,127 +1,150 @@
 <template>
-    <div class="col-sm-6">
-        <table class="table table-sm caption-top">
-            <caption>
-                <button class="btn btn-primary" @click="addDataSource">增加数据源</button>
-            </caption>
-            <thead>
-                <tr>
-                    <th width="300px">数据库名称</th>
-                    <th>采集编号</th>
-                    <th>服务编号</th>
-                    <th width="500px">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template v-for="d in impdbs">
-                    <tr>
-                        <td>{{ d.dbName }}</td>
-                        <td>{{ d.dbIdEtl }}</td>
-                        <td>{{ d.dbIdDs }}</td>
-                        <td><button class="btn btn-xs btn-info" @click="dataOp(d.id, 'show')">详情</button>
-                            <a class="btn btn-xs btn-warning" @click="dataOp(d.id, 'edit')">编辑</a>
-                            <a href="#" class="btn btn-xs btn-info">使用场景</a>
-                            <a href="#" class="btn btn-xs btn-info">探索源库</a>
-                        </td>
-                    </tr>
-                </template>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- form -->
-
-    <div class="col-6">
-        <div class="card">
-            <div class="card-header text-light bg-dark">
-                <span v-show="mode === 'add'">新增数据源</span>
-                <span v-show="mode == 'edit'">编辑数据源</span>
-                <span v-show="mode == 'show'">数据源详情</span>
+    <div class="container text-left">
+        <div class="row">
+            <div class="col-12">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="搜索">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary">搜索</button>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <form @submit.prevent="saveData">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">数据库名称</span>
-                        <input v-model="form.dbName" class="form-control" />
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">数据源链接串</span>
-                        <input v-model="form.dbConstr" id="constr" class="form-control" />
-                    </div>
+        </div>
 
-                    <span>采集信息</span>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">采集编号</span>
-                        <input v-model="form.dbIdEtl" class="form-control" />
-                        <span class="input-group-text">并发数</span>
-                        <input v-model="form.dbParalEtl" class="form-control" />
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">用户名</span>
-                        <input v-model="form.dbUserEtl" class="form-control" />
-                        <span class="input-group-text">密码</span>
-                        <input v-model="form.dbPassEtl" class="form-control" />
-                    </div>
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success">增加一行</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-7">
+                <div class="table-responsive">
+                <DataTable class="display" options = "{data-page-length: '25'}">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>采集编号</th>
+                            <th>服务编号</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-for="d in impdbs">
+                            <tr>
+                                <td><a href="#" @click="dataOp(d.id, 'show')">{{ d.dbName }}</a></td>
+                                <td>{{ d.dbIdEtl }}</td>
+                                <td>{{ d.dbIdDs }}</td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning" @click="dataOp(d.id, 'edit')">编辑</a>
+                                    <a href="#" class="btn btn-xs btn-info">使用场景</a>
+                                    <a href="#" class="btn btn-xs btn-info">探索源库</a>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </DataTable>
+            </div>
+            </div>
 
-                    <span>数据服务信息</span>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">采集编号</span>
-                        <input v-model="form.dbIdDs" class="form-control" />
-                        <span class="input-group-text">并发数</span>
-                        <input v-model="form.dbParalDs" class="form-control" />
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">用户名</span>
-                        <input v-model="form.dbUserDs" class="form-control" />
-                        <span class="input-group-text">密码</span>
-                        <input v-model="form.dbPassDs" class="form-control" />
-                    </div>
+            <!-- form -->
 
-                    <span>采集扩展信息</span>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">启动类型</span>
-                        <input v-model="form.dbStartType" class="form-control" />
-                        <span class="input-group-text">启动时间</span>
-                        <input v-model="form.dbStart" class="form-control" />
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header text-light bg-dark">
+                        <span v-show="mode === 'add'">新增数据源</span>
+                        <span v-show="mode == 'edit'">编辑数据源</span>
+                        <span v-show="mode == 'show'">数据源详情</span>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">判断脚本</span>
-                        <input v-model="form.dbJudgeSql" class="form-control" />
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">采集前置脚本</span>
-                        <input v-model="form.dbJudgePre" class="form-control" />
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">其他配置</span>
-                        <textarea v-model="form.conf" class="form-control" rows="6"></textarea>
-                    </div>
+                    <div class="card-body">
+                        <form @submit.prevent="saveData">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">数据库名称</span>
+                                <input v-model="form.dbName" class="form-control" />
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">数据源链接串</span>
+                                <input v-model="form.dbConstr" id="constr" class="form-control" />
+                            </div>
+
+                            <span>采集信息</span>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">采集编号</span>
+                                <input v-model="form.dbIdEtl" class="form-control" />
+                                <span class="input-group-text">并发数</span>
+                                <input v-model="form.dbParalEtl" class="form-control" />
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">用户名</span>
+                                <input v-model="form.dbUserEtl" class="form-control" />
+                                <span class="input-group-text">密码</span>
+                                <input v-model="form.dbPassEtl" class="form-control" />
+                            </div>
+
+                            <span>数据服务信息</span>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">采集编号</span>
+                                <input v-model="form.dbIdDs" class="form-control" />
+                                <span class="input-group-text">并发数</span>
+                                <input v-model="form.dbParalDs" class="form-control" />
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">用户名</span>
+                                <input v-model="form.dbUserDs" class="form-control" />
+                                <span class="input-group-text">密码</span>
+                                <input v-model="form.dbPassDs" class="form-control" />
+                            </div>
+
+                            <span>采集扩展信息</span>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">启动类型</span>
+                                <input v-model="form.dbStartType" class="form-control" />
+                                <span class="input-group-text">启动时间</span>
+                                <input v-model="form.dbStart" class="form-control" />
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">判断脚本</span>
+                                <input v-model="form.dbJudgeSql" class="form-control" />
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">采集前置脚本</span>
+                                <input v-model="form.dbJudgePre" class="form-control" />
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">其他配置</span>
+                                <textarea v-model="form.conf" class="form-control" rows="6"></textarea>
+                            </div>
 
 
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">备注信息</span>
-                        <textarea v-model="form.dbRemark" class="form-control" rows="6"></textarea>
-                    </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">备注信息</span>
+                                <textarea v-model="form.dbRemark" class="form-control" rows="6"></textarea>
+                            </div>
 
-                    <div class="form-group">
-                        <button type="submit" :disabled="mode == 'show'" class="btn btn-primary">
-                            <span v-if="mode == 'add'">Add</span>
-                            <span v-else>Save</span>
-                        </button>
-                        <button type="reset" class="btn btn-warning">Cancel</button>
+                            <div class="form-group">
+                                <button type="submit" :disabled="mode == 'show'" class="btn btn-primary">
+                                    <span v-if="mode == 'add'">Add</span>
+                                    <span v-else>Save</span>
+                                </button>
+                                <button type="reset" class="btn btn-warning">Cancel</button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
-
-
 <script>
 import axios from 'axios';
 // import Grid from 'gridjs-vue'
-
+import DataTable from 'datatables.net-vue3';
+// import DataTablesCore from 'datatables.net';
+import DataTablesCore from 'datatables.net-bs5';
+import 'datatables.net-select';
+import 'datatables.net-responsive';
+ 
+DataTable.use(DataTablesCore);
 
 export default {
     data() {
@@ -190,3 +213,8 @@ export default {
     }
 }
 </script>
+
+
+<style>
+@import 'datatables.net-bs5';
+</style>

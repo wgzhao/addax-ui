@@ -4,19 +4,18 @@ import Nav from './components/Nav.vue'
 </script>
 
 <template>
-    <div>
-        <div class="row">
-            <Nav />
-        </div>
-        <!-- <Layout />  -->
-        <div class="row">
-            <router-view></router-view>
-        </div>
-    </div>
+
+    <Nav />
+    <!-- <Layout />  -->
+    <router-view></router-view>
+    
 </template>
 
 <style>
-.content {
-    margin-top: 50px;
+body {
+    margin: 10px;
 }
+/* #app {
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+} */
 </style>
