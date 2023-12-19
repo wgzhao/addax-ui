@@ -11,7 +11,7 @@ import Dict from '../views/Dict.vue'
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
 
-axios.defaults.baseURL = 'http://188.175.3.34:5001'
+axios.defaults.baseURL = 'http://localhost:5001'
 
 const router = createRouter( {
     history: createWebHistory(),

@@ -1,21 +1,38 @@
 <script setup>
-import Login from './components/Login.vue';
-import Nav from './components/Nav.vue'
+import Topbar from './components/Topbar.vue'
 </script>
 
 <template>
-
-    <Nav />
-    <!-- <Layout />  -->
-    <router-view></router-view>
-    
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- <Nav /> -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <Topbar />
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <router-view></router-view>
+                </div>
+            </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; My Website 2023</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
 </template>
 
 <style>
-body {
-    margin: 10px;
-}
-/* #app {
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-} */
+@import 'bootstrap';
+@import 'datatables.net-bs5';
 </style>

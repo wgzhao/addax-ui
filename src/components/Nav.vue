@@ -1,7 +1,7 @@
 <template>
-<nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+<ul class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="sidebar-brand" href="#">
         <img src='https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg' width="30">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,7 +17,8 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            主表配置
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>主表配置</span>
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#ods">ODS 采集</a></li>
@@ -38,7 +39,7 @@
       </form>
     </div>
   </div>
-</nav>
+</ul>
 </template>
 <style>
     #nav a.router-link-active {
