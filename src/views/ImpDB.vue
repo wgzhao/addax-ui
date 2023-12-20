@@ -5,7 +5,7 @@
     <!-- Content Row -->
     <div class="d-inline-flex p-2">
         <div col="col-3">
-            <button class="btn btn-xs btn-primary" >新增数据源</button>
+            <button class="btn btn-xs btn-primary" @click="addDataSource()">新增</button>
         </div>
         <div col="col-3">
             <div class="input-group">
@@ -19,17 +19,6 @@
             </div>
         </div>
     </div>
-
-    <!-- <div class="row">
-        <div class="col-12">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="搜索">
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-primary">搜索</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
     <div class="row">
         <div class="col-auto">
             <div class="table-responsive">
@@ -122,17 +111,17 @@
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">采集前置脚本</span>
-                            <input v-model="form.dbJudgePre" class="form-control" />
+                            <textarea v-model="form.dbJudgePre" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">其他配置</span>
-                            <textarea v-model="form.conf" class="form-control" rows="6"></textarea>
+                            <textarea v-model="form.conf" class="form-control" rows="4"></textarea>
                         </div>
 
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">备注信息</span>
-                            <textarea v-model="form.dbRemark" class="form-control" rows="6"></textarea>
+                            <textarea v-model="form.dbRemark" class="form-control" rows="4"></textarea>
                         </div>
 
                         <div class="form-group">
@@ -173,12 +162,14 @@ export default {
     },
 
     computed: {
-
             filterImpdbs() {
-                const filterImpdbs = this.searchValue === ""
+                const result = this.searchValue === ""
                     ? this.impdbs
-                    : this.impdbs.filter(wo => Object.values(wo).join("").indexOf(this.searchValue) !== -1);
-                return filterImpdbs;
+                    : this.impdbs.filter(
+                        wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.searchValue.toLocaleLowerCase()) !== -1
+                    );
+                return result;
+                
             },
         // filterImpdbs: function() {
         //     console.log(this.mode);

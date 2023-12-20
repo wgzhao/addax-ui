@@ -15,9 +15,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Earnings (Monthly)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            <div class="text-ms font-weight-bold text-primary  mb-1">
+                                采集数据源</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ ratios.length }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -182,31 +182,13 @@
                     <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
                 </div>
                 <div class="card-body">
-                    <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20"
+                    <template v-for="ratio in ratios" :key="ratio.OVER_PREC">
+                        <h4 class="small font-weight-bold">{{ ratio.SYSNAME }} <span class="float-right">{{ ratio.OVER_PREC }}%</span></h4>
+                        <div class="progress mb-4">
+                        <div class="progress-bar" :class="ratio.BG_COLOR" role="progressbar" :style="{width: ratio.OVER_PREC + '%'}" aria-valuenow="{{ ratio.OVER_PREC }}"
                             aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                    </template>
                 </div>
             </div>
 
@@ -319,10 +301,47 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 import LineChart from '../components/LineChart.vue'
 import PieChart from '../components/PieChart.vue'
+
 export default {
-    components: {LineChart, PieChart}
+    data() {
+        return {
+            ratios: []
+        }
+    },
+    components: {LineChart, PieChart},
+
+    mounted() {
+        this.fetchRatio();
+    },
+
+    computed: {
+        barWidthCalculated(val) {
+            return {
+                width: val + '%'
+            }
+        },
+        bgCalc(val) {
+            console.log(val)
+            if (val <= 0.2) {
+                return 'bg-danger';
+            }
+            if (val <=0.4) {
+                return 'bg-warning';
+            }
+            if ( 0.4 < val <=0.8) {
+                return 'bg-info';
+            }
+            return 'bg-success';
+        }
+    },
+    methods: {
+        fetchRatio() {
+            axios.get('/etl/accomplishRatio').then(resp => this.ratios = resp.data);
+        }
+    }
 }
 </script>
 

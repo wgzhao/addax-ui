@@ -51,7 +51,7 @@ export default {
                 cutoutPercentage: 80,
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: "50%"
+                cutout: "80%"
             },
             plugins: {
                 legend: {
