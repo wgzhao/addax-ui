@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import {ref, onMounted} from 'vue'
 import axios from 'axios'
 import DataTable from 'datatables.net-vue3';
@@ -7,7 +7,10 @@ import SpDetail from '../components/sp/Detail.vue'
 
 DataTable.use(DataTablesCore);
 
-const columns =  [
+export default {
+  data() {
+    return {
+      columns:  [
                 {data: 'runFreq', title:'频率', width: '5%'},
                 {data: 'flag', title: '状态', width: '5%'},
                 {data: 'spName', title: 'SP 名称', width: '20%'},
@@ -15,7 +18,7 @@ const columns =  [
                 {data: 'endTime', title: '结束时间', width: '10%'},
                 {data: 'runtime', title: '耗时(秒)', width: '5%'},
                 {data: null, orerable: false, title: '操作', width:'20%', render: function (data) { 
-                  return '<button type="button" class="btn btn-sm btn-outline-primary" @click="showDetail(' + data + ')">主表详情</button>' +
+                  return '<button type="button" class="btn btn-sm btn-outline-primary" @click="showDetail(\'' + data.spId + '\')">主表详情</button>' +
                   '<button type="button" class="btn btn-sm btn-outline-primary" @click="showCmd(' + data.spId + ')">命令列表</button>' + 
                   '<button type="button" class="btn btn-sm btn-outline-primary" @click="showLogs(' + data.spId + ')">调度日志</button>' +
                   '<button type="button" class="btn btn-sm btn-outline-primary" @click="showScene(' + data.spId + ')">使用场景</button>' +
@@ -23,16 +26,36 @@ const columns =  [
                   '<button type="button" class="btn btn-sm btn-outline-primary" @click="showRequires(' + data.spId + ')">前置情况</button>';
                 }
                 }
-              ];
+              ],
+      impSps: [],
+      data: null,
+      showModal: false,
+      currentComponent: null
+    }
+  },
+  components: {
+    DataTable,
+    SpDetail
+  },
+  methods: {
+    showDetail(val) {
+      this.showModal = true;
+      console.log(this.showModal);
+      this.data = val;
+      this.currentComponent = 'SpDetail';
+    },
 
-const impSps = ref([])
-const showModal = ref(false)
-const data = ref()
-// Initial data
-axios.get('/impSp/list').then(resp => impSps.value = resp.data);
+    initData() {
+      // Initial data
+      axios.get('/impSp/list').then(resp => this.impSps = resp.data);
+    }
+  },
 
-function showDetail(val) {
-  this.showModal = true;
+  mounted() {
+    {
+      this.initData();
+    }
+  },
 }
 </script>
 <template>
@@ -58,9 +81,11 @@ function showDetail(val) {
         </thead> -->
     </DataTable>
   </div>
+
   <div v-if="showModal">
     <!-- <slot name="SpDetail" :data="data" /> -->
-    <component :is="currentComponent" :data="data" />
+    <SpDetail />
+    <!-- <component :is="currentComponent" :data="data" /> -->
   </div>
 </template>
 

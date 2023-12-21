@@ -1,7 +1,7 @@
 <template>
     <!-- SP 计算的主表详情 -->
     <!-- Modal -->
-    <slot name="spDetail">
+    <!-- <slot name="spDetail"> -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-    </slot>
+    <!-- </slot> -->
 </template>
 <script>
 export default {
