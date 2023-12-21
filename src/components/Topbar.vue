@@ -43,7 +43,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#ods">ODS 采集</a></li>
-                    <li><a class="dropdown-item" href="#sp">SP 计算</a></li>
+                    <li><router-link class="dropdown-item" :to="{name: 'impsp'}">SP 计算</router-link></li>
                     <li><a class="dropdown-item" href="#ds">数据服务</a></li>
                     <li><a class="dropdown-item" href="#cron">计划任务</a></li>
                     <li><a class="dropdown-item" href="/dict/list">参数管理</a></li>

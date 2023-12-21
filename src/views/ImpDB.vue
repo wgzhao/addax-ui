@@ -239,5 +239,7 @@ export default {
 </script>
 
 
-<style>@import 'bootstrap';
-@import 'datatables.net-bs5';</style>
+<style>
+@import 'bootstrap';
+@import 'datatables.net-bs5';
+</style>
