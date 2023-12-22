@@ -9,10 +9,11 @@ import Home from '../views/Home.vue'
 import ImpDB from '../views/ImpDB.vue'
 import Dict from '../views/Dict.vue'
 import ImpSp from '../views/ImpSp.vue'
+import PlanTask from '../views/PlanTask.vue'
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
 
-axios.defaults.baseURL = 'http://localhost:5001'
+axios.defaults.baseURL = 'http://188.175.3.34:5001'
 
 const router = createRouter( {
     history: createWebHistory(),
@@ -21,7 +22,8 @@ const router = createRouter( {
         { path: '/etl', name: 'ETL', component: ETL},
         { path: '/impdb', name: 'impdb', component: ImpDB},
         { path: '/dict', name: 'Dict', component: Dict},
-        { path: '/impsp', name: 'impsp', component: ImpSp}
+        { path: '/impsp', name: 'impsp', component: ImpSp},
+        { path: '/plantask', name: 'plantask', component: PlanTask},
     ]
 });
 
