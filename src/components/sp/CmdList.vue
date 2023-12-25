@@ -21,6 +21,7 @@
                         <Popper :content="d.comText" >
                             <a type="button" >{{  d.comText.substring(0, 50) }}...</a>
                         </Popper>
+
                     </span>
                     <span v-else><code>{{  d.comText }}</code></span>
                 </td>

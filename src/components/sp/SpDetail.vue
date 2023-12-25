@@ -20,6 +20,17 @@
             "pnInterval": null,
             "pnRange": null
         }
+
+        needs data sample 
+        {
+            "NEED_SOU": "PR",
+            "NEED_SP": null,
+            "SP_DEST": null,
+            "SP_ALLNEXT": null,
+            "THROUGH_NEED_SP": null,
+            "SP_ALLTABS": "ODSPR.PRO_SERVE\n",
+            "THROUGH_NEED_SOU": null
+        }
     -->
     <div class="card">
         <div class="card-header text-light bg-dark">
@@ -73,27 +84,27 @@
 
                 <div class="input-group mb-3">
                     <span class="input-group-text">直接前置源</span>
-                    <textarea v-model="form.dbJudgeSql" class="form-control" rows="2"></textarea>
+                    <textarea v-model="needs.NEED_SOU" class="form-control" rows="2"></textarea>
                     <span class="input-group-text">穿透后所有前置源</span>
-                    <textarea v-model="form.dbJudgePre" class="form-control" rows="2"></textarea>
+                    <textarea v-model="needs.THROUGH_NEED_SOU" class="form-control" rows="2"></textarea>
                 </div>
                 <div class="input-group mb-1">
                     <span class="input-group-text">直接前置SP</span>
-                    <textarea v-model="form.conf" class="form-control" rows="2"></textarea>
+                    <textarea v-model="needs.NEED_SP" class="form-control" rows="2"></textarea>
                     <span class="input-group-text">穿透后所有前置SP</span>
-                    <textarea v-model="form.dbJudgePre" class="form-control" rows="4"></textarea>
+                    <textarea v-model="needs.THROUGH_NEED_SP" class="form-control" rows="4"></textarea>
                 </div>
 
                 <div class="input-group mb-1">
                     <span class="input-group-text">脚本涉及表</span>
-                    <textarea v-model="form.remark" class="form-control" rows="2"></textarea>
+                    <textarea v-model="needs.SP_ALLTABS" class="form-control" rows="2"></textarea>
                     <span class="input-group-text">脚本生成表</span>
-                    <textarea v-model="form.remark" class="form-control" rows="2"></textarea>
+                    <textarea v-model="needs.SP_DEST" class="form-control" rows="2"></textarea>
                 </div>
 
                 <div class="input-group mb-1">
                     <span class="input-group-text">穿透后所有下游</span>
-                    <textarea v-model="form.remark" class="form-control" rows="4"></textarea>
+                    <textarea v-model="needs.SP_ALLNEXT" class="form-control" rows="4"></textarea>
                 </div>
 
                 <span></span>
@@ -131,7 +142,7 @@
 </template>
 <script>
 export default {
-    props: ['form', 'header']
+    props: ['form', 'header', 'needs']
 }
 </script>
 <style>
