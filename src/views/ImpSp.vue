@@ -3,7 +3,7 @@ import axios from 'axios'
 import SpDetail from '../components/sp/SpDetail.vue'
 import CmdList from '../components/sp/CmdList.vue'
 import SceneList from '../components/sp/SceneList.vue'
-import SpLineage from '../components/sp/SpLineage.vue'
+// import SpLineage from '../components/sp/SpLineage.vue'
 import SpRequiresList from '../components/sp/SpRequiresList.vue'
 
 export default {
@@ -33,7 +33,7 @@ export default {
       }
   },
   components: {
-    SpDetail, CmdList, SceneList, SpLineage, SpRequiresList
+    SpDetail, CmdList, SceneList, SpRequiresList
   },
   methods: {
     closeAllForms() {
@@ -174,7 +174,7 @@ export default {
       <SpDetail v-if="showDetailForm" :form="sp" :header="header" :needs="needs"/>
       <CmdList v-if="showCmdList" :form="sp" :header="header" />
       <SceneList v-if="showSceneList" :form="sp" />
-      <SpLineage v-if="showLineageChart" />
+      <!-- <SpLineage v-if="showLineageChart" /> -->
       <SpRequiresList v-if="showRequiresList" :form="sp"/>
     </div>
   </div>
