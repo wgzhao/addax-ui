@@ -12,6 +12,7 @@ import ImpSp from '../views/ImpSp.vue'
 import PlanTask from '../views/PlanTask.vue'
 import SpMonitor from '../views/SpMonitor.vue'
 import TaskGroup from '../views/TaskGroup.vue'
+import Risk from '../views/Risk.vue'
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
 
@@ -28,6 +29,7 @@ const router = createRouter( {
         { path: '/plantask', name: 'plantask', component: PlanTask},
         { path: '/spmonitor', name: 'spmonitor', component: SpMonitor},
         { path: '/taskgroup', name: 'taskgroup', component: TaskGroup},
+        { path: '/risk', name: 'risk', component: Risk},
     ]
 });
 

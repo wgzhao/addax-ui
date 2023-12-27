@@ -46,6 +46,11 @@
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">任务组</span></router-link>
             </li>
+            <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'risk' }">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">风险点</span></router-link>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-fw fa-wrench"></i>
