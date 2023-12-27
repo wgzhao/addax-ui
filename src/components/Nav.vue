@@ -13,7 +13,10 @@
           <router-link class="nav-link"  aria-current="page" :to="{name: 'Home'}">Home</router-link>
         </li>
         <li class="nav-item">
-            <router-link class="nav-link" :to="{name: 'ETL'}">SP监控</router-link>
+            <router-link class="nav-link" :to="{name: 'ETL'}">采集监控</router-link>
+        </li>
+        <li class="nav-item">
+            <router-link class="nav-link" :to="{name: 'spmonitor'}">SP监控</router-link>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

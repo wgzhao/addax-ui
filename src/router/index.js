@@ -10,6 +10,8 @@ import ImpDB from '../views/ImpDB.vue'
 import Dict from '../views/Dict.vue'
 import ImpSp from '../views/ImpSp.vue'
 import PlanTask from '../views/PlanTask.vue'
+import SpMonitor from '../views/SpMonitor.vue'
+import TaskGroup from '../views/TaskGroup.vue'
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
 
@@ -24,6 +26,8 @@ const router = createRouter( {
         { path: '/dict', name: 'Dict', component: Dict},
         { path: '/impsp', name: 'impsp', component: ImpSp},
         { path: '/plantask', name: 'plantask', component: PlanTask},
+        { path: '/spmonitor', name: 'spmonitor', component: SpMonitor},
+        { path: '/taskgroup', name: 'taskgroup', component: TaskGroup},
     ]
 });
 

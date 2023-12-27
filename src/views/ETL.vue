@@ -4,13 +4,13 @@
             <div class="header text-center"><h4>数据源完成情况</h4></div>
                 <table class="table table-bordered table-striped table-sm m-1" >
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th colspan="2">数据源</th>
                             <th colspan="7">整体情况</th>
                             <th colspan="3">T-1 日</th>
                             <th colspan="3">T 日</th>
                         </tr>
-                        <tr>
+                        <tr class="text-center">
                             <th>启动</th>
                             <th>数据源</th>
                             <th>总数</th>
@@ -166,7 +166,7 @@ export default {
     },
     methods: {
         fetchEtlData() {
-            axios.get('/etl/list')
+            axios.get('/etl/accomplishList')
                 .then(resp => {
                     this.impEtlOverprec = resp.data
                     this.totalPages = Math.floor(this.impEtlOverprec.length / this.pageSize);
@@ -178,7 +178,7 @@ export default {
 
             axios.get('/etl/specialTask').then(resp => this.specialTasks = resp.data);
             axios.get('/etl/realtimeTask').then(resp => this.realtimeTasks = resp.data);
-            axios.get('/addax/taskReject').then(resp => this.rejectTasks["data"] = resp.data);
+            axios.get('/etl/taskReject').then(resp => this.rejectTasks["data"] = resp.data);
         },
 
         formatDate(value) {
