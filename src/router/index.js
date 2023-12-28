@@ -13,6 +13,8 @@ import PlanTask from '../views/PlanTask.vue'
 import SpMonitor from '../views/SpMonitor.vue'
 import TaskGroup from '../views/TaskGroup.vue'
 import Risk from '../views/Risk.vue'
+import Realtime from '../views/Realtime.vue'
+import SystemInfo from '../views/SystemInfo.vue'
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
 
@@ -30,6 +32,8 @@ const router = createRouter( {
         { path: '/spmonitor', name: 'spmonitor', component: SpMonitor},
         { path: '/taskgroup', name: 'taskgroup', component: TaskGroup},
         { path: '/risk', name: 'risk', component: Risk},
+        { path: '/realtime', name: 'realtime', component: Realtime},
+        { path: '/systeminfo', name: 'systeminfo', component: SystemInfo},
     ]
 });
 
