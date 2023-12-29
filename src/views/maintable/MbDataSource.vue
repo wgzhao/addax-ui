@@ -241,6 +241,4 @@ export default {
 
 
 <style>
-@import 'bootstrap';
-@import 'datatables.net-bs5';
 </style>

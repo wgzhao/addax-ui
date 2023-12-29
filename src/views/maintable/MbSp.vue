@@ -183,9 +183,6 @@ export default {
 
 
 <style>
-/* @import 'bootstrap';
-@import 'datatables.net-bs5'; */
-
 table {
   font-size: 1rem;
 }
