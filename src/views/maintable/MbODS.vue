@@ -1,6 +1,6 @@
 <template>
     <!-- 主表配置 -- ODS 采集配置-->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-6">
             <table class="table table-sm">
                 <thead class="text-center">
@@ -14,7 +14,7 @@
                     <th with="30%">操作</th>
                 </thead>
                 <tbody>
-                    <template v-for="d in ods">
+                    <template v-for="d in null">
                         <tr>
                             <td>{{ d.destOwner }}</td>
                             <td>{{ d.sysName }}</td>
@@ -37,7 +37,21 @@
                 </tbody>
                 </table>
         </div>
-    </div>
+    </div>-->
+    <v-card flat title="主表配置 -- ODS 采集配置">
+
+    <template v-slot:text>
+        <v-text-field
+        v-model="search"
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        single-line
+        variant="outlined"
+        hide-details
+      ></v-text-field>
+    </template>
+    <v-data-table :items="ods" :headers="headers" ></v-data-table>
+    </v-card>
 </template>
 <script>
 import axios from 'axios';
@@ -47,21 +61,27 @@ export default {
         return {
             ods: [],
             flag: "",
-            filter: ""
+            filter: "",
+            search: "",
+            headers: [
+                {
+                    "title": "目标用户",
+                    "align": "start",
+                    "sortable": false,
+                    "value": "destOwner"
+                },
+                { "title": "系统名称", "value": "sysName" },
+                { "title": "源用户", "value": "souOwner" },
+                { "title": "目标表名", "value": "destTablename" },
+                { "title": "状态", "value": "flag" },
+                { "title": "剩余", "value": "retryCnt" },
+                { "title": "耗时", "value": "runtime" },
+                { "title": "操作", "value": "action", "sortable": false }
+            ],
         }
     },
     mounted() {
         this.fetchData();
-    },
-    computed: {
-        filterOds() {
-            const result = this.filter === ""
-                ? this.ods
-                : this.ods.filter(
-                    wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.filter.toLocaleLowerCase()) !== -1
-                );
-            return result;
-        }
     },
     methods: {
         fetchData() {

@@ -8,17 +8,21 @@ import App from './App.vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
-import SmartTable from 'vuejs-smart-table'
-// import 'datatables.net-vue3/dist/datatables.net-vue3.js'
-// import './assets/js/sb-admin-2.min.js'
-// import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+// use vuetify
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
 
 import router from './router'
 
+const vuetify = createVuetify({
+    components,
+    directives,
+})
 // import './plugins/table.js'
 
 createApp(App)
     .use(router)
-    .use(SmartTable)
+    .use(vuetify)
     .mount('#app')
