@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <nav class="navbar navbar-expand bg-primary topbar mb-4 static-top" data-bs-theme="dark">
 
         <!-- Sidebar Toggle (Topbar) -->
         <!-- <form class="form-inline">
@@ -22,7 +22,12 @@
         </form> -->
 
         <!-- Topbar Navbar -->
-        <ul class="navbar-nav mr-auto">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-log-0">
 
             <!-- generator nav item from $router -->
             <template v-for="item in $router.options.routes">
@@ -58,9 +63,9 @@
             <li class="nav-item dropdown no-arrow mx-1">
                 <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-bell fa-fw"></i>
+                    <i class="fa-solid fa-bell fa-fw"></i>
                     <!-- Counter - Alerts -->
-                    <span class="badge badge-danger badge-counter">3+</span>
+                    <span class="position-absolute  translate-middle badge rounded-pill bg-danger">3+</span>
                 </a>
             </li>
 
@@ -70,7 +75,7 @@
                     aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-envelope fa-fw"></i>
                     <!-- Counter - Messages -->
-                    <span class="badge badge-danger badge-counter">7</span>
+                    <span class="position-absolute  translate-middle badge rounded-pill bg-danger">7</span>
                 </a>
             </li>
 
@@ -80,7 +85,7 @@
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
-                    <img class="img-profile rounded-circle" src="/src/assets/images/undraw_profile.svg">
+                    <img class="img-profile rounded-circle" width="80%" src="/src/assets/images/undraw_profile.svg">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -105,7 +110,17 @@
             </li>
 
         </ul>
-
+        </div>
+        </div>
     </nav>
+    
     <!-- End of Topbar -->
 </template>
+<style>
+.sidebar .nav-item .nav-link .img-profile,
+.topbar .nav-item .nav-link .img-profile {
+  height: 2rem;
+  width: 2rem;
+}
+
+</style>
