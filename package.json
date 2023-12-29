@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fortawesome/vue-fontawesome": "^3.0.5",
+    "@rollup/plugin-alias": "^5.1.0",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.2",
     "datatables.net-bs5": "^1.13.8",

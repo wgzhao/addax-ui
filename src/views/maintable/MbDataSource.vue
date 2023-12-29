@@ -1,4 +1,5 @@
 <template>
+    <!-- 主表配置 -- 数据源管理 -->
     <!-- Page Heading -->
     <h1 class="h3 mb-1 text-gray-800">数据源管理</h1>
     <p class="mb-4">这里描述数据源管理的基本内容</p>

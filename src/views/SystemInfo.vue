@@ -29,11 +29,11 @@
                 <tbody>
                     <template v-for="d in etlAndDs">
                         <tr class="text-wrap">
-                            <td>{{ d.SYS_KIND }}</td>
-                            <td>{{ d.SYSID }}</td>
-                            <td>{{ d.SYS_NAME }}</td>
-                            <td><code>{{ d.DB_CONSTR }}</code></td>
-                            <td>{{ d.DB_USER }}</td>
+                            <td>{{ d.sysKind }}</td>
+                            <td>{{ d.sysid }}</td>
+                            <td>{{ d.sysName }}</td>
+                            <td><code>{{ d.dbConstr }}</code></td>
+                            <td>{{ d.dbUser }}</td>
                         </tr>
                     </template>
                 </tbody>
@@ -56,12 +56,12 @@
                 <tbody>
                     <template v-for="d in etlInfo">
                         <tr>
-                            <td>{{ d.SYSNAME }}</td>
-                            <td>{{ d.SOU_OWNER }}</td>
-                            <td>{{ d.SOU_TABLENAME }}</td>
-                            <td><code>{{ d.SOU_FILTER }}</code></td>
-                            <td>{{ d.DEST_OWNER }}</td>
-                            <td>{{ d.DEST_TABLENAME }}</td>
+                            <td>{{ d.sysName }}</td>
+                            <td>{{ d.souOwner }}</td>
+                            <td>{{ d.souTablename }}</td>
+                            <td><code>{{ d.souFilter }}</code></td>
+                            <td>{{ d.destOwner }}</td>
+                            <td>{{ d.destTablename }}</td>
                         </tr>
                     </template>
                 </tbody>

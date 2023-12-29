@@ -1,10 +1,10 @@
 <script>
 import axios from 'axios'
-import SpDetail from '../components/sp/SpDetail.vue'
-import CmdList from '../components/sp/CmdList.vue'
-import SceneList from '../components/sp/SceneList.vue'
-// import SpLineage from '../components/sp/SpLineage.vue'
-import SpRequiresList from '../components/sp/SpRequiresList.vue'
+import SpDetail from '@/components/sp/SpDetail.vue'
+import CmdList from '@/components/sp/CmdList.vue'
+import SceneList from '@/components/sp/SceneList.vue'
+// import SpLineage from '@/components/sp/SpLineage.vue'
+import SpRequiresList from '@/components/sp/SpRequiresList.vue'
 
 export default {
   data() {
@@ -123,6 +123,7 @@ export default {
 }
 </script>
 <template>
+  <!-- 主表配置 -- SP 计算 -->
   <div class="row">
     <!-- <DataTable 
       class="table table-striped" 
@@ -132,7 +133,7 @@ export default {
       >
     </DataTable> -->
     <div class="col-6">
-    <table class="table table-stripped">
+    <table class="table table-striped">
               <thead>
             <tr>
                 <th width="5%">运行频率</th>

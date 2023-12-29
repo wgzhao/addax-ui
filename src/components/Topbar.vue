@@ -24,61 +24,34 @@
         <!-- Topbar Navbar -->
         <ul class="navbar-nav mr-auto">
 
-
-            <li class="nav-item">
-                <router-link class="nav-link" aria-current="page" :to="{ name: 'Home' }">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Home</span>
-                </router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" :to="{ name: 'ETL' }">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">采集监控</span></router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" :to="{ name: 'spmonitor' }">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">SP监控</span></router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" :to="{ name: 'taskgroup' }">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">任务组</span></router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" :to="{ name: 'risk' }">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">风险点</span></router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" :to="{ name: 'realtime' }">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">实时监控</span></router-link>
-            </li>
-            <li class="nav-item">
-                <router-link class="nav-link" :to="{ name: 'systeminfo' }">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">系统一览</span></router-link>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">主表配置</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#ods">ODS 采集</a></li>
-                    <li><router-link class="dropdown-item" :to="{name: 'impsp'}">SP 计算</router-link></li>
-                    <li><a class="dropdown-item" href="#ds">数据服务</a></li>
-                    <li><router-link class="dropdown-item" :to="{name: 'plantask'}">计划任务</router-link></li>
-                    <li><a class="dropdown-item" href="/dict/list">参数管理</a></li>
-                    <li><router-link class="dropdown-item" :to="{name: 'impdb'}">数据源管理</router-link></li>
-                    <li><a class="dropdown-item" href="#apimgt">接口管理</a></li>
-                    <li><a class="dropdown-item" href="#procedure">存储过程</a></li>
-                    <li><a class="dropdown-item" href="#trino">trino执行日志</a></li>
-                </ul>
-            </li>
-            
+            <!-- generator nav item from $router -->
+            <template v-for="item in $router.options.routes">
+                <div v-if="item.children">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-fw" :class="item.icon"></i>
+                            <span class="pl-1 mr-2 d-none d-lg-inline text-gray-600 small">{{  item.title }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <template v-for="child in item.children">
+                                <li><router-link class="dropdown-item" :to="{name: child.name}">
+                                    <i class="fa-solid" :class="child.icon"></i>
+                                    <span class="pl-1 mr-2 d-none d-lg-inline">{{ child.title }}</span>
+                                </router-link>
+                            </li>
+                            </template>
+                        </ul>
+                    </li>
+                </div>
+                <div v-else>
+                    <li class="nav-item">
+                        <router-link class="nav-link" :to="{ name: item.name }">
+                            <i class="fa-solid " :class="item.icon"></i>
+                            <span class="pl-1 mr-2 d-none d-lg-inline text-gray-600 small">{{ item.title }}</span>
+                        </router-link>
+                    </li>
+                </div>
+            </template>
             </ul>
             <ul class="navbar-nav ml-auto">
                  <!-- Nav Item - Alerts -->

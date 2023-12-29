@@ -1,4 +1,5 @@
 <template>
+    <!-- 主表配置 -- 参数管理 -->
     <div class="row">
         <div class="col-sm-12">
             <section class="panel">
