@@ -1,60 +1,61 @@
 <template>
     <!-- 主表配置 -- ODS 采集配置-->
-    <!-- <div class="row">
-        <div class="col-6">
-            <table class="table table-sm">
-                <thead class="text-center">
-                    <th>目标用户</th>
-                    <th>系统名称</th>
-                    <th>源用户</th>
-                    <th>目标表名</th>
-                    <th>状态</th>
-                    <th>剩余</th>
-                    <th>耗时</th>
-                    <th with="30%">操作</th>
-                </thead>
-                <tbody>
-                    <template v-for="d in null">
+    <div class="row">
+        <div class="col-12">
+            <v-card flat title="主表配置 -- ODS 采集配置">
+
+                <template v-slot:text>
+                    <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" single-line
+                        variant="outlined" hide-details></v-text-field>
+
+                    <v-select :items="selectOptions" density="compact" label="操作" item-title="text" item-value="value"
+                        return-object v-model="select">
+                    </v-select>
+
+
+
+                </template>
+                <v-data-table 
+                    density="compact" 
+                    :items="ods" 
+                    :headers="headers" 
+                    item-value="name" 
+                    :search="search"
+                    hover="true">
+                    <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
                         <tr>
-                            <td>{{ d.destOwner }}</td>
-                            <td>{{ d.sysName }}</td>
-                            <td>{{ d.souOwner }}</td>
-                            <td>{{ d.destTablename }}</td>
-                            <td>{{ d.flag }}</td>
-                            <td>{{ d.retryCnt }}</td>
-                            <td>{{ d.runtime }}</td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-outline-primary" @click="mainTableInfo(d)">主表信息</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" @click="">字段对比</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" @click="">命令列表</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" @click="">使用场景</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" @click="">datax结果</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" @click="">命令日志</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary" @click="">调度日志</button>
+                            <td :colspan="columns.length">
+                                <VBtn size="small" variant="text" @click="toggleGroup(item)"
+                                    :icon="isGroupOpen ? '$expand' : '$next'"></VBtn>
+                                {{ item.value }}
                             </td>
                         </tr>
                     </template>
-                </tbody>
-                </table>
+                    <template v-slot:item.action="{ item }">
+                        <!-- add link for selectOption -->
+                        <template v-for="l in selectOptions">
+                            <v-btn class="m-1 p-0 btn btn-outline-primary" @click="doAction(item, l.value)">
+                            {{ l.text }}
+                            </v-btn>
+                        </template>
+                    </template>
+                </v-data-table>
+            </v-card>
         </div>
-    </div>-->
-    <v-card flat title="主表配置 -- ODS 采集配置">
-
-    <template v-slot:text>
-        <v-text-field
-        v-model="search"
-        label="Search"
-        prepend-inner-icon="mdi-magnify"
-        single-line
-        variant="outlined"
-        hide-details
-      ></v-text-field>
-    </template>
-    <v-data-table :items="ods" :headers="headers" ></v-data-table>
-    </v-card>
+    </div>
+    <div class="row">
+            <component :is="dynamicComponent" :d="item"></component>
+            <!-- <MainTableInfo v-if="showFlag['mainTableInfo']" :d="item"></MainTableInfo>
+            <FieldsCompare v-if="showFlag['fieldsCompare']" :d="item"></FieldsCompare> -->
+    </div>
 </template>
+
 <script>
 import axios from 'axios';
+import MainTableInfo from '@/components/ods//MainTable.vue';
+import FieldsCompare from '@/components/ods/FieldsCompare.vue';
+import CmdList from '@/components/ods/CmdList.vue';
+
 export default {
     name: 'MbODS',
     data() {
@@ -63,6 +64,33 @@ export default {
             flag: "",
             filter: "",
             search: "",
+            item: "",
+            dynamicComponent: null,
+            select: { text: "主表信息", value: "MainTableInfo" },
+            selectOptions: [
+                { text: "主表信息", value: "MainTableInfo" },
+                { text: "字段对比", value: "FieldsCompare" },
+                { text: "命令列表", value: "CmdList" },
+                { text: "使用场景", value: "usage" },
+                { text: "datax结果", value: "dataxResult" },
+                { text: "命令日志", value: "cmdLog" },
+                { text: "调度日志", value: "scheduleLog" },
+            ],
+            rowSelect: null,
+            groupBy: [
+                {
+                    key: "destOwner",
+                    order: 'asc'
+                },
+                {
+                    key: "sysName",
+                    order: 'asc'
+                },
+                {
+                    key: 'souOwner',
+                    order: 'asc'
+                },
+            ],
             headers: [
                 {
                     "title": "目标用户",
@@ -76,9 +104,9 @@ export default {
                 { "title": "状态", "value": "flag" },
                 { "title": "剩余", "value": "retryCnt" },
                 { "title": "耗时", "value": "runtime" },
-                { "title": "操作", "value": "action", "sortable": false }
+                { "title": "操作", "value": "action", "sortable": false },
             ],
-        }
+        };
     },
     mounted() {
         this.fetchData();
@@ -92,17 +120,38 @@ export default {
         filterOds() {
             const result = this.filter === ""
                 ? this.ods
-                : this.ods.filter(
-                    wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.filter.toLocaleLowerCase()) !== -1
-                );
+                : this.ods.filter(wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.filter.toLocaleLowerCase()) !== -1);
             return result;
         },
-        mainTableInfo(d) {
-            this.$router.push({ path: '/maintable/ods/info', query: { id: d.id } });
+        doAction(val, comp) {
+            // clear item
+            this.item = "";
+            if (comp == "FieldsCompare") {
+                axios.get('/maintable/ods/fieldCompare/' + val.tid).then(res => {
+                    this.item = res.data;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }else if (comp == 'CmdList') {
+                axios.get('/maintable/ods/cmdList/' + val.tid).then(res => {
+                    this.item = res.data;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+             else {
+                this.item = val;
+            }
+            this.dynamicComponent = comp;
+            // console.log(this.item);
         }
+        // mainTableInfo(d) {
+        //     this.$router.push({ path: '/maintable/ods/info', query: { id: d.id } });
+        // }
     },
+    components: {MainTableInfo, FieldsCompare, CmdList }
 }
 </script>
-<style>
-    
-</style>
+<style></style>

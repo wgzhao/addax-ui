@@ -293,8 +293,8 @@
 </template>
 <script>
 import axios from 'axios';
-import LineChart from '../components/LineChart.vue'
-import PieChart from '../components/PieChart.vue'
+import LineChart from '../components/dashboard/LineChart.vue'
+import PieChart from '../components/dashboard/PieChart.vue'
 import L5TEtlBar from '../components/dashboard/L5TEtlBar.vue';
 
 export default {

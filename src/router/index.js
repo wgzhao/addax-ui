@@ -18,7 +18,7 @@ import MbODS from '@/views/maintable/MbODS.vue'
 // import MbDataService from '@/views/maintable/MbDataService.vue'
 import MbParam from '@/views/maintable/MbParam.vue'
 import MbDataSource from '@/views/maintable/MbDataSource.vue'
-import { h } from 'vue'
+
 
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
@@ -31,14 +31,14 @@ const routes = [
     { path: '/risk', name: 'risk', title: "风险点", icon: "fa-warning", component: Risk},
     { path: '/realtime', name: 'realtime', title: "实时监控", icon: "fa-tachometer", component: Realtime},
     { path: '/systeminfo', name: 'systeminfo', title: "系统一览", icon: "fa-database",  component: SystemInfo},
-    { path: '/maintab', name: null, title: "主表配置", icon: "fa-cogs", component: null,
+    { path: '/maintable', name: null, title: "主表配置", icon: "fa-cogs", component: null,
         children: [        
-            { path: '/ods', name: 'mbods', title: "ODS 采集", icon: "fa-arrow-down", component: MbODS},
-            { path: '/sp', name: 'mbsp', title: "SP 计算", icon: "fa-exchange", component: MbSp},
-            { path: '/dataservice', name: 'mbsp', title: "数据服务", icon: "fa-arrow-up", component: null},
-            { path: '/plantask', name: 'plantask', title: "计划任务", icon: "fa-tasks",  component: PlanTask},
-            { path: '/param', name: 'param', title:"参数管理", icon: "fa-th", component: MbParam},
-            { path: '/datasource', name: 'datasource', title: "数据源管理", icon: "fa-database", component: MbDataSource},    
+            { path: '/maintable/ods', name: 'mbods', title: "ODS 采集", icon: "fa-arrow-down", component: MbODS},
+            { path: '/maintable/sp', name: 'mbsp', title: "SP 计算", icon: "fa-exchange", component: MbSp},
+            { path: '/maintable/dataservice', name: 'mbsp', title: "数据服务", icon: "fa-arrow-up", component: null},
+            { path: '/maintable/plantask', name: 'plantask', title: "计划任务", icon: "fa-tasks",  component: PlanTask},
+            { path: '/maintable/param', name: 'param', title:"参数管理", icon: "fa-th", component: MbParam},
+            { path: '/maintable/datasource', name: 'datasource', title: "数据源管理", icon: "fa-database", component: MbDataSource},    
             { path: '', name: 'mbapi', title: "接口管理", icon: "fa-feed", component: null},
             { path: '', name: 'mbprocedure', title: "存储过程", icon: "fa-file-code", component: null},
             { path: '', name: 'mblog', title: "Trino 执行日志", icon: "fa-file",  component: null},
