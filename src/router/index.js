@@ -11,6 +11,7 @@ import Risk from '@/views/Risk.vue'
 import Realtime from '@/views/Realtime.vue'
 import SystemInfo from '@/views/SystemInfo.vue'
 
+
 // 主表配置
 
 import MbSp from '@/views/maintable/MbSp.vue'
@@ -18,6 +19,7 @@ import MbODS from '@/views/maintable/MbODS.vue'
 // import MbDataService from '@/views/maintable/MbDataService.vue'
 import MbParam from '@/views/maintable/MbParam.vue'
 import MbDataSource from '@/views/maintable/MbDataSource.vue'
+import MbDS from '@/views/maintable/MbDS.vue'
 
 
 
@@ -35,7 +37,7 @@ const routes = [
         children: [        
             { path: '/maintable/ods', name: 'mbods', title: "ODS 采集", icon: "fa-arrow-down", component: MbODS},
             { path: '/maintable/sp', name: 'mbsp', title: "SP 计算", icon: "fa-exchange", component: MbSp},
-            { path: '/maintable/dataservice', name: 'mbsp', title: "数据服务", icon: "fa-arrow-up", component: null},
+            { path: '/maintable/dataservice', name: 'dataservice', title: "数据服务", icon: "fa-arrow-up", component: MbDS},
             { path: '/maintable/plantask', name: 'plantask', title: "计划任务", icon: "fa-tasks",  component: PlanTask},
             { path: '/maintable/param', name: 'param', title:"参数管理", icon: "fa-th", component: MbParam},
             { path: '/maintable/datasource', name: 'datasource', title: "数据源管理", icon: "fa-database", component: MbDataSource},    

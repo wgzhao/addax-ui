@@ -122,4 +122,7 @@ export default {
 }
 </script>
 <style>
+.v-input .v-field  {
+    font-size: 0.9rem;
+}
 </style>

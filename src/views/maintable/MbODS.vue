@@ -1,7 +1,7 @@
 <template>
     <!-- 主表配置 -- ODS 采集配置-->
     <div class="row">
-        <div class="col-12">
+        <div class="col-6">
             <v-card flat title="主表配置 -- ODS 采集配置">
 
                 <template v-slot:text>
@@ -42,12 +42,12 @@
                 </v-data-table>
             </v-card>
         </div>
-    </div>
-    <div class="row">
+    <div class="col-6">
             <component :is="dynamicComponent" :d="item"></component>
             <!-- <MainTableInfo v-if="showFlag['mainTableInfo']" :d="item"></MainTableInfo>
             <FieldsCompare v-if="showFlag['fieldsCompare']" :d="item"></FieldsCompare> -->
     </div>
+</div>
 </template>
 
 <script>
@@ -55,6 +55,8 @@ import axios from 'axios';
 import MainTableInfo from '@/components/ods//MainTable.vue';
 import FieldsCompare from '@/components/ods/FieldsCompare.vue';
 import CmdList from '@/components/ods/CmdList.vue';
+import TableUsed from '@/components/ods/TableUsed.vue';
+import AddaxResult from '@/components/ods/AddaxResult.vue';
 
 export default {
     name: 'MbODS',
@@ -71,8 +73,8 @@ export default {
                 { text: "主表信息", value: "MainTableInfo" },
                 { text: "字段对比", value: "FieldsCompare" },
                 { text: "命令列表", value: "CmdList" },
-                { text: "使用场景", value: "usage" },
-                { text: "datax结果", value: "dataxResult" },
+                { text: "使用场景", value: "TableUsed" },
+                { text: "addax结果", value: "AddaxResult" },
                 { text: "命令日志", value: "cmdLog" },
                 { text: "调度日志", value: "scheduleLog" },
             ],
@@ -140,6 +142,16 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
+            } else if (comp == 'TableUsed') {
+                axios.get('/maintable/ods/tableUsed', {
+                    params: {
+                        tablename: val.destOwner + '.' +  val.destTablename,
+                        sysId: val.sysid
+                    }
+                }).then(res => {this.item = res.data;});
+            } else if (comp == 'AddaxResult') {
+                axios.get('/maintable/ods/addaxResult/' + val.spname)
+                .then(res => {this.item = res.data});
             }
              else {
                 this.item = val;
@@ -151,7 +163,11 @@ export default {
         //     this.$router.push({ path: '/maintable/ods/info', query: { id: d.id } });
         // }
     },
-    components: {MainTableInfo, FieldsCompare, CmdList }
+    components: {MainTableInfo, FieldsCompare, CmdList, TableUsed, AddaxResult }
 }
 </script>
-<style></style>
+<style>
+.v-input field {
+    font-size: 0.8rem;
+}
+</style>
