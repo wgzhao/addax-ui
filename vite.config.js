@@ -7,7 +7,7 @@ const projectRootDir = resolve(__dirname);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // css: {
+// css: {
   //   devSourcemap: true,
   // },
   plugins: [
@@ -22,6 +22,7 @@ export default defineConfig({
     })
   ],
   server: {
-    host: "0.0.0.0"
+    host: "0.0.0.0",
+    port: 3000,
   },
 })

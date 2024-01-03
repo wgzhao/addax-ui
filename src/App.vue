@@ -33,6 +33,4 @@ import Topbar from './components/Topbar.vue'
 </template>
 
 <style>
-@import 'bootstrap';
-@import 'datatables.net-bs5';
 </style>
