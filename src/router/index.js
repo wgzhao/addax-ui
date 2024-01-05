@@ -22,6 +22,10 @@ import MbDataSource from '@/views/maintable/MbDataSource.vue'
 import MbDS from '@/views/maintable/MbDS.vue'
 
 
+// demo
+import Demo from '@/views/Demo.vue'
+
+
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
 
@@ -46,6 +50,7 @@ const routes = [
             { path: '', name: 'mblog', title: "Trino 执行日志", icon: "fa-file",  component: null},
         ]
     },
+    {path: '/demo', name: 'demo', title: "Demo", icon: "fa-file", component: Demo},
 
 ]
 

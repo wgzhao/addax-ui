@@ -1,4 +1,5 @@
 <template>
+    <div class="row h-75">
         <v-card>
             <v-tabs v-model="tab" bg-color="info">
                 <template v-for="(val, idx) in headers">
@@ -10,19 +11,13 @@
                 <v-window v-model="tab">
                     <template v-for="(val, idx) in headers">
                       <v-window-item :value="idx">
-                        <v-data-table 
-                            density="compact" 
-                            v-if="val.data" 
-                            :items="val.data" 
-                            :headers="val.headers"
-                            items-per-page="20"
-                            hover
-                            ></v-data-table>
+                        <v-data-table density="compact" v-if="val.data" :items="val.data" :headers="val.headers"></v-data-table>
                     </v-window-item>
                     </template>
                 </v-window>
             </v-card-text>
         </v-card>
+    </div>
 </template>
 <script>
 import axios from 'axios';
@@ -32,6 +27,82 @@ export default {
     data() {
         return {
             tab: null,
+            data: [
+                {
+                    name: "one",
+                    headers: [
+                        {
+                            title: 'Dessert (100g serving)',
+                            align: 'start',
+                            sortable: false,
+                            key: 'name',
+                        },
+                        { title: 'Calories', key: 'calories', align: 'end' },
+                        { title: 'Fat (g)', key: 'fat', align: 'end' },
+                        { title: 'Carbs (g)', key: 'carbs', align: 'end' },
+                        { title: 'Protein (g)', key: 'protein', align: 'end' },
+                        { title: 'Iron (%)', key: 'iron', align: 'end' }
+                    ],
+                    data: [
+                        {
+                            name: 'Frozen Yogurt',
+                            calories: 159,
+                            fat: 6.0,
+                            carbs: 24,
+                            protein: 4.0,
+                            iron: '1',
+                        },
+                        {
+                            name: 'Jelly bean',
+                            calories: 375,
+                            fat: 0.0,
+                            carbs: 94,
+                            protein: 0.0,
+                            iron: '0',
+                        },
+                        {
+                            name: 'KitKat',
+                            calories: 518,
+                            fat: 26.0,
+                            carbs: 65,
+                            protein: 7,
+                            iron: '6',
+                        },
+                        {
+                            name: 'Eclair',
+                            calories: 262,
+                            fat: 16.0,
+                            carbs: 23,
+                            protein: 6.0,
+                            iron: '7',
+                        }]
+                },
+                {
+                    name: "two",
+                    headers: [{title: "name", key: "name"}, {title: "spcies", key: "spcies"}, {title: "diet", key: "diet"}, {title: "habitat", key: "habitat"}],
+                    data: [
+                        {
+                            name: 'African Elephant',
+                            species: 'Loxodonta africana',
+                            diet: 'Herbivore',
+                            habitat: 'Savanna, Forests',
+                        },
+                        {
+                            name: 'African Elephant',
+                            species: 'Loxodonta africana',
+                            diet: 'Herbivore',
+                            habitat: 'Savanna, Forests',
+                        },
+                        {
+                            name: 'African Elephant',
+                            species: 'Loxodonta africana',
+                            diet: 'Herbivore',
+                            habitat: 'Savanna, Forests',
+                        },
+                    ]
+                }
+            ],
+
             headers:  [{
                     name: "totalExec",
                     api: "totalExec",
@@ -44,8 +115,7 @@ export default {
                         { title: "标志生成时间", key: "flagTime" },
                         { title: "总数", key: "allcnt" },
                         {
-                            title: "运行成功的任务情况", value: "", align: "center",
-                            children: [
+                            title: "运行成功的任务情况", value: "", children: [
                                 { title: "任务数", key: "ycnt" },
                                 { title: "开始时间", key: "startTime" },
                                 { title: "结束时间", key: "endTime" },
@@ -53,15 +123,13 @@ export default {
                             ]
                         },
                         {
-                            title: "正在执行的任务情况", value: "", align: "center",
-                            children: [
+                            title: "正在执行的任务情况", value: "", children: [
                                 { title: "正在执行", key: "rcnt" },
                                 { title: "开始时间", key: "startTimeR" },
                             ]
                         },
                         {
-                            title: "其他任务数", value: "", align: "center",
-                            children: [
+                            title: "其他任务数", value: "", children: [
                                 { title: "未执行", key: "ncnt" },
                                 { title: "执行失败", key: "ecnt" }
                             ]
@@ -76,8 +144,7 @@ export default {
                     headers: [
                         {title: "类别", key: "kind2"},
                         {title: "类别", key: "dsName"},
-                        {title: "任务执行情况", value: "", align: "center",
-                        children: [
+                        {title: "任务执行情况", value: "", children: [
                             {title: "执行状态", key: "flag2"},
                             {title: "开始时间", key: "startTime2"},
                             {title: "结束时间", key: "endTime2"}
@@ -87,7 +154,7 @@ export default {
                 },
                 {
                     name: "flagGenTimes",
-                    api: "flagGenTime",
+                    api: "flagGenTimes",
                     title: "任务组生成时间",
                     data: [],
                     headers: [
@@ -147,6 +214,8 @@ export default {
             if ( ! this.headers[val].data.length > 0)  {
             const url = '/taskGroup/' + this.headers[val].api
             axios.get(url).then(res => {this.headers[val].data = res.data});
+            } else {
+                console.log("has data");
             }
         }
     },

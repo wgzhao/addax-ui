@@ -1,59 +1,35 @@
 <template>
     <!-- 主表配置 -- 数据源管理 -->
-    <!-- Page Heading -->
-    <h1 class="h3 mb-1 text-gray-800">数据源管理</h1>
-    <p class="mb-4">这里描述数据源管理的基本内容</p>
-    <!-- Content Row -->
-    <div class="d-inline-flex p-2">
-        <div col="col-3">
-            <button class="btn btn-xs btn-primary" @click="addDataSource()">新增</button>
-        </div>
-        <div col="col-3">
-            <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" v-model="searchValue" placeholder="Search for..."
-                    aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row">
-        <div class="col-auto">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>名称</th>
-                            <th>采集编号</th>
-                            <th>服务编号</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template v-for="d in filterImpdbs">
-                            <tr>
-                                <td>{{ d.dbName }}</td>
-                                <td>{{ d.dbIdEtl }}</td>
-                                <td>{{ d.dbIdDs }}</td>
-                                <td>
-                                    <a class="btn btn-xs btn-info" @click="dataOp(d.id, 'show')">详情</a>
-                                    <a class="btn btn-xs btn-warning" @click="dataOp(d.id, 'edit')">编辑</a>
-                                    <a href="#" class="btn btn-xs btn-info">使用场景</a>
-                                    <a href="#" class="btn btn-xs btn-info">探索源库</a>
-                                </td>
-                            </tr>
+        <div class="col-6">
+            <v-card flat title="数据源管理">
+                <v-card-actions>
+                    <v-btn @click="addDataSource()">新增</v-btn>
+                </v-card-actions>
+                        <template v-slot:text>
+                            <v-text-field v-model="searchValue"  label="Search" prepend-inner-icon="mdi-magnify" single-line
+                                variant="outlined" hide-details></v-text-field>
                         </template>
-                    </tbody>
-                </table>
-            </div>
+    
+                <v-data-table 
+                    :items="impdbs" 
+                    :headers="headers" 
+                    :search="searchValue" 
+                    density="compact"
+                    items-per-page="20">
+                    <template v-slot:item.actions="{item}">
+                        <a class="btn btn-xs btn-info" @click="dataOp(d.id, 'show')">详情</a>
+                        <a class="btn btn-xs btn-warning" @click="dataOp(d.id, 'edit')">编辑</a>
+                        <a href="#" class="btn btn-xs btn-info">使用场景</a>
+                        <a href="#" class="btn btn-xs btn-info">探索源库</a>
+                    </template>
+                </v-data-table>
+            </v-card>
         </div>
 
         <!-- form -->
 
-        <div class="col-auto">
+        <div class="col-6">
             <div class="card">
                 <div class="card-header text-light bg-dark">
                     <span v-show="mode === 'add'">新增数据源</span>
@@ -152,6 +128,12 @@ export default {
             impdb: {},
             form: {},
             searchValue: '',
+            headers: [
+                { title: "名称", key: "dbName" },
+                { title: "采集编号", key: "dbIdEtl" },
+                { title: "服务编号", key: "dbIdDs" },
+                { title: "操作", value: "actions", align: "center" }
+            ]
         }
     },
     components: {
@@ -163,15 +145,15 @@ export default {
     },
 
     computed: {
-            filterImpdbs() {
-                const result = this.searchValue === ""
-                    ? this.impdbs
-                    : this.impdbs.filter(
-                        wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.searchValue.toLocaleLowerCase()) !== -1
-                    );
-                return result;
-                
-            },
+        filterImpdbs() {
+            const result = this.searchValue === ""
+                ? this.impdbs
+                : this.impdbs.filter(
+                    wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.searchValue.toLocaleLowerCase()) !== -1
+                );
+            return result;
+
+        },
         // filterImpdbs: function() {
         //     console.log(this.mode);
         //     // if (this.searchValue === '') {
@@ -185,7 +167,7 @@ export default {
     },
     methods: {
         retrieveImpDB() {
-            axios.get("/impdb/list")
+            axios.get("/maintable/datasource/list")
                 .then(resp => {
                     this.impdbs = resp.data
                     return resp
@@ -197,7 +179,7 @@ export default {
 
         dataOp(id, flag) {
             this.mode = flag
-            axios.get("/impdb/detail/" + id)
+            axios.get("/maintable/datasource/detail/" + id)
                 .then(resp => {
                     this.form = resp.data
                     return resp
@@ -215,7 +197,7 @@ export default {
         saveData() {
             console.log(this.mode)
             if (this.mode == 'add' || this.mode == 'edit') {
-                axios.post('/save', {
+                axios.post('/maintable/datasource/save', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -240,5 +222,4 @@ export default {
 </script>
 
 
-<style>
-</style>
+<style></style>
