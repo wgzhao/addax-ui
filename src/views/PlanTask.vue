@@ -1,36 +1,13 @@
 <template>
     <!-- 计划任务 -->
-
-    <p>
-        <button @click="showModal">Show Modal</button>
-    </p>
-    <p>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" @click="showModal(1)"
-            data-bs-target="#impSpDetail">主表详情</button>
-    </p>
-
-    <div class="modal fade" id="impSpDetail" tabindex="-1" aria-labelledby="impSpDetailLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="impSpDetailLabel">HADOOP存储过程主表配置</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {{ data }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="close">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-data-table
+        :items="data"
+        :headers="headers"
+        density="compact"
+    >
+    </v-data-table>
 </template>
 <script>
-// import SpDetail from '../components/sp/Detail.vue'
-
-
 export default {
     name: 'PlanTask',
     data() {
@@ -52,26 +29,14 @@ export default {
                 buttons: ["copy", "excel", "pdf"],
                 dom: "Bfrltip"
             },
-            columns: [
-                { data: 'runFreq', title: '频率', width: '5%' },
-                { data: 'flag', title: '状态', width: '5%' },
-                { data: 'spName', title: 'SP 名称', width: '20%' },
-                { data: 'startTime', title: '开始时间', width: '10%' },
-                { data: 'endTime', title: '结束时间', width: '10%' },
-                { data: 'runtime', title: '耗时(秒)', width: '5%' },
-                {
-                    data: null, orerable: false, title: '操作', width: '20%', render: function (data) {
-                        let btn = '<button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" @click=';
-                        let cmds = ["showDetail", "showCmd", "showLogs", "showScene", "showLineage", "showRequires"];
-                        let titles = ["主表详情", "命令列表", "调度日志", "使用场景", "计算溯源", "前置情况"]
-                        let result = ""
-                        let i = 0;
-                        for (; i < cmds.length; i++) {
-                            result = result + btn + cmds[i] + "('" + data.spId + "') id='" + cmds[i] + "'>" + titles[i] + "</button>"
-                        }
-                        return result;
-                    }
-                }
+            headers: [
+                { key: 'runFreq', title: '频率', width: '5%' },
+                { key: 'flag', title: '状态', width: '5%' },
+                { key: 'spName', title: 'SP 名称', width: '20%' },
+                { key: 'startTime', title: '开始时间', width: '10%' },
+                { key: 'endTime', title: '结束时间', width: '10%' },
+                { key: 'runtime', title: '耗时(秒)', width: '5%' },
+                { key: "actions", title: "操作", value: ""}
             ],
         }
     },

@@ -22,7 +22,6 @@
             :headers="etlAndDsHeaders" 
             items-per-page="10" 
             density="compact"
-            hover
             >
         </v-data-table>
     </div>

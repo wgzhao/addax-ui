@@ -4,7 +4,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import ETL from '@/views/ETL.vue'
 import Home from '@/views/Home.vue'
 
-import PlanTask from '@/views/PlanTask.vue'
+// import PlanTask from '@/views/PlanTask.vue'
 import SpMonitor from '@/views/SpMonitor.vue'
 import TaskGroup from '@/views/TaskGroup.vue'
 import Risk from '@/views/Risk.vue'
@@ -20,6 +20,7 @@ import MbODS from '@/views/maintable/MbODS.vue'
 import MbParam from '@/views/maintable/MbParam.vue'
 import MbDataSource from '@/views/maintable/MbDataSource.vue'
 import MbDS from '@/views/maintable/MbDS.vue'
+import PlanTask from '@/views/maintable/PlanTask.vue'
 
 
 // demo

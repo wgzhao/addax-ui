@@ -1,11 +1,12 @@
 <template>
     <!-- 其他实时 -->
-    <v-card flat title="计划任务执行情况">
+    <v-card flat title="计划任务执行情况" class="justify-center">
         <v-data-table
             :items="planAll"
             :headers="headers"
             items-per-page="20"
-            hover
+            density="compact"
+            color="cyan-lighten-3"
             >
         </v-data-table>
     </v-card>
@@ -20,7 +21,7 @@ export default {
             headers: [
                 {title: "计划类型", key: "pnTypeName"},
                 {title: "计划名称", key: "spname"},
-                {title: "命令列表", value: "", 
+                {title: "命令列表", value: "", align: "center",
                 children: [
                     {title: "CMD1", key: "c1"},
                     {title: "CMD2", key: "c2"},

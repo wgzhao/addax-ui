@@ -81,7 +81,7 @@ export default {
                     ]
                 },
                 {
-                    name: "rejectTasks",
+                    name: "rejectTask",
                     api: "rejectTask",
                     title: "采集拒绝行信息",
                     data: [],
