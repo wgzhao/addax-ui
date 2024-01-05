@@ -42,7 +42,6 @@ export default {
                                 { title: "完成率", key: "overPrec", 
                                     value: item => `${Math.round(item.overPrec * 100,2)}%`, 
                                     cellProps: ({ value }) => ({class: value =='100%' ? 'text-success' : 'text-warning'}),
-                                    // cellProps: { class: item => `${item.overPrec == 1 ? 'bg-success': 'bg-warning'}` }
                                 },
                                 { title: "运行", key: "runCnt" },
                                 { title: "错误", key: "errCnt" },
