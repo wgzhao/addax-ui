@@ -14,18 +14,15 @@
         </template>
     </div>
 </template>
-<script>
+<script setup>
 import axios from 'axios';
+import { ref, onUnmounted } from 'vue';
 
-export default {
-    name: 'SpMonitor',
-    data() {
-        return {
-            pipelines:[],
-            validSp: [],
-            validSpCnt: [],
-            errorTasks:[],
-            data: [
+const pipelines = ref([])
+const validSp = ref([])
+const validSpCnt = ref([])
+const errorTasks = ref([])
+const data = ref([
                 {
                     name: 'validChkSp',
                     api: 'validChkSp',
@@ -78,20 +75,24 @@ export default {
                         {title: "运行频率", key: "RUN_FREQ"},
                     ]
                 }
-            ]
-        }
-    },
-    mounted() {
-        this.initData();
-    },
-    methods: {
-        initData() {
-            for(const row in this.data) {
-                axios.get('/sp/' + this.data[row].api).then(res => {this.data[row].data = res.data});
+            ])
+
+const initData = () =>  {
+            for(const row in data.value) {
+                axios.get('/sp/' + data.value[row].api).then(res => {data.value[row].data = res.data});
             }
         }
-    }
-}
+            
+initData();
+
+const timer = setInterval(() => {
+    fetchData();
+}, 1000 * 60 * 1);
+
+onUnmounted(() => {
+    clearInterval(timer);
+});
+
 </script>
 <style>
 
