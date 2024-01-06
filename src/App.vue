@@ -19,8 +19,8 @@ import Topbar from './components/Topbar.vue'
             </div>
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
+                <div class="container">
+                    <div class="copyright text-center">
                         <span>Copyright &copy; My Website 2023</span>
                     </div>
                 </div>
