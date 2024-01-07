@@ -2,15 +2,15 @@
     <!-- 主表配置 -- ODS 采集配置-->
     <div class="row">
         <div class="col-6">
-            <v-card flat title="主表配置 -- ODS 采集配置">
+            <v-card flat title="主表配置 - ODS 采集配置">
 
                 <template v-slot:text>
-                    <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" single-line
+                    <v-text-field v-model="search"  density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
                         variant="outlined" hide-details></v-text-field>
 
-                    <v-select :items="selectOptions" density="compact" label="操作" item-title="text" item-value="value"
+                    <!-- <v-select :items="selectOptions" density="compact" label="操作" item-title="text" item-value="value"
                         return-object v-model="select">
-                    </v-select>
+                    </v-select> -->
 
 
 
@@ -21,7 +21,7 @@
                     :headers="headers" 
                     item-value="name" 
                     :search="search"
-                    hover="true">
+                    >
                     <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
                         <tr>
                             <td :colspan="columns.length">

@@ -2,16 +2,20 @@
     <!-- 数据中心采集及数据服务系统清单-->
     <!-- search input -->
     <div class="row">
-        <div class="col-4">
-            <div class="input-group mb-3">
-                <input v-model="filter" class="form-control" placeholder="输入关键字" />
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" @click="fetchData">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+        <v-responsive max-width="360">
+          <v-text-field
+            prepend-inner-icon="mdi-magnify"
+            density="compact"
+            flat
+            hide-details
+            label="Search"
+            v-model="filter"
+            rounded="lg"
+            single-line
+            variant="outlined"
+            @keyup.enter="fetchData"
+          ></v-text-field>
+        </v-responsive>
     </div>
     <div class="row">
         <div class="header text-center">
