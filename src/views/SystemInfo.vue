@@ -57,7 +57,7 @@ export default {
                 { title: "类别", key: "sysKind" },
                 { title: "系统编号", key: "sysid" },
                 { title: "系统名称", key: "sysName" },
-                { title: "连接串", key: "dbConstr" },
+                { title: "连接串", key: "dbConstr", cellProps: {class: "code"} },
                 { title: "登录用户", key: "dbUser" },
 
             ],

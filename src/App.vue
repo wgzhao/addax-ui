@@ -33,4 +33,8 @@ import Topbar from './components/Topbar.vue'
 </template>
 
 <style>
+.v-data-table tbody tr td, thead tr th {
+    padding: 0px !important;
+    font-size: 0.8rem;
+}
 </style>

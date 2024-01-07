@@ -1,37 +1,37 @@
 <template>
     <!-- 风险点监测-->
-    <div class="row">
+
         <v-card title="系统风险检测结果">
             <v-card-text>
             <v-data-table :items="sysRisk" :headers="sysRiskHeaders" items-per-page="30" density="compact">
             </v-data-table>
         </v-card-text>
     </v-card>
-    </div>
-    <div class="row">
+
+
         <v-card flat title="ODS采集源库的字段变更提醒(T-1日结构与T日结构对比)">
             <v-data-table :items="odsFieldChange" :headers="odsFieldChangeHeaders" items-per-page="10" density="compact"
                 item-value="name" class="table table-borderless table-sm">
             </v-data-table>
         </v-card>
-    </div>
-    <div class="p-2"></div>
-    <div class="row">
+
+
+
         <v-card flat title="短信发送情况">
             <template v-slot:text>
-                <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" single-line
+                <v-text-field density="compact" v-model="search" label="Search" prepend-inner-icon="mdi-magnify" single-line
                     variant="outlined" hide-details></v-text-field>
             </template>
             <v-data-table :items="smsDetail" :headers="smsDetailHeaders" items-per-page="20" density="compact"
                 :search="search">
             </v-data-table>
         </v-card>
-    </div>
+
 </template>
 <script setup>
 import axios from 'axios';
 import { ref, onUnmounted } from 'vue';
-const search = ref(null);
+
 // 系统风险
 const sysRisk = ref([]);
 
@@ -63,6 +63,7 @@ const odsFieldChangeHeaders = [
 ];
 
 // 短信发送情况
+const search = ref(null);
 const smsDetail = ref([]);
 const smsDetailHeaders = [
     {
