@@ -26,8 +26,8 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-log-0">
+            <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mb-1 mb-log-0">
 
             <!-- generator nav item from $router -->
             <template v-for="item in $router.options.routes">
@@ -122,5 +122,10 @@
   height: 2rem;
   width: 2rem;
 }
-
+.nav-item .router-link-active,
+.nav-item .router-link-exact-active {
+   cursor: pointer;
+   background-color:rgb(26, 81, 182);
+   color: white;
+ }
 </style>

@@ -40,18 +40,63 @@ const routes = [
     { path: '/systeminfo', name: 'systeminfo', title: "系统一览", icon: "fa-database",  component: SystemInfo},
     { path: '/maintable', name: null, title: "主表配置", icon: "fa-cogs", component: null,
         children: [        
-            { path: '/maintable/ods', name: 'mbods', title: "ODS 采集", icon: "fa-arrow-down", component: MbODS},
-            { path: '/maintable/sp', name: 'mbsp', title: "SP 计算", icon: "fa-exchange", component: MbSp},
-            { path: '/maintable/dataservice', name: 'dataservice', title: "数据服务", icon: "fa-arrow-up", component: MbDS},
-            { path: '/maintable/plantask', name: 'plantask', title: "计划任务", icon: "fa-tasks",  component: PlanTask},
-            { path: '/maintable/param', name: 'param', title:"参数管理", icon: "fa-th", component: MbParam},
-            { path: '/maintable/datasource', name: 'datasource', title: "数据源管理", icon: "fa-database", component: MbDataSource},    
+            { path: '/maintable/ods', name: 'mbods', title: "ODS 采集", icon: "fa-arrow-down", component: MbODS, meta: {
+                breadcrumbs: [
+                    { title: "Home", href: "/"},
+                    {title: "主表配置", href: "/maintable"},
+                    {title: "ODS 采集", href: "/maintable/ods"},
+                ]
+            }},
+            { path: '/maintable/sp', name: 'mbsp', title: "SP 计算", icon: "fa-exchange", component: MbSp, meta: {
+                breadcrumbs: [
+                    { title: "Home", href: "/"},
+                    {title: "主表配置", href: "/maintable"},
+                    {title: "SP 计算", href: "/maintable/sp"},
+                ]
+            
+            }},
+            { path: '/maintable/dataservice', name: 'dataservice', title: "数据服务", icon: "fa-arrow-up", component: MbDS, meta: {
+                breadcrumbs: [
+                    { title: "Home", href: "/"},
+                    {title: "主表配置", href: "/maintable"},
+                    {title: "数据服务", href: "/maintable/dataservice"},
+                ]
+            
+            }},
+            { path: '/maintable/plantask', name: 'plantask', title: "计划任务", icon: "fa-tasks",  component: PlanTask, meta: {
+                breadcrumbs: [
+                    { title: "Home", href: "/"},
+                    {title: "主表配置", href: "/maintable"},
+                    {title: "计划任务", href: "/maintable/plantask"},
+                ]
+            }},
+            { path: '/maintable/param', name: 'param', title:"参数管理", icon: "fa-th", component: MbParam, meta: {
+                breadcrumbs: [
+                    { title: "Home", href: "/"},
+                    {title: "主表配置", href: "/maintable"},
+                    {title: "参数管理", href: "/maintable/param"},
+                ]
+            
+            }},
+            { path: '/maintable/datasource', name: 'datasource', title: "数据源管理", icon: "fa-database", component: MbDataSource, meta: {
+                breadcrumbs: [
+                    { title: "Home", href: "/"},
+                    {title: "主表配置", href: "/maintable"},
+                    {title: "数据源管理", href: "/maintable/datasource"},
+                ]
+            
+            }},  
             { path: '', name: 'mbapi', title: "接口管理", icon: "fa-feed", component: null},
             { path: '', name: 'mbprocedure', title: "存储过程", icon: "fa-file-code", component: null},
             { path: '', name: 'mblog', title: "Trino 执行日志", icon: "fa-file",  component: null},
         ]
     },
-    {path: '/demo', name: 'demo', title: "Demo", icon: "fa-file", component: Demo},
+    {path: '/demo', name: 'demo', title: "Demo", icon: "fa-file", component: Demo, meta: {
+        breadcrumbs: [
+            { title: "Home", href: "/"},
+            { title: "Demo", href: "/demo"},
+        ]
+    }},
 
 ]
 

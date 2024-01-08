@@ -1,27 +1,24 @@
 <template>
-    <table class="table table-sm">
-        <caption>直接前置依赖执行情况</caption>
-        <thead>
-            <th>编号</th>
-            <th>名称</th>
-            <th>状态</th>
-            <th>结束时间</th>
-        </thead>
-        <tbody>
-            <template v-for="d in form">
-                <tr>
-                <td>{{ d.NEEDS }}</td>
-                <td>{{ d.NEEDS_NAME }}</td>
-                <td>{{ d.NEEDS_FLAG }}</td>
-                <td>{{ d.NEEDS_END_TIME }}</td>
-                </tr>
-            </template>
-        </tbody>
-    </table>
+    <v-card title="直接前置依赖执行情况">
+        <v-card-text>
+            <v-data-table
+                :items="props.form"
+                :headers="headers"
+                disable-pagination
+                
+                >
+            </v-data-table>
+        </v-card-text>
+    </v-card>
 </template>
-<script>
-export default {
-    name: 'SpRequiresList',
-    props: ['form']
-}
+<script setup>
+import {ref} from 'vue'
+const props = defineProps(['form', 'header','need'])
+const headers = ref([
+    {title: "编号", key: "NEEDS"},
+    {title: "名称", key: "NEEDS_NAME"},
+    {title: "状态", key: "NEEDS_FLAG"},
+    {title: "结束时间", key: "NEEDS_END_TIME"},
+])
+
 </script>

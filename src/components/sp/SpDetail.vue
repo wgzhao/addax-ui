@@ -140,10 +140,8 @@
         </div>
     </div>
 </template>
-<script>
-export default {
-    props: ['form', 'header', 'needs']
-}
+<script setup>
+defineProps(['form', 'header', 'needs'])
 </script>
 <style>
 .input-group {

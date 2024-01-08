@@ -1,23 +1,16 @@
 <template>
-    <table class="table table-stripped">
-        <thead>
-            <th>场景类别</th>
-            <th>名称</th>
-        </thead>
-        <tbody>
-            <template v-for="d in form">
-                <tr>
-                    <td>{{ d.KIND }}</td>
-                    <td>{{ d.USED }}</td>
-                </tr>
-            </template>
-        </tbody>
-    </table>
+    <v-data-table-virtual
+    :items="form"
+    :headers="headers"
+    height="300"
+    >
+    </v-data-table-virtual>
 </template>
 
-<script>
-export default {
-    name: 'SceneList',
-    props: ['form']
-}
+<script setup>
+defineProps(['form', 'header'])
+const headers = ref([
+        { title: '场景类别', value: 'kindName' },
+        { title: '名称', value: 'used' },
+    ])
 </script>
