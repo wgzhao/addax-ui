@@ -6,16 +6,16 @@
                 <v-data-table-virtual :items="data" :headers="headers" density="compact" height="300">
                     <template v-slot:item.action="{ item }">
                         <!-- add link for selectOption -->
-                        <template v-for="(k,v) in actionList">
-                            <v-btn class="m-1 p-0 btn btn-outline-primary" @click="doAction(item, v)">
-                                {{ k }}
+                        <template v-for="act in actionList">
+                            <v-btn class="m-1 p-0 btn btn-outline-primary" @click="doAction(item.dsId, act.comp)">
+                                {{ act.title }}
                             </v-btn>
                         </template>
                     </template>
                 </v-data-table-virtual>
             </div>
             <div class="row">
-                <component :is="tabs[curTab]" :d="compData" :key="key"></component>
+                <component :is="curComp" :d="param" :key="key"></component>
             </div>
 
         </v-card-text>
@@ -23,19 +23,17 @@
 </template>
 <script setup>
 import axios from 'axios';
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, markRaw } from 'vue'
 // import components
 
 import MainTableInfo from '@/components/dataservice/MainTableInfo.vue'
 import DSTableDetail from '@/components/dataservice/DSTableDetail.vue'
 const data = ref([])
-const compData = ref([])
-const tabs = ref({
-                MainTableInfo,
-                DSTableDetail
-            })
-const curTab = ref()   
-const key = ref()
+const param = ref(null)
+const key = ref(null)
+const curComp = ref(null)   
+const mti = markRaw(MainTableInfo)
+const dst = markRaw(DSTableDetail)
 const headers = ref([
                 { title: "目标系统", value: "destSysid" },
                 { title: "频率", value: "runFreq" },
@@ -48,26 +46,19 @@ const headers = ref([
                 { title: "耗时", value: "runtime" },
                 { title: "操作", value: "action", "sortable": false },
             ])   
-const actionList = ref({
-                MainTableInfo: "主表信息",  
-                DSTableDetail: "推送表",
-                ScheduleLog: "调度日志"
-            })      
+const actionList = ref([
+    {comp: mti, title: "主表信息"},
+    {comp: dst, title: "推送表"},
+    {comp: "ScheduleLog", title:"调度日志"}
+        ])   
 const fetchData = ()  => {
             axios.get('/maintable/dataService/list').then(res => { data.value = res.data });
         }
 
 const  doAction = (val, comp) => {
-    console.log(comp)
-            key.value = val.dsId
-            if (comp == "MainTableInfo") {
-                axios.get('/maintable/dataService/detail/' + val.dsId).then(res => { compData.value = res.data; return res.data; });
-            }
-            else if (comp == "DSTableDetail") {
-                axios.get('/maintable/dataService/dsTable/' + val.dsId).then(res => { compData.value = res.data; return res.data; });
-            }
-
-            curTab.value = comp;
+            key.value = val
+            curComp.value = comp
+            param.value = val
         }
 onMounted(() => {
    fetchData() 

@@ -2,8 +2,7 @@
     <!-- 数据服务推送表详情 -->
     <v-card flat title="推送表--新版">
         <v-data-table
-        :items="props.d"
-        v-if="props.d"
+        :items="data"
         :headers="dsHeaders"
         density="compact">
     </v-data-table>
@@ -11,8 +10,10 @@
 </template>
 <script setup>
 import {ref, onMounted} from 'vue'
+import axios from 'axios';
 const props = defineProps(['d'])
 const search=ref()
+const data = ref([])
 const dsHeaders = ref([
             {title: "ID", value: "tblId"},
             {title: "目标库用户", value: "destOwner"},
@@ -28,6 +29,12 @@ const dsHeaders = ref([
             {title: "结束时间", value: "endTime"},
             {title: "配置信息", value:"Action"}
             ])
+const fetchData = () => {
+    axios.get('/maintable/dataService/dsTable/' + props.d)
+    .then(res => { data.value = res.data; return res.data; });
+}
+
+fetchData()
 </script>
 <style>
     
