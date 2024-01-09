@@ -18,8 +18,8 @@
                     density="compact"
                     items-per-page="20">
                     <template v-slot:item.actions="{item}">
-                        <a class="btn btn-xs btn-info" @click="dataOp(d.id, 'show')">详情</a>
-                        <a class="btn btn-xs btn-warning" @click="dataOp(d.id, 'edit')">编辑</a>
+                        <a class="btn btn-xs btn-info" @click="dataOp(item.id, 'show')">详情</a>
+                        <a class="btn btn-xs btn-warning" @click="dataOp(item.id, 'edit')">编辑</a>
                         <a href="#" class="btn btn-xs btn-info">使用场景</a>
                         <a href="#" class="btn btn-xs btn-info">探索源库</a>
                     </template>
@@ -45,6 +45,13 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text">数据源链接串</span>
                             <input v-model="form.dbConstr" id="constr" class="form-control" />
+
+                            <span class="input-group-text">是否有效</span>
+                            <v-radio-group v-model="form.bvalid" inline>
+                                <v-radio  label="有效" value="Y" />
+                                <v-radio  label="无效" value="N" />
+                            </v-radio-group>
+
                         </div>
 
                         <span>采集信息</span>
