@@ -1,6 +1,5 @@
 <script>
 import Topbar from './Topbar.vue'
-import Breadcrumb from '@/components/Breadcrumb.vue';
 </script>
 
 <template>
