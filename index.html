@@ -15,19 +15,24 @@
     <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet" /> -->
     <!-- <script src="/src/assets/js/mdb5js/mdb.umd.min.js"></script> -->
     <!-- <link rel="stylesheet" href="/src/assets/css/mdb.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="/loader.css">
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      const loaderColor = localStorage.getItem('sneat-initial-loader-bg') || '#FFFFFF'
+      const primaryColor = localStorage.getItem('sneat-initial-loader-color') || '#696CFF'
+  
+      if (loaderColor)
+        document.documentElement.style.setProperty('--initial-loader-bg', loaderColor)
+  
+      if (primaryColor)
+        document.documentElement.style.setProperty('--initial-loader-color', primaryColor)
+    </script>
   </body>
 </html>
 <style>
-  html {
-    font-size: 0.9rem;
-  }
-  body {
-    margin: 0 0 0 0;
-  }
   tbody tr:nth-of-type(odd) {
     background-color: rgba(0, 0, 0, .05);
   }

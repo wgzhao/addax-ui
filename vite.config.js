@@ -17,6 +17,10 @@ export default defineConfig({
         {
           find: '@',
           replacement: resolve(projectRootDir, 'src')
+        },
+        {
+          find: "@layouts",
+          replacement: resolve(projectRootDir, "src/@layouts")
         }
       ]
     })
