@@ -155,7 +155,7 @@ const doAction = (item, idx) => {
     } else if (idx == 2) {
         let spName = "tuna_addax_" + item.destTablename;
         formTitle.value =  spName + " 的运行日志" 
-        axios.get(apiPrefix.value + actions.value[idx].api + "tuna_addax_" + item.tblId)
+        axios.get("/log/" + actions.value[idx].api + "tuna_addax_" + item.tblId)
             .then(res => {childData.value = res.data; return res.data});
     }
     dialog.value[idx] = true;
@@ -164,7 +164,7 @@ const doAction = (item, idx) => {
 }
 
 const getContent = (f) => {
-    axios.get(apiPrefix.value + "logFileContent", {
+    axios.get("/log" + "logFileContent", {
         params: {
             f: f
         }

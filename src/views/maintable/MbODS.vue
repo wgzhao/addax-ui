@@ -5,8 +5,22 @@
             <v-card flat title="主表配置 - ODS 采集配置">
 
                 <template v-slot:text>
-                    <v-text-field v-model="search"  density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
+
+                        <v-row justify="center" align="center">
+                            <v-col cols="col-4">
+                                <v-text-field v-model="search"  density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
                         variant="outlined" hide-details></v-text-field>
+                            </v-col>
+                            <v-col cols="auto">
+                                <button type="button" density="compact" class="btn btn-primary btn-sm" @click="dynamicComponent='BatchAdd'">批量新增表</button>
+                            </v-col>
+                            <v-col cols="auto">
+                                <button type="button" density="compact" class="btn btn-primary btn-sm" @click="doEtl('source')">启动表更新</button>
+                            </v-col>
+                            <v-col cols="auto">
+                                <button type="button" density="compact" class="btn btn-primary btn-sm" @click="doEtl('sp')">启动采集</button>
+                            </v-col>
+                        </v-row>
 
                     <!-- <v-select :items="selectOptions" density="compact" label="操作" item-title="text" item-value="value"
                         return-object v-model="select">
@@ -57,6 +71,8 @@ import FieldsCompare from '@/components/ods/FieldsCompare.vue';
 import CmdList from '@/components/ods/CmdList.vue';
 import TableUsed from '@/components/ods/TableUsed.vue';
 import AddaxResult from '@/components/ods/AddaxResult.vue';
+import BatchAdd from '@/components/ods/BatchAdd.vue';
+import LogFiles from '@/components/ods/LogFiles.vue';
 
 export default {
     name: 'MbODS',
@@ -75,8 +91,8 @@ export default {
                 { text: "命令列表", value: "CmdList" },
                 { text: "使用场景", value: "TableUsed" },
                 { text: "addax结果", value: "AddaxResult" },
-                { text: "命令日志", value: "cmdLog" },
-                { text: "调度日志", value: "scheduleLog" },
+                { text: "命令日志", value: "LogFiles1" },
+                { text: "调度日志", value: "LogFiles2" },
             ],
             rowSelect: null,
             groupBy: [
@@ -152,18 +168,44 @@ export default {
             } else if (comp == 'AddaxResult') {
                 axios.get('/maintable/ods/addaxResult/' + val.spname)
                 .then(res => {this.item = res.data});
+            } else if (comp == "LogFiles1") {
+                // 命令日志
+                axios.get("/log/logFiles/" + val.spname)
+                    .then(res => {this.item = res.data; return res.data});
+                comp = "LogFiles";
+            } else if (comp == "LogFiles2") {
+                // 调度日志
+                axios.get("/log/logFiles/" + "tuna_sp_etl_" + val.tid)
+                    .then(res => {this.item = res.data; return res.data});
+                comp = "LogFiles";
             }
              else {
                 this.item = val;
             }
             this.dynamicComponent = comp;
             // console.log(this.item);
+        },
+
+        getContent(f)  {
+            axios.get("/log/logFileContent", {
+                params: {
+                    f: f
+                }
+                })
+                .then(res => { fContent.value = res.data; return res.data; });
+        },
+        doEtl(ctype) {
+            axios.post("/maintable/ods/startEtl", {
+                "ctype": ctype
+            }).then(res => alert("启动成功"))
+            .catch(res => alert("启动失败" + res))
+            
         }
         // mainTableInfo(d) {
         //     this.$router.push({ path: '/maintable/ods/info', query: { id: d.id } });
         // }
     },
-    components: {MainTableInfo, FieldsCompare, CmdList, TableUsed, AddaxResult }
+    components: {MainTableInfo, FieldsCompare, CmdList, TableUsed, AddaxResult, BatchAdd, LogFiles }
 }
 </script>
 <style>

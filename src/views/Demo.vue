@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <apexchart width="500"  :options="options" :series="series"></apexchart>
+    <!-- <apexchart width="500"  :options="options" :series="series"></apexchart> -->
   </div>
 </template>
 
 <script>
-import VueApexCharts from "vue3-apexcharts";
+// import VueApexCharts from "vue3-apexcharts";
 import axios from "axios";
 export default {
   data() {
@@ -29,9 +29,9 @@ export default {
       }]
     }
   },
-  components: {
-    apexchart: VueApexCharts,
-  },
+  // components: {
+  //   apexchart: VueApexCharts,
+  // },
   mounted() {
     this.fetchData()
     console.log(this.series[0]["data"]);
