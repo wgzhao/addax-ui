@@ -1,4 +1,5 @@
 <template>
+    <!-- 采集监控 -->
     <div class="row">
         <template v-for="d in data">
             <v-card flat :title="d.title">
@@ -121,20 +122,7 @@ export default {
             for(let row in this.data) {
                 axios.get('/etl/' + this.data[row].api).then(res => {this.data[row].data = res.data});
             }
-            // axios.get('/etl/accomplishList')
-            //     .then(resp => {
-            //         this.impEtlOverprec = resp.data
-            //         this.totalPages = Math.floor(this.impEtlOverprec.length / this.pageSize);
-            //         return resp
-            //     })
-            //     .catch(error => {
-            //         return error
-            //     });
-
-            // axios.get('/etl/specialTask').then(resp => this.specialTasks = resp.data);
-            // axios.get('/etl/realtimeTask').then(resp => this.realtimeTasks = resp.data);
-            // axios.get('/etl/taskReject').then(resp => this.rejectTasks["data"] = resp.data);
-        },
+          },
 
         formatDate(value) {
             return new Date(value).toLocaleDateString('zh-CN', 'YYYY-MM-DD HH:mm:ss');
