@@ -81,7 +81,9 @@
 
             <div class="topbar-divider d-none d-sm-block"></div>
             <!-- Nav Item - User Information -->
+            <NavbarThemeSwitcher class="me-2" />
             <li class="nav-item dropdown no-arrow">
+
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
@@ -116,6 +118,9 @@
     
     <!-- End of Topbar -->
 </template>
+<script setup>
+import NavbarThemeSwitcher from './NavbarThemeSwitcher.vue'
+</script>
 <style>
 .sidebar .nav-item .nav-link .img-profile,
 .topbar .nav-item .nav-link .img-profile {

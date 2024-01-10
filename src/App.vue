@@ -1,9 +1,14 @@
 <script setup>
+import { useTheme } from 'vuetify'
+import { hexToRgb } from './utils';
 import Topbar from '@/components/Topbar.vue'
 import Footer from '@/components/Footer.vue';
+
+const { global } = useTheme()
 </script>
 
 <template>
+    <v-app :style="`--v-global-theme-primary: ${hexToRgb(global.current.value.colors.primary)}`">
     <!-- Page Wrapper -->
     <div id="wrapper">
         <!-- <Nav /> -->
@@ -23,6 +28,7 @@ import Footer from '@/components/Footer.vue';
         <Footer />
     </div>
     <!-- End of Page Wrapper -->
+</v-app>
 </template>
 
 <style>

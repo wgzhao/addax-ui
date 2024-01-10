@@ -1,7 +1,7 @@
 {
-  "name": "fsbrowser-ui",
+  "name": "addax-ui",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite --force",
@@ -26,7 +26,8 @@
     "vue-highlight-code": "^0.1.16",
     "vue-router": "^4.2.5",
     "vue3-popper": "^1.5.0",
-    "vuetify": "^3.4.9"
+    "vuetify": "^3.4.9",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
