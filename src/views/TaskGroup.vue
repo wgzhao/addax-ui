@@ -1,8 +1,11 @@
 <template>
     <v-card>
-        <v-tabs v-model="tab" bg-color="info">
+        <v-tabs v-model="tab" bg-color="gray">
             <template v-for="(val, idx) in headers">
-                <v-tab :value="idx">{{ val.title }}</v-tab>
+                <v-tab :value="idx">
+                    <v-icon color="gray" start icon="mdi-dialpad"></v-icon>
+                    {{ val.title }}
+                </v-tab>
             </template>
         </v-tabs>
 
