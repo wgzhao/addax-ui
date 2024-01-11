@@ -1,7 +1,8 @@
 <template >
     <!-- 数据中心采集及数据服务系统清单-->
     <!-- search input -->
-    <div class="row">
+    <div class="v-row">
+        <div class="v-col col-12">
         <v-responsive max-width="360">
           <v-text-field
             prepend-inner-icon="mdi-magnify"
@@ -16,6 +17,7 @@
             @keyup.enter="fetchData"
           ></v-text-field>
         </v-responsive>
+    </div>
     </div>
     <div class="row">
         <div class="header text-center">

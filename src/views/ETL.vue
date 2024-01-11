@@ -1,16 +1,17 @@
 <template>
     <!-- 采集监控 -->
-    <div class="row">
         <template v-for="d in data">
+            <div class="v-row">
+                <div class="v-col col-12">
             <v-card flat :title="d.title">
                 <v-card-text>
                     <v-data-table :items="d.data" :headers="d.headers" density="compact" :sort-by="d.sortBy">
                     </v-data-table>
                 </v-card-text>
             </v-card>
-            <v-spacer></v-spacer>
+            </div>
+            </div>
         </template>
-    </div>
 </template>
 
 <script setup>

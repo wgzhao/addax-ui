@@ -28,15 +28,21 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // use vuetify
+// import '@/styles/vuetify/index.scss'
 import 'vuetify/styles'
 // // import 'vuetify/dist/vuetify.min.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import '@fortawesome/fontawesome-free/js/all.min.js'
 import { createVuetify } from 'vuetify'
+import { aliases, fa } from 'vuetify/iconsets/fa'
+import '@mdi/font/css/materialdesignicons.min.css'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
 import theme from '@/plugins/theme.js'
 
 import { loadFonts } from '@/plugins/webfontloader.js'
+
 import router from './router'
 
 loadFonts()
@@ -45,6 +51,9 @@ const vuetify = createVuetify({
     components,
     directives,
     theme,
+    icons: {
+      defaultSet: 'mdi',
+    }
   })
 
 createApp(App)

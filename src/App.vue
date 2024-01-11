@@ -5,6 +5,8 @@ import Topbar from '@/components/Topbar.vue'
 import Footer from '@/components/Footer.vue';
 
 const { global } = useTheme()
+
+global.name.value = "dark"
 </script>
 
 <template>
@@ -23,9 +25,9 @@ const { global } = useTheme()
                     <router-view></router-view>
                 </div>
             </div>
+            <Footer />
         </div>
         <!-- End of Content Wrapper -->
-        <Footer />
     </div>
     <!-- End of Page Wrapper -->
 </v-app>

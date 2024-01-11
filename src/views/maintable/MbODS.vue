@@ -3,65 +3,52 @@
     <div class="row">
         <div class="col-6">
             <v-card flat title="主表配置 - ODS 采集配置">
-
                 <template v-slot:text>
-
-                        <v-row justify="center" align="center">
-                            <v-col cols="col-4">
-                                <v-text-field v-model="search"  density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
-                        variant="outlined" hide-details></v-text-field>
-                            </v-col>
-                            <v-col cols="auto">
-                                <button type="button" density="compact" class="btn btn-primary btn-sm" @click="dynamicComponent='BatchAdd'">批量新增表</button>
-                            </v-col>
-                            <v-col cols="auto">
-                                <button type="button" density="compact" class="btn btn-primary btn-sm" @click="doEtl('source')">启动表更新</button>
-                            </v-col>
-                            <v-col cols="auto">
-                                <button type="button" density="compact" class="btn btn-primary btn-sm" @click="doEtl('sp')">启动采集</button>
-                            </v-col>
-                        </v-row>
-
-                    <!-- <v-select :items="selectOptions" density="compact" label="操作" item-title="text" item-value="value"
-                        return-object v-model="select">
-                    </v-select> -->
-
-
-
+                    <v-row justify="center" align="center">
+                        <v-col cols="col-4">
+                            <v-text-field v-model="search" density="compact" label="Search"
+                                prepend-inner-icon="fa-solid fa-magnifying-glass" single-line variant="outlined"
+                                hide-details></v-text-field>
+                        </v-col>
+                        <v-col cols="auto">
+                            <button type="button" density="compact" class="btn btn-primary btn-sm"
+                                @click="dynamicComponent = 'BatchAdd'">批量新增表</button>
+                        </v-col>
+                        <v-col cols="auto">
+                            <button type="button" density="compact" class="btn btn-primary btn-sm"
+                                @click="doEtl('source')">启动表更新</button>
+                        </v-col>
+                        <v-col cols="auto">
+                            <button type="button" density="compact" class="btn btn-primary btn-sm"
+                                @click="doEtl('sp')">启动采集</button>
+                        </v-col>
+                    </v-row>
                 </template>
-                <v-data-table 
-                    density="compact" 
-                    :items="ods" 
-                    :headers="headers" 
-                    item-value="name" 
-                    :search="search"
-                    >
-                    <template v-slot:group-header="{ item, columns, toggleGroup, isGroupOpen }">
-                        <tr>
-                            <td :colspan="columns.length">
-                                <VBtn size="small" variant="text" @click="toggleGroup(item)"
-                                    :icon="isGroupOpen ? '$expand' : '$next'"></VBtn>
-                                {{ item.value }}
-                            </td>
-                        </tr>
-                    </template>
-                    <template v-slot:item.action="{ item }">
-                        <!-- add link for selectOption -->
-                        <template v-for="l in selectOptions">
-                            <v-btn class="m-1 p-0 btn btn-outline-primary" @click="doAction(item, l.value)">
-                            {{ l.text }}
-                            </v-btn>
+                <v-card-text>
+                    <v-data-table density="default" :items="ods" :headers="headers" item-value="name" :search="search">
+                        <template v-slot:item.action="{ item }">
+                            <!-- add link for selectOption -->
+                            <v-menu>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn icon="mdi-dots-vertical" v-bind="props">
+                                    </v-btn>
+                                </template>
+                                <v-list>
+                                    <v-list-item slim density="compact" v-for="(op, i) in selectOptions" :key="i"
+                                        @click="doAction(item, op.value)">
+                                        <v-list-item-title class="text-button">{{ op.text }}</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
                         </template>
-                    </template>
-                </v-data-table>
+                    </v-data-table>
+                </v-card-text>
             </v-card>
         </div>
-    <div class="col-6">
+        <div class="col-6">
             <component :is="dynamicComponent" :d="item"></component>
-            <!-- <MainTableInfo v-if="showFlag['mainTableInfo']" :d="item"></MainTableInfo>
-            <FieldsCompare v-if="showFlag['fieldsCompare']" :d="item"></FieldsCompare> -->
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -110,19 +97,14 @@ export default {
                 },
             ],
             headers: [
-                {
-                    "title": "目标用户",
-                    "align": "start",
-                    "sortable": false,
-                    "value": "destOwner"
-                },
-                { "title": "系统名称", "value": "sysName" },
-                { "title": "源用户", "value": "souOwner" },
-                { "title": "目标表名", "value": "destTablename" },
-                { "title": "状态", "value": "flag" },
-                { "title": "剩余", "value": "retryCnt" },
-                { "title": "耗时", "value": "runtime" },
-                { "title": "操作", "value": "action", "sortable": false },
+                { "title": "目标用户", "align": "center", "sortable": false, "value": "destOwner" },
+                { "title": "系统名称", "value": "sysName", align: "center" },
+                { "title": "源用户", "value": "souOwner", align: "center" },
+                { "title": "目标表名", "value": "destTablename", align: "center" },
+                { "title": "状态", "value": "flag", align: "center" },
+                { "title": "剩余", "value": "retryCnt", align: "center" },
+                { "title": "耗时", "value": "runtime", align: "center" },
+                { "title": "操作", "value": "action", "sortable": false, align: "center" },
             ],
         };
     },
@@ -148,68 +130,64 @@ export default {
                 axios.get('/maintable/ods/fieldCompare/' + val.tid).then(res => {
                     this.item = res.data;
                 })
-                .catch(err => {
-                    console.log(err);
-                });
-            }else if (comp == 'CmdList') {
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else if (comp == 'CmdList') {
                 axios.get('/maintable/ods/cmdList/' + val.tid).then(res => {
                     this.item = res.data;
                 })
-                .catch(err => {
-                    console.log(err);
-                });
+                    .catch(err => {
+                        console.log(err);
+                    });
             } else if (comp == 'TableUsed') {
                 axios.get('/maintable/ods/tableUsed', {
                     params: {
-                        tablename: val.destOwner + '.' +  val.destTablename,
+                        tablename: val.destOwner + '.' + val.destTablename,
                         sysId: val.sysid
                     }
-                }).then(res => {this.item = res.data;});
+                }).then(res => { this.item = res.data; });
             } else if (comp == 'AddaxResult') {
                 axios.get('/maintable/ods/addaxResult/' + val.spname)
-                .then(res => {this.item = res.data});
+                    .then(res => { this.item = res.data });
             } else if (comp == "LogFiles1") {
                 // 命令日志
                 axios.get("/log/logFiles/" + val.spname)
-                    .then(res => {this.item = res.data; return res.data});
+                    .then(res => { this.item = res.data; return res.data });
                 comp = "LogFiles";
             } else if (comp == "LogFiles2") {
                 // 调度日志
                 axios.get("/log/logFiles/" + "tuna_sp_etl_" + val.tid)
-                    .then(res => {this.item = res.data; return res.data});
+                    .then(res => { this.item = res.data; return res.data });
                 comp = "LogFiles";
             }
-             else {
+            else {
                 this.item = val;
             }
             this.dynamicComponent = comp;
             // console.log(this.item);
         },
 
-        getContent(f)  {
+        getContent(f) {
             axios.get("/log/logFileContent", {
                 params: {
                     f: f
                 }
-                })
+            })
                 .then(res => { fContent.value = res.data; return res.data; });
         },
         doEtl(ctype) {
             axios.post("/maintable/ods/startEtl", {
                 "ctype": ctype
             }).then(res => alert("启动成功"))
-            .catch(res => alert("启动失败" + res))
-            
+                .catch(res => alert("启动失败" + res))
+
         }
         // mainTableInfo(d) {
         //     this.$router.push({ path: '/maintable/ods/info', query: { id: d.id } });
         // }
     },
-    components: {MainTableInfo, FieldsCompare, CmdList, TableUsed, AddaxResult, BatchAdd, LogFiles }
+    components: { MainTableInfo, FieldsCompare, CmdList, TableUsed, AddaxResult, BatchAdd, LogFiles }
 }
 </script>
-<style>
-.v-input field {
-    font-size: 0.8rem;
-}
-</style>
+<style></style>

@@ -32,116 +32,136 @@
             "THROUGH_NEED_SOU": null
         }
     -->
-    <div class="card">
-        <div class="card-header text-light bg-dark">
-            HADOOP存储过程主表配置
-        </div>
-        <div class="card-body">
-            <form @submit.prevent="saveData">
-                <div class="input-group mb-1">
-                    <span class="input-group-text">SP 用户</span>
-                    <input v-model="form.spOwner" class="form-control" />
-                    <span class="input-group-text">SP 名称</span>
-                    <input v-model="form.spName"  class="form-control" />
-                </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text">参数组</span>
-                    <input v-model="form.paramSou" class="form-control" />
-                    <span class="input-group-text">运行频率</span>
-                    <input v-model="form.runFreq" class="form-control" />
-                </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text">状态</span>
-                    <input v-model="form.flag" class="form-control" />
-                    <span class="input-group-text">剩余次数</span>
-                    <input v-model="form.retryCnt" class="form-control" />
-                </div>
+    <v-card title="HADOOP存储过程主表配置">
+        <v-card-text>
+            <v-form fast-fail @submit.prevent="saveData">
+                <v-container>
+                <v-row no-gutters>
+                    <v-col cols="12" md="3" class="m-0">
+                        <v-text-field v-model="spDetail.spOwner" label="SP 用户"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.spName" label="SP 名称"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.paramSou" label="参数组"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.runFreq" label="运行频率"></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row no-gutters>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.flag" label="状态"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.retryCnt" label="剩余次数"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.taskGroup" label="任务组"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.realtimeTaskgroup" label="前置实时采集任务组"></v-text-field>
+                    </v-col>
+                </v-row>
+ 
+                <v-row no-gutters>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.pnType" label="计划类型"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.pnFixed" label="计划定点时间"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.pnInterval" label="计划间隔时间"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.pnRange" label="计划间隔时间范围"></v-text-field>
+                    </v-col>
 
-                <div class="input-group mb-1">
-                    <span class="input-group-text">前置实时采集任务组</span>
-                    <input v-model="form.realtimeTaskgroup" class="form-control" />
-                    <span class="input-group-text">任务组</span>
-                    <input v-model="form.taskGroup" class="form-control" />
-                </div>
-                
-                <span></span>
+                </v-row>
 
-                <div class="input-group mb-3">
-                    <span class="input-group-text">计划类型</span>
-                    <input v-model="form.pnType" class="form-control" />
-                    <span class="input-group-text">计划定点时间</span>
-                    <input v-model="form.pnFixed" class="form-control" />
-                </div>
+                <v-row no-gutters>
+                    <v-col cols="12" md="6">
+                        <v-textarea v-model="needs.NEED_SOU" label="直接前置源" rows="2"></v-textarea>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-textarea v-model="needs.THROUGH_NEED_SOU" label="穿透后所有前置源" rows="2"></v-textarea>
+                    </v-col>
+                </v-row>
+     
+                <v-row no-gutters>
+                    <v-col cols="12" md="6">
+                        <v-textarea v-model="needs.NEED_SP" label="直接前置SP" rows="2"></v-textarea>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-textarea v-model="needs.THROUGH_NEED_SP" label="穿透后所有前置SP" rows="2"></v-textarea>
+                    </v-col>
+                </v-row>
 
-                <div class="input-group mb-1">
-                    <span class="input-group-text">计划间隔时间</span>
-                    <input v-model="form.pnInterval" class="form-control" />
-                    <span class="input-group-text">计划间隔时间范围</span>
-                    <input v-model="form.pnRange" class="form-control" />
-                </div>
+                <v-row no-gutters>
+                    <v-col cols="12" md="6">
+                        <v-textarea v-model="needs.SP_ALLTABS" label="脚本涉及表" rows="2"></v-textarea>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-textarea v-model="needs.SP_DEST" label="脚本生成表" rows="2"></v-textarea>
+                    </v-col>
+                </v-row>
 
-                <span></span>
+                <v-row no-gutters>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="needs.SP_ALLNEXT" label="穿透后所有下游"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-text-field v-model="spDetail.remark" label="备注"></v-text-field>
+                    </v-col>
+                </v-row>
 
-                <div class="input-group mb-3">
-                    <span class="input-group-text">直接前置源</span>
-                    <textarea v-model="needs.NEED_SOU" class="form-control" rows="2"></textarea>
-                    <span class="input-group-text">穿透后所有前置源</span>
-                    <textarea v-model="needs.THROUGH_NEED_SOU" class="form-control" rows="2"></textarea>
-                </div>
-                <div class="input-group mb-1">
-                    <span class="input-group-text">直接前置SP</span>
-                    <textarea v-model="needs.NEED_SP" class="form-control" rows="2"></textarea>
-                    <span class="input-group-text">穿透后所有前置SP</span>
-                    <textarea v-model="needs.THROUGH_NEED_SP" class="form-control" rows="4"></textarea>
-                </div>
+                <v-row no-gutters>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.startTime" label="开始时间"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.endTime" label="结束时间"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.runtime" label="运行耗时"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-text-field v-model="spDetail.spId" label="SP编号"></v-text-field>
+                    </v-col>
+                </v-row>
 
-                <div class="input-group mb-1">
-                    <span class="input-group-text">脚本涉及表</span>
-                    <textarea v-model="needs.SP_ALLTABS" class="form-control" rows="2"></textarea>
-                    <span class="input-group-text">脚本生成表</span>
-                    <textarea v-model="needs.SP_DEST" class="form-control" rows="2"></textarea>
-                </div>
-
-                <div class="input-group mb-1">
-                    <span class="input-group-text">穿透后所有下游</span>
-                    <textarea v-model="needs.SP_ALLNEXT" class="form-control" rows="4"></textarea>
-                </div>
-
-                <span></span>
-
-                <div class="input-group mb-3">
-                    <span class="input-group-text">备注</span>
-                    <textarea v-model="form.remark" class="form-control" rows="4"></textarea>
-                </div>
-
-                <span></span>
-
-                <div class="input-group mb-1">
-                    <span class="input-group-text">开始时间</span>
-                    <input v-model="form.startTime" class="form-control" />
-                    <span class="input-group-text">结束时间</span>
-                    <input v-model="form.endTime" class="form-control" />
-                </div>
-
-                <div class="input-group mb-1">
-                    <span class="input-group-text">运行耗时</span>
-                    <input v-model="form.runtime" class="form-control" />
-                    <span class="input-group-text">SP编号</span>
-                    <input v-model="form.spId" class="form-control" />
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">
-                        <span>Save</span>
-                    </button>
-                    <button type="reset" class="btn btn-warning">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
+                <v-row no-gutters>
+                    <v-btn type="submit" class="btn btn-primary">保存</v-btn>
+                    <v-btn type="reset" class="btn btn-warning">取消</v-btn>
+                </v-row>
+                </v-container>
+            </v-form>
+        </v-card-text>
+    </v-card>
 </template>
 <script setup>
-defineProps(['form', 'header', 'needs'])
+import {ref, onMounted} from 'vue'
+import SpService from '@/service/spService'
+
+const props = defineProps(['spId'])
+
+const spDetail = ref({})
+const needs = ref([])
+
+const fetchData = () => {
+    SpService.fetchSpMainDetail(props.spId).then(res => spDetail.value = res.data);
+    SpService.fetchSpThrough(props.spId).then(res => needs.value = res.data);
+}
+
+const saveData = () => {
+    // SpService.spMainSave(spDetail.value)
+}
+onMounted(() => {
+    fetchData()
+    console.log(spDetail);
+})
 </script>
 <style>
 .input-group {

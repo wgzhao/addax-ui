@@ -1,2 +1,15 @@
 /* Import all of Bootstrap's CSS */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+@font-face {
+    font-family: 'MiSans Regular';
+    font-style: normal;
+    font-weight: normal; /* or 400 */
+    src: url('../assets/fonts/MiSans/MiSans-Light.woff2');
+  }
+@font-face {
+    font-family: 'MiSans Light';
+    font-style: light;
+    font-weight: lighter; 
+    src: url('../assets/fonts/MiSans/MiSans-Light.woff2');
+  }

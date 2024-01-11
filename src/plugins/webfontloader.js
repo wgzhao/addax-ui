@@ -9,8 +9,7 @@ export async function loadFonts() {
   webFontLoader.load(
   {
     custom: {
-      families: ['MiSans Regular', 'MiSans Light', 'MiSans Thin'],
-      urls: ['./fonts.css'],
+      families: ['MiSans Regular', 'MiSans Light', 'MiSans Thin']
     }
   })
 }

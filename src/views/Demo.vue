@@ -2,6 +2,9 @@
   <div id="app">
     1 + 2 = {{ s }}
   </div>
+  <span>
+    <v-icon>mdi-dots-vertical</v-icon>
+  </span>
 </template>
 
 <script>

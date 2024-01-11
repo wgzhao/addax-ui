@@ -77,3 +77,7 @@ html {
     transform: rotate(1turn);
   }
 }
+
+.v-data-table tbody tr td, thead tr th {
+  padding: 10px !important;
+}

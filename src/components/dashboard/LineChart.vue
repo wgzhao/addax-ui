@@ -21,8 +21,8 @@ Chart as ChartJS,
 import { Line } from 'vue-chartjs'
 
 
-ChartJS.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-ChartJS.defaultFontColor = '#858796';
+// ChartJS.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+// ChartJS.defaultFontColor = '#858796';
 
 ChartJS.register(
   CategoryScale,
@@ -73,12 +73,7 @@ const areaOtions =  ref({
                     }
                 },
                 tooltips: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyFontColor: "#858796",
                     titleMarginBottom: 10,
-                    titleFontColor: '#6e707e',
-                    titleFontSize: 14,
-                    borderColor: '#dddfeb',
                     borderWidth: 1,
                     xPadding: 15,
                     yPadding: 15,

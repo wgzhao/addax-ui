@@ -5,48 +5,43 @@
       <v-card title="主表配置 -- SP 计算">
         <template v-slot:text>
           <v-row>
-            <v-col cols="12" sm="6">
+            <v-col cols="12" sm="12">
               <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
                 variant="outlined" hide-details></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6">
-              <div class="btn-group-sm" role="group" arial-label="Actions">
-                <template v-for="a in selectOptions">
-                  <button type="button" class="btn btn-outline-primary">{{ a.title }}</button>
-                </template>
-              </div>
-            </v-col>
           </v-row>
-
         </template>
+        
         <v-card-text>
-          <v-data-table :items="impSps" :headers="impHeaders" :items-per-page="pageSize" density="compact" show-select
-            select-strategy="single" class="elevation-0" v-model="selected" item-value="spId">
+          <v-data-table :items="impSps" :headers="impHeaders" items-per-page="10" density="default">
             <template v-slot:item.actions="{ item }">
-              <template v-for="(a, index) in selectOptions">
-                <button type="button" class="btn btn-sm btn-outline-primary" @click="doAction(index, item)">{{ a.title
-                }}</button>
-              </template>
+              <v-menu>
+                <template v-slot:activator="{ props }">
+                  <v-btn icon="mdi-dots-vertical" v-bind="props">
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item slim density="compact" 
+                    v-for="(op, i) in selectOptions" :key="i" @click="doAction(op.value, item)">
+                    <v-list-item-title class="text-button">{{ op.title }}</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </template>
           </v-data-table>
         </v-card-text>
       </v-card>
     </div>
     <div class="col-6">
-      <component :is="currentComp" :form="sp" :header="header" :needs="needs" />
+      <component :is="currentComp" :spId="spId" :key="uniqueKey"/>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-    </div>
-
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import SpDetail from '@/components/sp/SpDetail.vue'
-import CmdList from '@/components/sp/CmdList.vue'
+import SpCmdList from '@/components/sp/SpCmdList.vue'
 import SceneList from '@/components/sp/SceneList.vue'
 import SpLineage from '@/components/sp/SpLineage.vue'
 import SpRequiresList from '@/components/sp/SpRequiresList.vue'
@@ -55,12 +50,10 @@ export default {
   data() {
     return {
       impSps: [],
-      sp: [],
-      header: null,
+      spId: null,
+      uniqueKey: null,
       currentComp: null,
-      selected: null,
       search: null,
-      apiPrefix: "/maintable/sp/",
       impHeaders: [
         { title: '运行频率', value: 'runFreq' },
         { title: '状态', value: 'flag' },
@@ -68,60 +61,33 @@ export default {
         { title: '开始时间', value: 'startTime' },
         { title: '结束时间', value: 'endTime' },
         { title: '耗时(秒)', value: 'runtime' },
-        { title: 'Action', value: 'actions' }
+        { title: '操作', value: 'actions' }
       ],
-      needs: {
-        "NEED_SOU": null,
-        "NEED_SP": null,
-        "SP_DEST": null,
-        "SP_ALLNEXT": null,
-        "THROUGH_NEED_SP": null,
-        "SP_ALLTABS": null,
-        "THROUGH_NEED_SOU": null
-      },
-      pageSize: 10,
-      select: null,
       selectOptions: [
-        { title: '主表详情', value: 'SpDetail', api: 'through' },
-        { title: '命令列表', value: 'CmdList', api: 'cmdlist' },
-        { title: '调度日志', value: 'showLogs', api: 'impSpLog' },
-        { title: '使用场景', value: 'SceneList', api: 'scene' },
-        { title: '计算溯源', value: 'SpLineage', api: 'lineage' },
-        { title: '前置情况', value: 'SpRequiresList', api: 'prequires' }
+        { title: '主表详情', value: 'SpDetail'  },
+        { title: '命令列表', value: 'SpCmdList'  },
+        { title: '调度日志', value: 'showLogs'  },
+        { title: '使用场景', value: 'SceneList'  },
+        { title: '计算溯源', value: 'SpLineage'  },
+        { title: '前置情况', value: 'SpRequiresList'  }
       ]
     }
   },
   components: {
-    SpDetail, CmdList, SceneList, SpRequiresList, SpLineage
+    SpDetail, SpCmdList, SceneList, SpRequiresList, SpLineage
   },
   methods: {
 
-    doAction(idx, val) {
-      // clear this.sp
-      this.sp = []
-      let a = this.selectOptions[idx]
-      let api = this.apiPrefix + a.api + '/' + val.spId
-      this.header = val.spOwner + '.' + val.spName;
-      if (a.value == "SpDetail") {
-        this.sp = val;
-        axios.get(api).then(res => { this.needs = res.data })
-      } else if (a.value == "SceneList") {
-        axios.get(this.apiPrefix + a.api, {
-          params: {
-            'tbl': val.spOwner + "." + val.spName,
-            'sysId': val.spId
-          }
-        }).then(resp => this.sp = resp.data);
-      }
-      else {
-        axios.get(api).then(res => { this.sp = res.data })
-      }
-      this.currentComp = a.value;
+    doAction(comp, val) {
+      this.spId = val.spId
+      this.uniqueKey = val.spId
+      console.log("invoke " + comp);
+      this.currentComp = comp;
     },
 
     initData() {
       // Initial data
-      axios.get(this.apiPrefix  + "list").then(resp => this.impSps = resp.data);
+      axios.get("/maintable/sp/list").then(resp => this.impSps = resp.data);
     },
   },
 
@@ -133,7 +99,4 @@ export default {
 }
 </script>
 <style>
-table {
-  font-size: 0.8rem;
-}
 </style>

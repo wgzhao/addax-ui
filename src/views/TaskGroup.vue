@@ -13,8 +13,12 @@
             <v-window v-model="tab">
                 <template v-for="(val, idx) in headers">
                     <v-window-item :value="idx">
+                        <div class="v-row">
+                            <div class="v-col v-col-12">
                         <v-data-table density="compact" v-if="val.data" :items="val.data" :headers="val.headers"
                             items-per-page="20" hover></v-data-table>
+                            </div>
+                            </div>
                     </v-window-item>
                 </template>
             </v-window>

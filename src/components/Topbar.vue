@@ -1,25 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand bg-primary topbar mb-4 static-top" data-bs-theme="dark">
-
-        <!-- Sidebar Toggle (Topbar) -->
-        <!-- <form class="form-inline">
-            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                <i class="fa fa-bars"></i>
-            </button>
-        </form> -->
-
-        <!-- Topbar Search -->
-        <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                    aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                </div>
-            </div>
-        </form> -->
+    <nav class="navbar navbar-expand  topbar mb-4 static-top" data-bs-theme="dark">
 
         <!-- Topbar Navbar -->
         <div class="container-fluid">
@@ -60,55 +40,21 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                  <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fa-solid fa-bell fa-fw"></i>
-                    <!-- Counter - Alerts -->
-                    <span class="position-absolute  translate-middle badge rounded-pill bg-danger">3+</span>
-                </a>
-            </li>
-
-            <!-- Nav Item - Messages -->
-            <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-envelope fa-fw"></i>
-                    <!-- Counter - Messages -->
-                    <span class="position-absolute  translate-middle badge rounded-pill bg-danger">7</span>
-                </a>
-            </li>
-
             <div class="topbar-divider d-none d-sm-block"></div>
+            <a class="nav-link" href="#" @click="toggleTheme()">
+                    <span class="mr-1 d-none d-lg-inline text-gray-600 small">
+                        <v-icon :icon="themes[idx]['icon']" />
+                        <!-- <i :class="themes[idx]['icon']"></i> -->
+                    </span>
+                </a>
             <!-- Nav Item - User Information -->
-            <NavbarThemeSwitcher class="me-2" />
             <li class="nav-item dropdown no-arrow">
-
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
+                <!-- <NavbarThemeSwitcher class="me-2" /> -->
+                <a class="nav-link" href="#">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
                     <img class="img-profile rounded-circle" width="80%" src="/src/assets/images/undraw_profile.svg">
                 </a>
                 <!-- Dropdown - User Information -->
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Profile
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Settings
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Activity Log
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Logout
-                    </a>
-                </div>
             </li>
 
         </ul>
@@ -119,7 +65,26 @@
     <!-- End of Topbar -->
 </template>
 <script setup>
-import NavbarThemeSwitcher from './NavbarThemeSwitcher.vue'
+import { useTheme } from 'vuetify'
+import {ref} from 'vue'
+const { global } = useTheme()
+
+const themes = ref([
+  {
+    name: 'light',
+    icon: 'fas fa-sun',
+  },
+  {
+    name: 'dark',
+    icon: 'fas fa-moon',
+  },
+])
+const idx = ref((themes.value.findIndex(t => t.name === global.name.value)  +1) % 2)
+
+const toggleTheme = () => {
+    global.name.value = themes.value[idx.value].name
+    idx.value = (idx.value + 1) % 2
+}
 </script>
 <style>
 .sidebar .nav-item .nav-link .img-profile,
@@ -129,8 +94,9 @@ import NavbarThemeSwitcher from './NavbarThemeSwitcher.vue'
 }
 .nav-item .router-link-active,
 .nav-item .router-link-exact-active {
-   cursor: pointer;
-   background-color:rgb(26, 81, 182);
-   color: white;
- }
+    cursor: pointer;
+    color: white;
+    background-color: rgb(var(--v-theme-primary))!important;
+    border-radius: 0.35rem;
+}
 </style>
