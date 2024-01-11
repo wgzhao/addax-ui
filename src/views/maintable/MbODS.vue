@@ -7,7 +7,7 @@
                     <v-row justify="center" align="center">
                         <v-col cols="col-4">
                             <v-text-field v-model="search" density="compact" label="Search"
-                                prepend-inner-icon="fa-solid fa-magnifying-glass" single-line variant="outlined"
+                                prepend-inner-icon="mdi-magnify" single-line variant="outlined"
                                 hide-details></v-text-field>
                         </v-col>
                         <v-col cols="auto">
@@ -81,7 +81,6 @@ export default {
                 { text: "命令日志", value: "LogFiles1" },
                 { text: "调度日志", value: "LogFiles2" },
             ],
-            rowSelect: null,
             groupBy: [
                 {
                     key: "destOwner",
