@@ -1,35 +1,38 @@
 <template>
     <!-- 主表配置 -- 参数管理 -->
-    <div class="row">
-        <div class="col-6 ml-auto">
-            <v-data-table :headers="headers" :items="dicts" density="compact">
+    <v-row>
+        <v-col cols="col-6" align="left" justify="top">
+            <v-card>
+                <v-card-text>
+                    <v-data-table :headers="headers" :items="dicts" density="compact">
                 <template v-slot:item.actions="{ item }">
                     <v-icon size="small" class="me-2" @click="getDictionary(item.dictCode)">
                         mdi-chevron-right
                     </v-icon>
                 </template>
-
             </v-data-table>
-        </div>
-        <div class="col-6 ml-auto">
-            <v-data-table v-if="dictionaries" 
+        </v-card-text>
+            </v-card>
+        </v-col>
+
+        <v-col cols="col-6">
+            <v-card title="参数详情">
+                <v-card-text>
+                    <v-data-table v-if="dictionaries" 
                 :headers="dictionaryHeaders" 
                 :items="dictionaries" 
                 items-per-page="20"
-                density="compact"
+                density="default"
                 class="elevation-1"
                 >
                 <template v-slot:top>
                     <v-toolbar density="compact">
-                        <v-toolbar-title>参数详情</v-toolbar-title>
-                        <!-- <v-divider class="mx-4" inset vertical></v-divider>
-                        <v-spacer></v-spacer> -->
                         <!-- edit/new form -->
                         <v-dialog v-model="dialog" max-width="500px">
                             <template v-slot:activator="{ props }">
-                                <v-btn color="primary" class="mb-2" v-bind="props">
-                                    New Item
-                                </v-btn>
+                                <button type="button" class="btn btn-primary btn-sm" v-bind="props">
+                                新增 
+                                </button>
                             </template>
                             <v-card>
                                 <v-card-title>
@@ -76,15 +79,12 @@
                         mdi-delete
                     </v-icon>
                 </template>
-                <template v-slot:no-data>
-                    <v-btn color="primary" @click="initialize">
-                        Reset
-                    </v-btn>
-                </template>
             </v-data-table>
+                </v-card-text>
+            </v-card>
 
-        </div>
-    </div>
+        </v-col>
+    </v-row>>
 </template>
 
 <script>
