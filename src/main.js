@@ -45,6 +45,8 @@ import { loadFonts } from '@/plugins/webfontloader.js'
 
 import router from './router'
 
+import { createPinia } from 'pinia'
+
 loadFonts()
 
 const vuetify = createVuetify({
@@ -55,8 +57,10 @@ const vuetify = createVuetify({
       defaultSet: 'mdi',
     }
   })
+const pinia = createPinia()
 
 createApp(App)
     .use(router)
     .use(vuetify)
+    .use(pinia)
     .mount('#app')

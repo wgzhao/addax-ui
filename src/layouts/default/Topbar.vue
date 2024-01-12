@@ -43,8 +43,7 @@
             <div class="topbar-divider d-none d-sm-block"></div>
             <a class="nav-link" href="#" @click="toggleTheme()">
                     <span class="mr-1 d-none d-lg-inline text-gray-600 small">
-                        <v-icon :icon="themes[idx]['icon']" />
-                        <!-- <i :class="themes[idx]['icon']"></i> -->
+                        <v-icon :icon = "global.name.value == 'dark'? 'fas fa-moon': 'fas fa-sun'" />
                     </span>
                 </a>
             <!-- Nav Item - User Information -->
@@ -66,24 +65,15 @@
 </template>
 <script setup>
 import { useTheme } from 'vuetify'
-import {ref} from 'vue'
 const { global } = useTheme()
+// set the default theme
+global.name.value = 'light'
 
-const themes = ref([
-  {
-    name: 'light',
-    icon: 'fas fa-sun',
-  },
-  {
-    name: 'dark',
-    icon: 'fas fa-moon',
-  },
-])
-const idx = ref((themes.value.findIndex(t => t.name === global.name.value)  +1) % 2)
 
 const toggleTheme = () => {
-    global.name.value = themes.value[idx.value].name
-    idx.value = (idx.value + 1) % 2
+    // global.name.value = themes.value[idx.value].name
+    // currentTheme.toggleTheme()
+    global.name.value = global.name.value === 'light' ? 'dark' : 'light'
 }
 </script>
 <style>
