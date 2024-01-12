@@ -230,3 +230,10 @@ export default {
 
 
 <style></style>
+
+<route lang="yaml">
+    name: 数据源管理
+    icon: "fa-database"
+    meta:
+        requiresAuth: false
+</route>

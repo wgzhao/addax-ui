@@ -148,3 +148,10 @@ export default {
     font-size: 0.8rem;
 }
 </style>
+
+<route lang="yaml">
+    name: 系统一览
+    icon: "fa-database"
+    meta:
+        requiresAuth: false
+</route>

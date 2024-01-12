@@ -97,3 +97,11 @@ onUnmounted(() => {
 fetchData();
 </script>
 <style></style>
+
+<route lang="yaml">
+name: 风险点监测
+icon: fa-warning
+meta:
+    requiresAuth: false
+
+</route>

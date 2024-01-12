@@ -93,3 +93,9 @@ onUnmounted(() => {
 
 </script>
 <style></style>
+<route lang="yaml">
+    name: SP监控
+    icon: "fa-desktop"
+    meta:
+        requiresAuth: false
+</route>

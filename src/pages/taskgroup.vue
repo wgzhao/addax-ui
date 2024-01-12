@@ -147,3 +147,9 @@ watchEffect(async() => {
 })
 </script>
 <style></style>
+<route lang="yaml">
+    name: 任务组
+    icon: "fa-tasks"
+    meta:
+        requiresAuth: false
+</route>

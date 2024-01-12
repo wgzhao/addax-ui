@@ -50,3 +50,9 @@ export default {
 }
 </script>
 <style></style>
+<route lang="yaml">
+    name: 实时监测
+    icon: "fa-tachometer"
+    meta:
+        requiresAuth: false
+    </route>

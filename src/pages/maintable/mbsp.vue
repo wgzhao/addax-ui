@@ -100,3 +100,9 @@ export default {
 </script>
 <style>
 </style>
+<route lang="yaml">
+  name: SP 计算
+  icon: "fa-exchange"
+  meta:
+      requiresAuth: false
+</route>

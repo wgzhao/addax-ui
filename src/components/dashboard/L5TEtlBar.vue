@@ -26,7 +26,7 @@ export default {
                         xAxisKey: 'FID',
                         yAxisKey: 'RUNTIME'
                     },
-                }],
+                }]},
             options: {
                 responsive: true,
                 parsing: {
@@ -34,7 +34,7 @@ export default {
                     yAxisKey: 'RUNTIME'
                 },
                 stack: "FID"
-            }
+            
             }
         }
     },

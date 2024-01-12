@@ -49,3 +49,9 @@ export default {
 <style>
     
 </style>
+<route lang="yaml">
+    name: 盘后检测
+    icon: "fa-check-square-o"
+    meta:
+        requiresAuth: false
+</route>

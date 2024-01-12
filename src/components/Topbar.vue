@@ -1,27 +1,24 @@
 <template>
+    <!-- Topbar Navbar -->
     <nav class="navbar navbar-expand  topbar mb-4 static-top" data-bs-theme="dark">
-
-        <!-- Topbar Navbar -->
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse">
             <ul class="navbar-nav mb-1 mb-log-0">
-
-            <!-- generator nav item from $router -->
-            <template v-for="item in $router.options.routes">
+            <template v-for="item in $router.options.routes" :key="item.name">
                 <div v-if="item.children">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa-solid fa-fw" :class="item.icon"></i>
-                            <span class="pl-1 mr-2 d-none d-lg-inline text-gray-600 small">{{  item.title }}</span>
+                            <span class="pl-1 mr-2 d-none d-lg-inline text-gray-600 small">{{  item.name }}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <template v-for="child in item.children">
-                                <li><router-link class="dropdown-item" :to="{name: child.name}">
+                                <li><router-link class="dropdown-item" :to="item.path + '/' + child.path">
                                     <i class="fa-solid" :class="child.icon"></i>
-                                    <span class="pl-1 mr-2 d-none d-lg-inline">{{ child.title }}</span>
+                                    <span class="pl-1 mr-2 d-none d-lg-inline">{{ child.name }}</span>
                                 </router-link>
                             </li>
                             </template>
@@ -30,31 +27,26 @@
                 </div>
                 <div v-else>
                     <li class="nav-item">
-                        <router-link class="nav-link" :to="{ name: item.name }">
+                        <router-link class="nav-link" :to="item.path">
                             <i class="fa-solid " :class="item.icon"></i>
-                            <span class="pl-1 mr-2 d-none d-lg-inline text-gray-600 small">{{ item.title }}</span>
+                            <span class="pl-1 mr-2 d-none d-lg-inline text-gray-600 small">{{ item.name }}</span>
                         </router-link>
                     </li>
                 </div>
             </template>
             </ul>
             <ul class="navbar-nav ml-auto">
-                 <!-- Nav Item - Alerts -->
             <div class="topbar-divider d-none d-sm-block"></div>
             <a class="nav-link" href="#" @click="toggleTheme()">
                     <span class="mr-1 d-none d-lg-inline text-gray-600 small">
                         <v-icon :icon="themes[idx]['icon']" />
-                        <!-- <i :class="themes[idx]['icon']"></i> -->
                     </span>
                 </a>
-            <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
-                <!-- <NavbarThemeSwitcher class="me-2" /> -->
                 <a class="nav-link" href="#">
                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
                     <img class="img-profile rounded-circle" width="80%" src="/src/assets/images/undraw_profile.svg">
                 </a>
-                <!-- Dropdown - User Information -->
             </li>
 
         </ul>

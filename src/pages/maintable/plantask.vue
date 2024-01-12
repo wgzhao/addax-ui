@@ -62,3 +62,9 @@ export default {
 }
 </script>
 <style></style>
+<route lang="yaml">
+    name: 计划任务
+    icon: "fa-tasks"
+    meta:
+        requiresAuth: false
+</route>

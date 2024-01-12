@@ -65,3 +65,9 @@ onMounted(() => {
 })
 </script>
 <style></style>
+<route lang="yaml">
+    name: 数据服务
+    icon: "fa-arrow-up"
+    meta:
+        requiresAuth: false
+  </route>

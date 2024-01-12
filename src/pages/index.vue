@@ -146,3 +146,10 @@ export default {
 <style scoped>
 
 </style>
+
+<route lang="yaml">
+    name: Home
+    icon: "fa-home"
+    meta:
+        requiresAuth: false
+</route>

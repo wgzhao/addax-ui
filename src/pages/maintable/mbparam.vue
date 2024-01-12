@@ -190,3 +190,9 @@ export default {
     },
 }
 </script>
+<route lang="yaml">
+    name: 参数管理
+    icon: "fa-th"
+    meta:
+        requiresAuth: false
+  </route>

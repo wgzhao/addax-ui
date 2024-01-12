@@ -116,3 +116,10 @@ onMounted(() => {
     getData()
 })
 </script>
+
+<route lang="yaml">
+    name: 采集监控
+    icon: "fa-dashboard"
+    meta:
+        requiresAuth: false
+    </route>

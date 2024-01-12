@@ -10,6 +10,8 @@ import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+//https://github.com/hannoeru/vite-plugin-pages
+import Pages from 'vite-plugin-pages'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,6 +26,14 @@ export default defineConfig({
       styles: {
         configFile: 'src/styles/settings.scss',
       },
+    }),
+    Pages({
+      // dirs: [
+      //   {dir: 'src/pages', baseRoute: ''},
+      //   {dir: 'src/pages/maintable', baseRoute: 'maintable'},
+      //   {dir: 'src/admin/pages', baseRoute: 'admin', filePattern: '**/*.page.*'},
+      // ],
+      exclude: ['**/components/*.vue'],
     }),
   ],
   define: {'process.env': {}},
