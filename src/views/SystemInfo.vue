@@ -19,37 +19,45 @@
         </v-responsive>
     </div>
     </div>
+    <v-divider></v-divider>
     <div class="row">
-        <div class="header text-center">
-            <h4>数据中心采集及数据服务系统清单</h4>
-        </div>
-        <v-data-table 
+        <div class="v-col col-12">
+        <v-card flat title="数据中心采集及数据服务系统清单">
+            <v-card-text>
+                <v-data-table 
             :items="etlAndDs" 
             :headers="etlAndDsHeaders" 
             items-per-page="10" 
-            density="compact"
             >
             <template v-slot:item.dbConstr = "{item}">
             <code>{{ item.dbConstr }}</code>
             </template>
         </v-data-table>
+            </v-card-text>
+        </v-card>
+    </div>
     </div>
 
-    <div class="row">
-        <div class="header text-center">
-            <h4>数据中心采集表清单(显示100条)</h4>
-        </div>
-        <v-data-table :items="etlInfo" :headers="etlInfoHeaders" items-per-page="10" density="compact">
+    <div class="v-row">
+        <div class="v-col col-12">
+        <v-card flat title="数据中心采集表清单(显示100条)">
+            <v-card-text>
+                <v-data-table :items="etlInfo" :headers="etlInfoHeaders" items-per-page="10">
         </v-data-table>
+            </v-card-text>
+        </v-card>
+        </div>
     </div>
 
-    <div class="wo">
-
-        <div class="header text-center">
-            <h4>数据中心数据推送表清单(显示100条)</h4>
-        </div>
-        <v-data-table :items="dsInfo" :headers="dsInfoHeaders" items-per-page="20" density="compact">
+    <div class="v-row">
+        <div class="v-col col-12">
+        <v-card flat title="数据中心数据推送表清单(显示100条)">
+            <v-card-text>
+                <v-data-table :items="dsInfo" :headers="dsInfoHeaders" items-per-page="20">
         </v-data-table>
+            </v-card-text>
+        </v-card>
+        </div>
     </div>
 </template>
 <script>
