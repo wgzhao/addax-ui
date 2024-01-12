@@ -20,6 +20,17 @@
 <script setup>
 import axios from 'axios';
 import { ref, onUnmounted } from 'vue';
+import {definePage} from 'vue-router/auto'
+
+definePage({
+    name: '风险点监测',
+    path: '/risk',
+    alias: [],
+    icon: 'mdi-alert-box',
+    meta: {
+        custom: 'data'
+    }
+})
 
 const titles = ref([
     { item: "sysRisk", title: "系统风险检测结果" },

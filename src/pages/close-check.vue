@@ -26,25 +26,26 @@
         </div>
     </div>
 </template>
-<script>
+<script setup>
 import axios from 'axios';
-export default {
-    data() {
-        return {
-            abnormalRecord: [],
-        }
-    },
-    mounted() {
-        this.fetchData();
-    },
-    methods: {
-        fetchData() {
-            axios.get('/closeCheck/abnormalRecord').then(res => {
-                this.abnormalRecord = res.data;
-            });
-        }
+import {definePage} from 'vue-router/auto'
+import {ref} from 'vue'
+
+definePage({
+    name: '盘后监测',
+    path: '/risk',
+    alias: [],
+    icon: 'fa-solid fa-clipboard-list-check',
+    meta: {
+        custom: 'data'
     }
-}
+})
+const abnormalRecord = ref([])
+
+// fetch data
+axios.get('/closeCheck/abnormalRecord').then(res => {
+                abnormalRecord.value = res.data;
+            })
 </script>
 <style>
     

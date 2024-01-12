@@ -21,14 +21,6 @@ export default defineConfig({
     Vue({
       template: { transformAssetUrls }
     }),
-    alias({
-      entries: [
-        {
-          find: '@',
-          replacement: resolve(projectRootDir, 'src')
-        }
-      ]
-    }),
     // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
     Vuetify({
       autoImport: true,
@@ -38,7 +30,7 @@ export default defineConfig({
     }),
     Components(),
     ViteFonts({
-      google: {
+      custom: {
         families: [{
           name: 'Roboto',
           styles: 'wght@100;300;400;500;700;900',

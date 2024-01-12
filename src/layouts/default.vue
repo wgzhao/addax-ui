@@ -1,5 +1,6 @@
-<script>
-import Topbar from './Topbar.vue'
+<script setup>
+import Topbar from './default/Topbar.vue'
+import Footer from './default/Footer.vue'
 </script>
 
 <template>
@@ -14,17 +15,13 @@ import Topbar from './Topbar.vue'
                 <Topbar />
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <v-main>
                     <router-view></router-view>
+                    </v-main>
                 </div>
             </div>
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; My Website 2023</span>
-                    </div>
-                </div>
-            </footer>
+            <Footer />
             <!-- End of Footer -->
         </div>
         <!-- End of Content Wrapper -->

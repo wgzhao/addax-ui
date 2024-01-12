@@ -1,9 +1,7 @@
 <script setup>
 import { useTheme } from 'vuetify'
 import { hexToRgb } from './utils';
-import Topbar from '@/components/Topbar.vue'
-import Footer from '@/components/Footer.vue';
-
+import defaultLayout from '@/layouts/default.vue'
 const { global } = useTheme()
 
 global.name.value = "dark"
@@ -11,26 +9,8 @@ global.name.value = "dark"
 
 <template>
     <v-app :style="`--v-global-theme-primary: ${hexToRgb(global.current.value.colors.primary)}`">
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-        <!-- <Nav /> -->
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Main Content -->
-            <div id="content">
-                <!-- Topbar -->
-                <Topbar />
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <router-view></router-view>
-                </div>
-            </div>
-            <Footer />
-        </div>
-        <!-- End of Content Wrapper -->
-    </div>
-    <!-- End of Page Wrapper -->
-</v-app>
+      <defaultLayout />
+  </v-app>
 </template>
 
 <style>

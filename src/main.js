@@ -6,6 +6,8 @@
 
 // Plugins
 
+import { registerPlugins } from '@/plugins'
+
 
 // Components
 import App from './App.vue'
@@ -13,50 +15,25 @@ import App from './App.vue'
 // Composables
 import { createApp } from 'vue'
 
-// import './styles/settings.scss'
-
-// import './styles/settings.css'
-
-// load .env file
-// import 'dotenv/config'
-
-// Import all of Bootstrap's JS
-// import * as bootstrap from 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
-
-// or, specify which plugins you need:
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 // use vuetify
 // import '@/styles/vuetify/index.scss'
 import 'vuetify/styles'
 // // import 'vuetify/dist/vuetify.min.css'
-import '@fortawesome/fontawesome-free/css/all.min.css'
-import '@fortawesome/fontawesome-free/js/all.min.js'
-import { createVuetify } from 'vuetify'
-import { aliases, fa } from 'vuetify/iconsets/fa'
-import '@mdi/font/css/materialdesignicons.min.css'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+// import '@fortawesome/fontawesome-free/css/all.min.css'
+// import '@fortawesome/fontawesome-free/js/all.min.js'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
 
-import theme from '@/plugins/theme.js'
+// import router from './router'
 
-import { loadFonts } from '@/plugins/webfontloader.js'
+const app = createApp(App)
 
-import router from './router'
+registerPlugins(app)
 
-loadFonts()
+app.mount('#app')
 
-const vuetify = createVuetify({
-    components,
-    directives,
-    theme,
-    icons: {
-      defaultSet: 'mdi',
-    }
-  })
-
-createApp(App)
-    .use(router)
-    .use(vuetify)
-    .mount('#app')
+// createApp(App)
+//     .use(router)
+//     .use(vuetify)
+//     .mount('#app')
