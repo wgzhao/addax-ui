@@ -5,7 +5,7 @@ import defaultLayout from '@/layouts/default.vue'
 
 const { global } = useTheme()
 
-global.name.value = "dark"
+// global.name.value = "dark"
 </script>
 
 <template>
@@ -17,6 +17,5 @@ global.name.value = "dark"
 <style>
 .v-data-table tbody tr td, thead tr th {
     padding: 0px !important;
-    font-size: 0.8rem;
 }
 </style>

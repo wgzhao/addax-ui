@@ -3,14 +3,20 @@
     <div class="row">
         <div class="col-6">
             <v-card flat title="数据源管理">
-                <v-card-actions>
-                    <v-btn @click="addDataSource()">新增</v-btn>
-                </v-card-actions>
-                        <template v-slot:text>
-                            <v-text-field v-model="searchValue"  label="Search" prepend-inner-icon="mdi-magnify" single-line
-                                variant="outlined" hide-details></v-text-field>
-                        </template>
-    
+                <template v-slot:text>
+                    <v-row justify="center" align="center">
+                        <v-col cols="col-4">
+                            <v-text-field v-model="searchValue" density="compact" label="Search"
+                                prepend-inner-icon="mdi-magnify" single-line variant="outlined"
+                                hide-details></v-text-field>
+                        </v-col>
+                        <v-col cols="auto">
+                            <button type="button" class="btn btn-primary"
+                            @click="addDataSource()">新增</button>
+                        </v-col>
+                    </v-row>
+                </template>
+                    <v-card-text>
                 <v-data-table 
                     :items="impdbs" 
                     :headers="headers" 
@@ -18,12 +24,28 @@
                     density="compact"
                     items-per-page="20">
                     <template v-slot:item.actions="{item}">
+                        <!-- add link for selectOption -->
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
+                                <v-btn icon="mdi-dots-vertical" v-bind="props">
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item slim density="compact" v-for="(op, i) in actions" :key="i"
+                                    @click="doAction(item.id, op.value)">
+                                    <v-list-item-title class="text-button">{{ op.text }}</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
+
+<!-- 
                         <a class="btn btn-xs btn-info" @click="dataOp(item.id, 'show')">详情</a>
                         <a class="btn btn-xs btn-warning" @click="dataOp(item.id, 'edit')">编辑</a>
                         <a href="#" class="btn btn-xs btn-info">使用场景</a>
-                        <a href="#" class="btn btn-xs btn-info">探索源库</a>
+                        <a href="#" class="btn btn-xs btn-info">探索源库</a> -->
                     </template>
                 </v-data-table>
+                </v-card-text>
             </v-card>
         </div>
 
@@ -140,7 +162,12 @@ export default {
                 { title: "采集编号", key: "dbIdEtl" },
                 { title: "服务编号", key: "dbIdDs" },
                 { title: "操作", value: "actions", align: "center" }
-            ]
+            ],
+            actions: [
+                { text: "详情", value: "show" },
+                { text: "编辑", value: "edit" },
+                { text: "使用场景", value: "scene" },
+                { text: "探索源库", value: "explore" }]
         }
     },
     components: {
@@ -182,6 +209,10 @@ export default {
                 .catch(error => {
                     return error
                 });
+        },
+
+        doAction(id, ctype) {
+            this.dataOp(id, ctype)
         },
 
         dataOp(id, flag) {

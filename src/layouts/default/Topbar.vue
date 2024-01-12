@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand  topbar mb-4 static-top" data-bs-theme="dark">
+    <nav class="navbar navbar-expand  topbar mb-4 static-top" :data-bs-theme="global.name.value">
 
         <!-- Topbar Navbar -->
         <div class="container-fluid">
