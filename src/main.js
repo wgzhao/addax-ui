@@ -37,7 +37,7 @@ import { createVuetify } from 'vuetify'
 import { aliases, fa } from 'vuetify/iconsets/fa'
 import '@mdi/font/css/materialdesignicons.min.css'
 import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+// import * as directives from 'vuetify/directives'
 
 import theme from '@/plugins/theme.js'
 
@@ -49,7 +49,7 @@ loadFonts()
 
 const vuetify = createVuetify({
     components,
-    directives,
+    // directives,
     theme,
     icons: {
       defaultSet: 'mdi',
