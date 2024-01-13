@@ -36,52 +36,52 @@
         <v-card-text>
             <v-form fast-fail @submit.prevent="saveData">
                 <v-container>
-                <v-row no-gutters>
+                <v-row >
                     <v-col cols="12" md="3" class="m-0">
-                        <v-text-field v-model="spDetail.spOwner" label="SP 用户"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.spOwner" label="SP 用户"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.spName" label="SP 名称"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.spName" label="SP 名称"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.paramSou" label="参数组"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.paramSou" label="参数组"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.runFreq" label="运行频率"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.runFreq" label="运行频率"></v-text-field>
                     </v-col>
                 </v-row>
-                <v-row no-gutters>
+                <v-row >
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.flag" label="状态"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.flag" label="状态"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.retryCnt" label="剩余次数"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.retryCnt" label="剩余次数"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.taskGroup" label="任务组"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.taskGroup" label="任务组"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.realtimeTaskgroup" label="前置实时采集任务组"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.realtimeTaskgroup" label="前置实时采集任务组"></v-text-field>
                     </v-col>
                 </v-row>
  
-                <v-row no-gutters>
+                <v-row>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.pnType" label="计划类型"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.pnType" label="计划类型"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.pnFixed" label="计划定点时间"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.pnFixed" label="计划定点时间"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.pnInterval" label="计划间隔时间"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.pnInterval" label="计划间隔时间"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.pnRange" label="计划间隔时间范围"></v-text-field>
+                        <v-text-field :variant="variant" v-model="spDetail.pnRange" label="计划间隔时间范围"></v-text-field>
                     </v-col>
 
                 </v-row>
 
-                <v-row no-gutters>
+                <v-row >
                     <v-col cols="12" md="6">
                         <v-textarea v-model="needs.NEED_SOU" label="直接前置源" rows="2"></v-textarea>
                     </v-col>
@@ -90,7 +90,7 @@
                     </v-col>
                 </v-row>
      
-                <v-row no-gutters>
+                <v-row >
                     <v-col cols="12" md="6">
                         <v-textarea v-model="needs.NEED_SP" label="直接前置SP" rows="2"></v-textarea>
                     </v-col>
@@ -99,40 +99,40 @@
                     </v-col>
                 </v-row>
 
-                <v-row no-gutters>
+                <v-row >
                     <v-col cols="12" md="6">
-                        <v-textarea v-model="needs.SP_ALLTABS" label="脚本涉及表" rows="2"></v-textarea>
+                        <v-textarea v-model="needs.SP_ALLTABS" label="脚本涉及表" auto-grow></v-textarea>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-textarea v-model="needs.SP_DEST" label="脚本生成表" rows="2"></v-textarea>
+                        <v-textarea v-model="needs.SP_DEST" label="脚本生成表" auto-grow></v-textarea>
                     </v-col>
                 </v-row>
 
-                <v-row no-gutters>
-                    <v-col cols="12" md="6">
-                        <v-text-field v-model="needs.SP_ALLNEXT" label="穿透后所有下游"></v-text-field>
+                <v-row >
+                    <v-col cols="12" md="12">
+                        <v-text-field :variant="variant" v-model="needs.SP_ALLNEXT" label="穿透后所有下游"></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
-                        <v-text-field v-model="spDetail.remark" label="备注"></v-text-field>
-                    </v-col>
-                </v-row>
-
-                <v-row no-gutters>
-                    <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.startTime" label="开始时间"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.endTime" label="结束时间"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.runtime" label="运行耗时"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3">
-                        <v-text-field v-model="spDetail.spId" label="SP编号"></v-text-field>
+                    <v-col cols="12" md="12">
+                        <v-text-field :variant="variant" v-model="spDetail.remark" label="备注"></v-text-field>
                     </v-col>
                 </v-row>
 
-                <v-row no-gutters>
+                <v-row >
+                    <v-col cols="12" md="4">
+                        <v-text-field :variant="variant" v-model="spDetail.startTime" label="开始时间"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <v-text-field :variant="variant" v-model="spDetail.endTime" label="结束时间"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <v-text-field :variant="variant" v-model="spDetail.runtime" label="运行耗时"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="12">
+                        <v-text-field :variant="variant" v-model="spDetail.spId" label="SP编号"></v-text-field>
+                    </v-col>
+                </v-row>
+
+                <v-row >
                     <v-btn type="submit" class="btn btn-primary">保存</v-btn>
                     <v-btn type="reset" class="btn btn-warning">取消</v-btn>
                 </v-row>
@@ -149,6 +149,10 @@ const props = defineProps(['spId'])
 
 const spDetail = ref({})
 const needs = ref([])
+
+// input style default is outlined
+
+const variant = ref('outlined')
 
 const fetchData = () => {
     SpService.fetchSpMainDetail(props.spId).then(res => spDetail.value = res.data);
