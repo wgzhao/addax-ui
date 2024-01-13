@@ -18,7 +18,9 @@
             <template v-slot:expanded-row="{columns, item}">
             <tr>
                 <td :colspan="columns.length">
-                <code>{{  item.comText }}</code>
+                    <HighCode :lang="item.comKind == 'addax' ? 'json': 'sql'" height="400"
+                    :copy="false" :codeValue="item.comText">
+                </HighCode>
                 </td>
             </tr>
             </template>
@@ -27,6 +29,8 @@
     </v-card>
 </template>
 <script>
+import {HighCode} from 'vue-highlight-code'
+import 'vue-highlight-code/dist/style.css'
 export default {
     name: 'CmdList',
     props: ['d'],
@@ -54,6 +58,9 @@ export default {
                 return "blue"
             }
         },
+    },
+    components: {
+        HighCode
     }
 }
 </script>
