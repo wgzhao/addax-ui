@@ -43,7 +43,7 @@
                 <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
             <v-card-text>
-                <HighCode lang="json"  theme="light" height="400"  font-size="0.9rem" 
+                <HighCode lang="json"  height="400"  font-size="0.9rem" 
                     :copy="false" :codeValue="childData">
                 </HighCode>
             </v-card-text>
