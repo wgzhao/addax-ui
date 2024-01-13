@@ -52,94 +52,94 @@
         <!-- form -->
 
         <div class="col-6">
-            <div class="card">
-                <div class="card-header text-light bg-dark">
-                    <span v-show="mode === 'add'">新增数据源</span>
-                    <span v-show="mode == 'edit'">编辑数据源</span>
-                    <span v-show="mode == 'show'">数据源详情</span>
-                </div>
-                <div class="card-body">
-                    <form @submit.prevent="saveData">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">数据库名称</span>
-                            <input v-model="form.dbName" class="form-control" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">数据源链接串</span>
-                            <input v-model="form.dbConstr" id="constr" class="form-control" />
+                <v-form fast-fail @submit.prevent="saveData">
+                    <v-card flat :title="formTitle">
+                    <v-container>
+                        <v-row no-gutters>
+                            <v-col cols="12" md="5">
+                                <v-text-field v-model="form.dbName" label="数据库名称"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="5">
+                                <v-text-field v-model="form.dbConstr" label="数据源链接串"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="2">
+                                <v-switch v-model="form.bvalid" 
+                                    true-value="Y"
+                                    false-value="N"
+                                    color="primary"
+                                    hide-details :label="`${form.bvalid == 'Y' ? '启用': '禁用'}`" ></v-switch>
+                            </v-col>
+                        </v-row>
+                        <v-row no-gutters>
+                            <div><h5>采集信息</h5></div>
+                            <v-divider></v-divider>
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbIdEtl" label="采集编号"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbParalEtl" label="并发数"></v-text-field>
+                                </v-col>
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbUserEtl" label="用户名"></v-text-field>
+                                </v-col>    
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbPassEtl" label="密码"></v-text-field>
+                                </v-col>
+                        </v-row>
 
-                            <span class="input-group-text">是否有效</span>
-                            <v-radio-group v-model="form.bvalid" inline>
-                                <v-radio  label="有效" value="Y" />
-                                <v-radio  label="无效" value="N" />
-                            </v-radio-group>
+                        <v-row no-gutters>
+                            <div><h5>数据服务信息</h5></div>
+                            <v-divider></v-divider>
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbIdDs" label="采集编号"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbParalDs" label="并发数"></v-text-field>
+                                </v-col>
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbUserDs" label="用户名"></v-text-field>
+                                </v-col>
+                            <v-col cols="12" md="3">
+                                <v-text-field v-model="form.dbPassDs" label="密码"></v-text-field>
+                                </v-col>
+                        </v-row>
 
-                        </div>
+                        <v-row no-gutters>
+                            <div><h5>采集扩展信息</h5></div>
+                            <v-divider></v-divider>
+                            <v-col cols="12" md="6">
+                                <v-text-field v-model="form.dbStartType" label="启动类型"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field v-model="form.dbStart" label="启动时间"></v-text-field>
+                                </v-col>
+                            <v-col cols="12" md="12">
+                                <v-textarea v-model="form.dbJudgeSql" label="判断脚本" rows="4"></v-textarea>
+                                </v-col>
+                            <v-col cols="12" md="12">
+                                <v-textarea v-model="form.dbJudgePre" label="采集前置脚本" rows="4"></v-textarea>
+                                </v-col>
+                            <v-col cols="12" md="12">
+                                <v-textarea v-model="form.conf" label="其他配置" rows="4"></v-textarea>
+                                </v-col>
+                        </v-row>
 
-                        <span>采集信息</span>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">采集编号</span>
-                            <input v-model="form.dbIdEtl" class="form-control" />
-                            <span class="input-group-text">并发数</span>
-                            <input v-model="form.dbParalEtl" class="form-control" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">用户名</span>
-                            <input v-model="form.dbUserEtl" class="form-control" />
-                            <span class="input-group-text">密码</span>
-                            <input v-model="form.dbPassEtl" class="form-control" />
-                        </div>
+                        <v-row no-gutters>
+                            <v-col cols="12" md="12">
+                                <v-textarea v-model="form.dbRemark" label="备注信息" rows="4"></v-textarea>
+                                </v-col>
+                        </v-row>
 
-                        <span>数据服务信息</span>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">采集编号</span>
-                            <input v-model="form.dbIdDs" class="form-control" />
-                            <span class="input-group-text">并发数</span>
-                            <input v-model="form.dbParalDs" class="form-control" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">用户名</span>
-                            <input v-model="form.dbUserDs" class="form-control" />
-                            <span class="input-group-text">密码</span>
-                            <input v-model="form.dbPassDs" class="form-control" />
-                        </div>
+                    </v-container>
+                        <v-card-actions>
+                            <v-btn type="button" class="btn btn-primary">
+                                {{mode == 'add' ? 'Add': 'Save'}}</v-btn>
+                            <v-btn type="reset">Cancel</v-btn>
+                        </v-card-actions>
+                    </v-card>
+        </v-form>
+                
 
-                        <span>采集扩展信息</span>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">启动类型</span>
-                            <input v-model="form.dbStartType" class="form-control" />
-                            <span class="input-group-text">启动时间</span>
-                            <input v-model="form.dbStart" class="form-control" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">判断脚本</span>
-                            <input v-model="form.dbJudgeSql" class="form-control" />
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">采集前置脚本</span>
-                            <textarea v-model="form.dbJudgePre" class="form-control" rows="4"></textarea>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">其他配置</span>
-                            <textarea v-model="form.conf" class="form-control" rows="4"></textarea>
-                        </div>
-
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">备注信息</span>
-                            <textarea v-model="form.dbRemark" class="form-control" rows="4"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" :disabled="mode == 'show'" class="btn btn-primary">
-                                <span v-if="mode == 'add'">Add</span>
-                                <span v-else>Save</span>
-                            </button>
-                            <button type="reset" class="btn btn-warning">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -188,16 +188,15 @@ export default {
             return result;
 
         },
-        // filterImpdbs: function() {
-        //     console.log(this.mode);
-        //     // if (this.searchValue === '') {
-        //     //     return this.impdbs.length >0 ? this.impdbs: this.retrieveImpDB()
-        //     // } else {
-        //     //     return this.impdbs.filter(function(item) {
-        //     //         console.log(this.searchValue);
-        //     //     })
-        //     return this.impdbs;
-        //     }
+        formTitle() {
+            if (this.mode == 'add') {
+                return '新增数据源'
+            } else if (this.mode == 'edit')  {
+                return '编辑数据源'
+            } else {
+                return '数据源详情'
+            }
+        }
     },
     methods: {
         retrieveImpDB() {
