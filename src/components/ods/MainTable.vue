@@ -4,7 +4,7 @@
         <v-card flat title="ODS采集主表配置">
         <v-form fast-fail @submit.prevent>
             <v-container>
-                <v-row  no-gutters>
+                <v-row>
                     <v-col cols="12" md="3" class="m-0">
                         <v-text-field v-model="d.sysName" label="源系统"></v-text-field>
                     </v-col>
@@ -19,7 +19,7 @@
                     </v-col>
                 </v-row>
 
-                <v-row  no-gutters>
+                <v-row>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="d.destTablename" label="目标表"></v-text-field>
                     </v-col>
@@ -34,7 +34,7 @@
                     </v-col>
                 </v-row>
 
-                <v-row  no-gutters>
+                <v-row>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="d.paramSou" label="参数组"></v-text-field>
                     </v-col>
@@ -50,7 +50,7 @@
                 </v-row>
 
 
-                <v-row  no-gutters>
+                <v-row>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="d.realtimeInterval" label="实时间隔"></v-text-field>
                     </v-col>
@@ -65,7 +65,7 @@
                     </v-col>
                 </v-row>
 
-                <v-row  no-gutters>
+                <v-row>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="d.realtimeFixed" label="实时定点"></v-text-field>
                     </v-col>
@@ -80,7 +80,7 @@
                     </v-col>
                 </v-row>
 
-                <v-row  no-gutters>
+                <v-row>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="d.afterRetryPntype" label="盘后重采计划"></v-text-field>
                     </v-col>
@@ -95,7 +95,7 @@
                     </v-col>
                 </v-row>
 
-                <v-row  no-gutters>
+                <v-row>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="d.runtime" label="运行耗时"></v-text-field>
                     </v-col>

@@ -7,20 +7,20 @@
                     <v-row justify="center" align="center">
                         <v-col cols="col-4">
                             <v-text-field v-model="search" density="compact" label="Search"
-                                prepend-inner-icon="fa-solid fa-magnifying-glass" single-line variant="outlined"
+                                prepend-inner-icon="mdi-magnify" single-line variant="outlined"
                                 hide-details></v-text-field>
                         </v-col>
                         <v-col cols="auto">
-                            <button type="button" density="compact" class="btn btn-primary btn-sm"
-                                @click="dynamicComponent = 'BatchAdd'">批量新增表</button>
+                            <v-btn  variant="tonal" prepend-icon="mdi-plus"
+                                @click="dynamicComponent = 'BatchAdd'">批量新增表</v-btn>
                         </v-col>
                         <v-col cols="auto">
-                            <button type="button" density="compact" class="btn btn-primary btn-sm"
-                                @click="doEtl('source')">启动表更新</button>
+                            <v-btn variant="tonal" prepend-icon="mdi-play" 
+                                @click="doEtl('source')">启动表更新</v-btn>
                         </v-col>
                         <v-col cols="auto">
-                            <button type="button" density="compact" class="btn btn-primary btn-sm"
-                                @click="doEtl('sp')">启动采集</button>
+                            <v-btn variant="tonal" prepend-icon="mdi-play"
+                                @click="doEtl('sp')">启动采集</v-btn>
                         </v-col>
                     </v-row>
                 </template>

@@ -5,9 +5,8 @@
         <div class="v-col col-12">
         <v-responsive max-width="360">
           <v-text-field
-            prepend-inner-icon="mdi-magnify"
+            append-inner-icon="mdi-magnify"
             density="compact"
-            flat
             hide-details
             label="Search"
             v-model="filter"
@@ -15,11 +14,11 @@
             single-line
             variant="outlined"
             @keyup.enter="fetchData"
+            @click:append-inner="fetchData"
           ></v-text-field>
         </v-responsive>
     </div>
     </div>
-    <v-divider></v-divider>
     <div class="row">
         <div class="v-col col-12">
         <v-card flat title="数据中心采集及数据服务系统清单">
@@ -74,7 +73,7 @@ export default {
                 { title: "类别", key: "sysKind" },
                 { title: "系统编号", key: "sysid" },
                 { title: "系统名称", key: "sysName" },
-                { title: "连接串", key: "dbConstr" },
+                { title: "连接串", key: "dbConstr"},
                 { title: "登录用户", key: "dbUser" },
 
             ],
@@ -122,37 +121,7 @@ export default {
             }
         }
     },
-    computed: {
-        filterEtlAndDs() {
-            const result = this.filter === ""
-                ? this.etlAndDs
-                : this.etlAndDs.filter(
-                    wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.filter.toLocaleLowerCase()) !== -1
-                );
-            return result;
-        },
-        filterEtlInfo() {
-            const result = this.filter === ""
-                ? this.etlInfo
-                : this.etlInfo.filter(
-                    wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.filter.toLocaleLowerCase()) !== -1
-                );
-            return result;
-        },
-        filterDsInfo() {
-            const result = this.filter === ""
-                ? this.dsInfo
-                : this.dsInfo.filter(
-                    wo => Object.values(wo).join("").toLocaleLowerCase().indexOf(this.filter.toLocaleLowerCase()) !== -1
-                );
-            return result;
-        }
-    }
-
 }
 </script>
-<style scoped>
-.v-table {
-    font-size: 0.8rem;
-}
+<style>
 </style>
