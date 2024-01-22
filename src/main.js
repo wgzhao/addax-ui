@@ -32,7 +32,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fortawesome/fontawesome-free/js/all.min.js'
 
-import '@mdi/font/css/materialdesignicons.min.css'
 import vuetify from '@/plugins/vuetify.js'
 
 import { loadFonts } from '@/plugins/webfontloader.js'
