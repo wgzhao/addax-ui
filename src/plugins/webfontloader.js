@@ -5,11 +5,4 @@
  */
 export async function loadFonts() {
   const webFontLoader = await import(/* webpackChunkName: "webfontloader" */ 'webfontloader')
-
-  webFontLoader.load(
-  {
-    custom: {
-      families: ['MiSans Regular', 'MiSans Light', 'MiSans Thin']
-    }
-  })
 }

@@ -26,7 +26,6 @@ export default defineConfig({
       },
     }),
   ],
-  define: {'process.env': {}},
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -48,4 +47,23 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['fsevents'],
   },
+  build: {
+    sourcemap: false,
+    // 消除打包大小超过500kb警告
+    chunkSizeWarningLimit: 1024,
+    rollupOptions: {
+      input: {
+        index: './index.html',
+      },
+      // 静态资源分类打包
+      output: {
+        manualChunks: {
+          loadsh: ['lodash'],
+        },
+        chunkFileNames: "static/js/[name]-[hash].js",
+        entryFileNames: "static/js/[name]-[hash].js",
+        assetFileNames: "static/[ext]/[name]-[hash].[ext]"
+      }
+    }
+  }
 })
