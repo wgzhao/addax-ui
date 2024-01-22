@@ -67,13 +67,18 @@
 import { useTheme } from 'vuetify'
 const { global } = useTheme()
 // set the default theme
-global.name.value = 'light'
-
+if (localStorage.getItem('theme') === null) {
+    localStorage.setItem('theme', 'light')
+    global.name.value = 'light'
+} else {
+    global.name.value = localStorage.getItem('theme')
+}
 
 const toggleTheme = () => {
     // global.name.value = themes.value[idx.value].name
     // currentTheme.toggleTheme()
     global.name.value = global.name.value === 'light' ? 'dark' : 'light'
+    localStorage.setItem('theme', global.name.value)
 }
 </script>
 <style>
