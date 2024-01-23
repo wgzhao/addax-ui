@@ -70,7 +70,7 @@
                         <v-text-field v-model="d.realtimeFixed" label="实时定点"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
-                        <v-text-field v-model="d.etlKind" label="采集模式"></v-text-field>
+                        <v-text-field v-model="d.etlKind" label="采集模式" hint="A:盘后采集,R:实时采集,默认为A"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="3">
                         <v-text-field v-model="d.realtimeIntervalRange" label="实时间隔范围"></v-text-field>
@@ -133,8 +133,10 @@ export default {
                     'Content-Type': 'application/json'
                 }
             }).then(res => {
-                console.log(res.data)
-            });
+                alert("保存成功!")
+            }).catch(err => {
+                alert("保存失败! " + err);
+            })
         }
     }
 }

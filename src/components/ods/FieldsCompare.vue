@@ -11,7 +11,7 @@
                 <tr rowspan="2">
                     <td rowspan="3">{{ item.IDX }}</td>
                 </tr>
-                <tr class="bg-success">
+                <tr class="bg-gray">
                     <td>源表</td>
                     <td>{{ item.COLUMN_NAME_ORIG }}</td>
                     <td>{{ item.DATA_TYPE }}</td>
@@ -21,7 +21,7 @@
                     <td>{{ item.COLUMN_COMMENT }}</td>
                     <td>{{ item.TABLE_COMMENT }}</td>
                 </tr>
-                <tr class="bg-primary">
+                <tr class="bg-secondary">
                     <td>目标表</td>
                     <td>{{ item.COL_NAME }}</td>
                     <td>{{ item.COL_TYPE_FULL }}</td>

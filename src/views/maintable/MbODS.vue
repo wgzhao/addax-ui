@@ -60,7 +60,14 @@
         <div class="col-6">
             <component :is="dynamicComponent" :d="item"></component>
         </div>
-    </div>
+      <!-- action response -->
+        <v-dialog v-model="alert.show" width="auto">
+        <v-card>
+            <v-toolbar :color="alert.color" :title="alert.title"></v-toolbar>
+            <v-card-text><pre>{{ alert.text }}</pre></v-card-text>
+        </v-card>
+        </v-dialog>
+     </div>
 </template>
 
 <script>
@@ -96,21 +103,6 @@ export default {
                 { text: "命令日志", value: "LogFiles1" },
                 { text: "调度日志", value: "LogFiles2" },
             ],
-            rowSelect: null,
-            groupBy: [
-                {
-                    key: "destOwner",
-                    order: 'asc'
-                },
-                {
-                    key: "sysName",
-                    order: 'asc'
-                },
-                {
-                    key: 'souOwner',
-                    order: 'asc'
-                },
-            ],
             headers: [
                 { "title": "目标用户", "align": "center", "sortable": false, "value": "destOwner", sort: "asc" },
                 { "title": "系统名称", "value": "sysName", align: "center" },
@@ -121,6 +113,12 @@ export default {
                 { "title": "耗时", "value": "runtime", align: "center" },
                 { "title": "操作", "value": "action", "sortable": false, align: "center" },
             ],
+            alert: {
+                show: false,
+                color: "",
+                icon: "",
+                text: ""
+            }
         };
     },
     mounted() {
@@ -194,8 +192,20 @@ export default {
         doEtl(ctype) {
             axios.post("/maintable/ods/startEtl", {
                 "ctype": ctype
-            }).then(res => alert("启动成功"))
-                .catch(res => alert("启动失败" + res))
+            }).then(res => {
+                this.alert.show = true;
+                this.alert.color = "success";
+                this.alert.icon = "mdi-check-circle";
+                this.alert.title = "启动成功";
+                this.alert.text = res.data;
+            } )
+                .catch(res => {
+                    this.alert.show = true;
+                    this.alert.color = "error";
+                    this.alert.icon = "mdi-alert-circle";
+                    this.alert.title = "启动失败";
+                    this.alert.text = res.data;
+                })
 
         },
         loadItems ({page, itemsPerPage, sortBy}) {
