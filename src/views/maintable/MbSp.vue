@@ -13,7 +13,7 @@
         </template>
         
         <v-card-text>
-          <v-data-table :items="impSps" :headers="impHeaders" items-per-page="10" density="default">
+          <v-data-table :items="impSps" :headers="impHeaders" :search="search" items-per-page="10" density="default">
             <template v-slot:item.actions="{ item }">
               <v-menu>
                 <template v-slot:activator="{ props }">
@@ -45,6 +45,7 @@ import SpCmdList from '@/components/sp/SpCmdList.vue'
 import SceneList from '@/components/sp/SceneList.vue'
 import SpLineage from '@/components/sp/SpLineage.vue'
 import SpRequiresList from '@/components/sp/SpRequiresList.vue'
+import ShowLogs from '@/components/sp/ShowLogs.vue'
 
 export default {
   data() {
@@ -66,7 +67,8 @@ export default {
       selectOptions: [
         { title: '主表详情', value: 'SpDetail'  },
         { title: '命令列表', value: 'SpCmdList'  },
-        { title: '调度日志', value: 'showLogs'  },
+        { title: '命令日志', value: 'ShowLogs1'  },
+        { title: '调度日志', value: 'ShowLogs2'  },
         { title: '使用场景', value: 'SceneList'  },
         { title: '计算溯源', value: 'SpLineage'  },
         { title: '前置情况', value: 'SpRequiresList'  }
@@ -74,15 +76,26 @@ export default {
     }
   },
   components: {
-    SpDetail, SpCmdList, SceneList, SpRequiresList, SpLineage
+    SpDetail, SpCmdList, SceneList, SpRequiresList, SpLineage, ShowLogs
   },
   methods: {
 
     doAction(comp, val) {
-      this.spId = val.spId
-      this.uniqueKey = val.spId
       console.log("invoke " + comp);
-      this.currentComp = comp;
+
+      if (comp === 'ShowLogs1') {
+        this.spId = val.spName
+        this.uniqueKey = val.spId + "1"
+        this.currentComp = 'ShowLogs'
+      } else if (comp === 'ShowLogs2') {
+        this.spId = "tuna_sp_etl_" + val.spId
+        this.uniqueKey = val.spId + "2"
+        this.currentComp = 'ShowLogs'
+      } else {
+        this.spId = val.spId
+        this.uniqueKey = val.spId
+        this.currentComp = comp
+      }
     },
 
     initData() {
