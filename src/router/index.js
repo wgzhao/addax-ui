@@ -100,7 +100,7 @@ const routes = [
 
 ]
 
-axios.defaults.baseURL = 'http://localhost:5001'
+axios.defaults.baseURL = import.meta.env.VITE_API_URL
 axios.defaults.timeout = 5000
 
 const router = createRouter( {

@@ -57,33 +57,33 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12" md="5">
-                                <v-text-field :variant="variant" v-model="form.dbName" label="数据库名称"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbName" label="数据库名称"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="5">
-                                <v-text-field :variant="variant" v-model="form.dbConstr" label="数据源链接串"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbConstr" label="数据源链接串"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="2">
-                                <v-switch v-model="form.bvalid" 
+                                <v-switch v-model="sourceItem.bvalid" 
                                     true-value="Y"
                                     false-value="N"
                                     color="primary"
-                                    hide-details :label="`${form.bvalid == 'Y' ? '启用': '禁用'}`" ></v-switch>
+                                    hide-details :label="`${sourceItem.bvalid == 'Y' ? '启用': '禁用'}`" ></v-switch>
                             </v-col>
                         </v-row>
                         <v-row >
                             <div><h5 class="text-h6 mb-0 pb-0">采集信息</h5></div>
                             <v-divider></v-divider>
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbIdEtl" label="采集编号"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbIdEtl" label="采集编号"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbParalEtl" label="并发数"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbParalEtl" label="并发数"></v-text-field>
                                 </v-col>
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbUserEtl" label="用户名"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbUserEtl" label="用户名"></v-text-field>
                                 </v-col>    
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbPassEtl" label="密码"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbPassEtl" label="密码"></v-text-field>
                                 </v-col>
                         </v-row>
 
@@ -91,16 +91,16 @@
                             <div><h5 class="text-h6 mb-0 pb-0">数据服务信息</h5></div>
                             <v-divider></v-divider>
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbIdDs" label="采集编号"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbIdDs" label="采集编号"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbParalDs" label="并发数"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbParalDs" label="并发数"></v-text-field>
                                 </v-col>
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbUserDs" label="用户名"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbUserDs" label="用户名"></v-text-field>
                                 </v-col>
                             <v-col cols="12" md="3">
-                                <v-text-field :variant="variant" v-model="form.dbPassDs" label="密码"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbPassDs" label="密码"></v-text-field>
                                 </v-col>
                         </v-row>
 
@@ -108,38 +108,36 @@
                             <div><h5 class="text-h6 mb-0 pb-0">采集扩展信息</h5></div>
                             <v-divider></v-divider>
                             <v-col cols="12" md="6">
-                                <v-text-field :variant="variant" v-model="form.dbStartType" label="启动类型"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbStartType" label="启动类型"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-text-field :variant="variant" v-model="form.dbStart" label="启动时间"></v-text-field>
+                                <v-text-field :variant="variant" v-model="sourceItem.dbStart" label="启动时间"></v-text-field>
                                 </v-col>
                             <v-col cols="12" md="12">
-                                <v-textarea v-model="form.dbJudgeSql" label="判断脚本" rows="4"></v-textarea>
+                                <v-textarea v-model="sourceItem.dbJudgeSql" label="判断脚本" rows="4"></v-textarea>
                                 </v-col>
                             <v-col cols="12" md="12">
-                                <v-textarea v-model="form.dbJudgePre" label="采集前置脚本" rows="4"></v-textarea>
+                                <v-textarea v-model="sourceItem.dbJudgePre" label="采集前置脚本" rows="4"></v-textarea>
                                 </v-col>
                             <v-col cols="12" md="12">
-                                <v-textarea v-model="form.conf" label="其他配置" rows="4"></v-textarea>
+                                <v-textarea v-model="sourceItem.conf" label="其他配置" rows="4"></v-textarea>
                                 </v-col>
                         </v-row>
 
                         <v-row >
                             <v-col cols="12" md="12">
-                                <v-textarea v-model="form.dbRemark" label="备注信息" rows="4"></v-textarea>
+                                <v-textarea v-model="sourceItem.dbRemark" label="备注信息" rows="4"></v-textarea>
                                 </v-col>
                         </v-row>
 
                     </v-container>
                         <v-card-actions>
-                            <v-btn type="button" class="btn btn-primary">
+                            <v-btn type="submit" class="btn btn-primary">
                                 {{mode == 'add' ? 'Add': 'Save'}}</v-btn>
                             <v-btn type="reset">Cancel</v-btn>
                         </v-card-actions>
                     </v-card>
         </v-form>
-                
-
         </div>
     </div>
 </template>
@@ -154,7 +152,7 @@ const variant = ref('outlined')
 const impdbs = ref([])
 // 模式： show 显示，edit 编辑， add 新增
 const mode = ref( 'show')
-const form = ref( {})
+const sourceItem = ref( {})
 const searchValue = ref( '')
 const headers = ref( [
                 { title: "名称", key: "dbName" },
@@ -200,7 +198,7 @@ const dataOp = (id, flag) => {
             mode.value = flag
             axios.get("/maintable/datasource/detail/" + id)
                 .then(resp => {
-                    form.value = resp.data
+                    sourceItem.value = resp.data
                     return resp
                 })
                 .catch(error => {
@@ -209,24 +207,30 @@ const dataOp = (id, flag) => {
         }
 const addDataSource = () => {
             mode.value = 'add'
-            form.value = {}
+            sourceItem.value = {}
         }
 
 const saveData = () => {
-            if (mode.value == 'add' || mode.value == 'edit') {
-                axios.post('/maintable/datasource/save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(this.form)
-                }).then(resp => resp.json());
-
-                form.value = ''
-                // get data agtain, it's lazy
-                retrieveImpDB()
+    console.log("save data");
+    console.log(sourceItem.value)
+    if (mode.value == 'add' || mode.value == 'edit') {
+        axios.post('/maintable/datasource/save', 
+            sourceItem.value,
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             }
-        }
+        ).then(resp => resp.json())
+        .catch(error => {
+            console.log(error)
+        })
+
+        sourceItem.value = ''
+        // get data agtain, it's lazy
+        retrieveImpDB()
+    }
+}
 
 // load data
 

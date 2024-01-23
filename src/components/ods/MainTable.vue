@@ -1,8 +1,8 @@
 <template>
     <!-- ODS 主表信息 ODS采集主表配置-->
     <!-- <v-sheet class="mx-auto"> -->
+        <v-form fast-fail @submit.prevent="saveOds">
         <v-card flat title="ODS采集主表配置">
-        <v-form fast-fail @submit.prevent>
             <v-container>
                 <v-row>
                     <v-col cols="12" md="3" class="m-0">
@@ -110,15 +110,33 @@
                     </v-col>
                 </v-row>
             </v-container>
-        </v-form>
+            <v-card-actions>
+                            <v-btn type="submit" class="btn btn-primary">
+                                {{mode == 'add' ? 'Add': 'Save'}}</v-btn>
+                            <v-btn type="reset">Cancel</v-btn>
+            </v-card-actions>
         </v-card>
+    </v-form>
     <!-- </v-sheet> -->
 </template>
 <script>
+import axios from 'axios'
 
 export default {
     name: 'tableInfo',
     props: ['d'],
+    methods: {
+        saveOds() {
+            this.d['souSysid'] = this.d['destOwner'].substring(3);
+            axios.post('/maintable/ods/save', this.d, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => {
+                console.log(res.data)
+            });
+        }
+    }
 }
 </script>
 <style>

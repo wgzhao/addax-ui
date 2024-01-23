@@ -8,7 +8,10 @@
                         <v-col cols="col-4">
                             <v-text-field v-model="search" density="compact" label="Search"
                                 prepend-inner-icon="mdi-magnify" single-line variant="outlined"
-                                hide-details></v-text-field>
+                                hide-details
+                                @keyup.enter="searchOds"
+                                @click:append-inner="searchOds"
+                                ></v-text-field>
                         </v-col>
                         <v-col cols="auto">
                             <v-btn  variant="tonal" prepend-icon="mdi-plus"
@@ -25,7 +28,16 @@
                     </v-row>
                 </template>
                 <v-card-text>
-                    <v-data-table density="default" :items="ods" :headers="headers" item-value="name" :search="search">
+                    <v-data-table-server 
+                        density="default" 
+                        :items="ods" 
+                        :headers="headers" 
+                        v-model:item-per-page="itemsPerPage"
+                        :items-length="totalItems"
+                        item-value="name" 
+                        :loading="loading"
+                        @update:options="loadItems"
+                        >
                         <template v-slot:item.action="{ item }">
                             <!-- add link for selectOption -->
                             <v-menu>
@@ -41,7 +53,7 @@
                                 </v-list>
                             </v-menu>
                         </template>
-                    </v-data-table>
+                    </v-data-table-server>
                 </v-card-text>
             </v-card>
         </div>
@@ -70,6 +82,9 @@ export default {
             filter: "",
             search: "",
             item: "",
+            itemsPerPage: 10,
+            totalItems: 0,
+            loading: true,
             dynamicComponent: null,
             select: { text: "主表信息", value: "MainTableInfo" },
             selectOptions: [
@@ -97,10 +112,10 @@ export default {
                 },
             ],
             headers: [
-                { "title": "目标用户", "align": "center", "sortable": false, "value": "destOwner" },
+                { "title": "目标用户", "align": "center", "sortable": false, "value": "destOwner", sort: "asc" },
                 { "title": "系统名称", "value": "sysName", align: "center" },
-                { "title": "源用户", "value": "souOwner", align: "center" },
-                { "title": "目标表名", "value": "destTablename", align: "center" },
+                { "title": "源用户", "value": "souOwner", align: "center", sort: "asc" },
+                { "title": "目标表名", "value": "destTablename", align: "center", sort: "asc" },
                 { "title": "状态", "value": "flag", align: "center" },
                 { "title": "剩余", "value": "retryCnt", align: "center" },
                 { "title": "耗时", "value": "runtime", align: "center" },
@@ -109,7 +124,7 @@ export default {
         };
     },
     mounted() {
-        this.fetchData();
+        // this.fetchData();
     },
     methods: {
         fetchData() {
@@ -182,7 +197,25 @@ export default {
             }).then(res => alert("启动成功"))
                 .catch(res => alert("启动失败" + res))
 
-        }
+        },
+        loadItems ({page, itemsPerPage, sortBy}) {
+            this.loading = true;
+            axios.get('/maintable/ods/list', {
+                params: {
+                    page: page - 1, // the v-data-table-server start with 1, but springboot jpa page start with 0
+                    pageSize: itemsPerPage,
+                    q: this.search
+                }
+            }).then(res => {
+                this.ods = res.data["content"];
+                this.totalItems = res.data["totalPages"];
+                this.loading = false;
+            });
+        },
+        searchOds() {
+            this.loadItems({page: 0, itemsPerPage: this.itemsPerPage, sortBy: this.sortBy});
+        },
+
         // mainTableInfo(d) {
         //     this.$router.push({ path: '/maintable/ods/info', query: { id: d.id } });
         // }

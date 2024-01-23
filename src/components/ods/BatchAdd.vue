@@ -95,7 +95,17 @@ const saveItems = () => {
             item.destTablename = item.souTablename.toUpperCase()
         }
     })
-    console.log(data.value)
+    // save data
+    axios.post('/maintable/ods/batchSave', data.value, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => {
+        console.log(res.data)
+    }).catch(err => {
+        console.log(err)
+    })
+    // console.log(data.value)
 }
 onMounted(() => {
     fetchSourceData()
