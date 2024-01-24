@@ -74,6 +74,7 @@
 import axios from 'axios';
 import {ref} from 'vue'
 import OdsService from '@/service/odsService'
+import LogService from '@/service/logService'
 import MainTableInfo from '@/components/ods//MainTable.vue';
 import FieldsCompare from '@/components/ods/FieldsCompare.vue';
 import CmdList from '@/components/ods/CmdList.vue';
@@ -124,37 +125,36 @@ const doAction = (val, comp) => {
     item.value = "";
     console.log("invoke " + comp);
     if (comp == "FieldsCompare") {
-        axios.get('/maintable/ods/fieldCompare/' + val.tid).then(res => {
+        OdsService.fetchFieldsCompare(val.tid)
+        .then(res => {
             item.value = res.data;
         })
-            .catch(err => {
+        .catch(err => {
                 console.log(err);
-            });
+        });
+
     } else if (comp == 'CmdList') {
-        axios.get('/maintable/ods/cmdList/' + val.tid).then(res => {
+        OdsService.fetchCmdList(val.tid)
+        .then(res => {
             item.value = res.data;
         })
-            .catch(err => {
-                console.log(err);
-            });
+        .catch(err => {
+            console.log(err);
+        });
     } else if (comp == 'TableUsed') {
-        axios.get('/maintable/ods/tableUsed', {
-            params: {
-                tablename: val.destOwner + '.' + val.destTablename,
-                sysId: val.sysid
-            }
-        }).then(res => { item.value = res.data; });
+        OdsService.fetchTableUsed(val.destOwner + '.' + val.destTablename,
+                val.sysid).then(res => { item.value = res.data; });
     } else if (comp == 'AddaxResult') {
-        axios.get('/maintable/ods/addaxResult/' + val.spname)
+        OdsService.fetchAddaxResult(val.spname)
             .then(res => { item.value = res.data });
     } else if (comp == "LogFiles1") {
         // 命令日志
-        axios.get("/log/logFiles/" + val.spname)
+        LogService.getLogFiles(val.spname)
             .then(res => { item.value = res.data; return res.data });
         comp = "LogFiles";
     } else if (comp == "LogFiles2") {
         // 调度日志
-        axios.get("/log/logFiles/" + "tuna_sp_etl_" + val.tid)
+        LogService.getLogFiles("tuna_sp_etl_" + val.tid)
             .then(res => { item.value = res.data; return res.data });
         comp = "LogFiles";
     }
