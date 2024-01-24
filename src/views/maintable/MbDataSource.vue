@@ -144,98 +144,83 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import axios from 'axios';
-
-// input style default is outlined
+import DSService from '@/service/datasourceService'
 
 const variant = ref('outlined')
 const impdbs = ref([])
 // 模式： show 显示，edit 编辑， add 新增
-const mode = ref( 'show')
+const mode = ref('show')
 const sourceItem = ref( {})
 const searchValue = ref( '')
-const headers = ref( [
-                { title: "名称", key: "dbName" },
-                { title: "采集编号", key: "dbIdEtl" },
-                { title: "服务编号", key: "dbIdDs" },
-                { title: "操作", value: "actions", align: "center" }
-            ])
-const actions = ref([
-                { text: "详情", value: "show" },
-                { text: "编辑", value: "edit" },
-                { text: "使用场景", value: "scene" },
-                { text: "探索源库", value: "explore" }]
-)
-
+const headers = [
+    { title: "名称", key: "dbName" },
+    { title: "采集编号", key: "dbIdEtl" },
+    { title: "服务编号", key: "dbIdDs" },
+    { title: "操作", value: "actions", align: "center" }
+]
+const actions = [
+    { text: "详情", value: "show" },
+    { text: "编辑", value: "edit" },
+    { text: "使用场景", value: "scene" },
+    { text: "探索源库", value: "explore" }
+]
 
 const formTitle = computed(() => {
-            if (mode.value == 'add') {
-                return '新增数据源'
-            } else if (mode.value == 'edit')  {
-                return '编辑数据源'
-            } else {
-                return '数据源详情'
-            }
-        })
+    if (mode.value == 'add') {
+        return '新增数据源'
+    } else if (mode.value == 'edit')  {
+        return '编辑数据源'
+    } else {
+        return '数据源详情'
+    }
+})
 
         
 const retrieveImpDB = () => {
-            axios.get("/maintable/datasource/list")
-                .then(resp => {
-                    impdbs.value = resp.data
-                    return resp
-                })
-                .catch(error => {
-                    return error
-                });
-        }
+    DSService.list()
+        .then(resp => {impdbs.value = resp.data; return resp})
+        .catch(error => {console.log(error)});
+}
 
 const doAction = (id, ctype) => {
-            dataOp(id, ctype)
-        }
+    mode.value = ctype
+    DSService.get(id)
+        .then(resp => {
+            sourceItem.value = resp.data
+            return resp
+        })
+        .catch(error => {
+            return error
+        });
+}
 
-const dataOp = (id, flag) => {
-            mode.value = flag
-            axios.get("/maintable/datasource/detail/" + id)
-                .then(resp => {
-                    sourceItem.value = resp.data
-                    return resp
-                })
-                .catch(error => {
-                    return error
-                });
-        }
 const addDataSource = () => {
-            mode.value = 'add'
-            sourceItem.value = {}
-        }
+        mode.value = 'add'
+        sourceItem.value = {}
+    }
 
 const saveData = () => {
-    console.log("save data");
-    console.log(sourceItem.value)
     if (mode.value == 'add' || mode.value == 'edit') {
-        axios.post('/maintable/datasource/save', 
-            sourceItem.value,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        ).then(resp => resp.json())
-        .catch(error => {
-            console.log(error)
-        })
+        DSService.save(sourceItem.value)
+        .then(resp => alert("保存成功"))
+        .catch(error => {alert("保存失败:" + error)})
 
         sourceItem.value = ''
         // get data agtain, it's lazy
-        retrieveImpDB()
+        // retrieveImpDB()
     }
 }
 
 // load data
 
 onMounted(() => {
-    retrieveImpDB()
+    DSService.list().then(resp => {
+            impdbs.value = resp.data
+            return resp
+        })
+        .catch(error => {
+            return error
+        });
 })
 </script>
 <style>

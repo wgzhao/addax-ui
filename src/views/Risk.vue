@@ -18,21 +18,24 @@
     </template>
 </template>
 <script setup>
-import axios from 'axios';
+import axios from 'axios'
+import RiskService from '@/service/riskService'
+
 import { ref, onUnmounted } from 'vue';
 
-const titles = ref([
+const titles = [
     { item: "sysRisk", title: "系统风险检测结果" },
     { item: "odsFieldChange", title: "ODS采集源库的字段变更提醒(T-1日结构与T日结构对比)" },
     { item: "smsDetail", title: "短信发送情况" },
-])
+]
+
 const data = ref({
     sysRisk: [],
     odsFieldChange: [],
     smsDetail: [],
 }
 )
-const headers = ref({
+const headers = {
     sysRisk: [
         { title: "类别", key: "chkKind" },
         { title: "名称", key: "chkName" },
@@ -62,7 +65,7 @@ const headers = ref({
         },
         { title: "发送时间", value: "dwCltDate" }
     ],
-})
+}
 // 系统风险
 
 
@@ -71,16 +74,15 @@ const search = ref(null);
 
 // 获取数据
 const fetchData = () => {
-
-    axios.get('/risk/sysRisk').then(res => {
+    RiskService.sysRisks().then(res => {
         data.value['sysRisk'] = res.data;
         // sysRisk.value = res.data;
     });
-    axios.get('/risk/odsFieldChange').then(res => {
+    RiskService.fieldChanges().then(res => {
         data.value['odsFieldChange'] = res.data;
         // odsFieldChange.value = res.data;
     });
-    axios.get('/risk/smsDetail').then(res => {
+    RiskService.smsDetails().then(res => {
         data.value['smsDetail'] = res.data;
         // smsDetail.value = res.data;
     });

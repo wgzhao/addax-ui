@@ -12,41 +12,28 @@
         </div>
     </div>
 </template>
-<script>
-import axios from 'axios';
-export default {
-    name: 'Realtime',
-    data() {
-        return {
-            planAll: [],
-            headers: [
-                { title: "计划类型", key: "pnTypeName" },
-                { title: "计划名称", key: "spname" },
-                {
-                    title: "命令列表", value: "", align: "center",
-                    children: [
-                        { title: "CMD1", key: "c1" },
-                        { title: "CMD2", key: "c2" },
-                        { title: "CMD3", key: "c3" },
-                        { title: "CMD4", key: "c4" },
-                        { title: "CMD5", key: "c5" },
-                        { title: "CMD6", key: "c6" },
-                    ]
-                }
-            ]
-        }
-    },
-    mounted() {
-        this.fetchData();
-    },
-    methods: {
-        fetchData() {
-            axios.get('/realtime/planAll').then(res => {
-                this.planAll = res.data;
-            });
-        }
-    }
+<script setup>
+import {ref} from 'vue'
+import axios from 'axios'
 
-}
+const planAll = ref([])
+const headers =  [
+    { title: "计划类型", key: "pnTypeName" },
+    { title: "计划名称", key: "spname" },
+    {
+        title: "命令列表", value: "", align: "center",
+        children: [
+            { title: "CMD1", key: "c1" },
+            { title: "CMD2", key: "c2" },
+            { title: "CMD3", key: "c3" },
+            { title: "CMD4", key: "c4" },
+            { title: "CMD5", key: "c5" },
+            { title: "CMD6", key: "c6" },
+        ]
+    }
+]
+     
+ axios.get('/realtime/planAll').then(res => {planAll.value = res.data});
+
 </script>
 <style></style>
