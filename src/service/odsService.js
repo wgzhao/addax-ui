@@ -5,13 +5,30 @@ import axios from "axios";
 const apiPrefix = ref("/maintable/ods")
 
 // 0. 主表列表
-const fetchOdsList = () => {
-  return axios.get(apiPrefix.value + "/list");
+const fetchOdsList = (page, pageSize, q) => {
+  return axios.get(apiPrefix.value, {
+    params: {
+      page: page,
+      pageSize: pageSize,
+      q: q
+    }
+  });
+}
+
+// 0.1 主表列表搜索
+const searchOdsList = (page, pageSize, q) => {
+  return axios.get(apiPrefix.value +"/search", {
+    params: {
+      q: q,
+      page: page,
+      pageSize: pageSize
+    }
+  })
 }
 
 // 1. 主表详情
 const fetchOdsDetail = (tid) => {
-  return axios.get(apiPrefix.value + "/detail/" + tid);
+  return axios.get(apiPrefix.value + "/" + tid);
 }
 
 // 2. 表字段对比
@@ -34,9 +51,14 @@ const fetchTableUsed = (sysid, tbl) => {
         }});
 }
 
+// 5. 保存
+const save = (data) => {
+    return axios.post(apiPrefix.value + "/save", data);
+}
+
 // 5. 采集的结果
 const fetchAddaxResult = (spname) => {
     return axios.get(apiPrefix.value + "/addaxResult/" + spname);
 }
 
-export default {fetchOdsList, fetchOdsDetail, fetchFieldsCompare, fetchCmdList, fetchTableUsed, fetchAddaxResult}
+export default {fetchOdsList, fetchOdsDetail, searchOdsList, fetchFieldsCompare, fetchCmdList, fetchTableUsed, fetchAddaxResult, save}
