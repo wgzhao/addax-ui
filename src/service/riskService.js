@@ -1,5 +1,7 @@
-import axios from "axios";
-const apiPrefix = "/risk"
+import axios from "axios"
+import {ref} from 'vue'
+
+const apiPrefix = ref("/risk")
 
 const sysRisks = () => {
     return axios.get(apiPrefix.value + '/sysRisk')

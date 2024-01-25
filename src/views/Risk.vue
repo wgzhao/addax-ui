@@ -78,7 +78,7 @@ const fetchData = () => {
         data.value['sysRisk'] = res.data;
         // sysRisk.value = res.data;
     });
-    RiskService.fieldChanges().then(res => {
+    RiskService.fieldsChanges().then(res => {
         data.value['odsFieldChange'] = res.data;
         // odsFieldChange.value = res.data;
     });
