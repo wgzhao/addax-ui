@@ -18,4 +18,9 @@ export function post(url, data) {
   axios.post(url, data).then(res => alert("请求成功")).catch(err => {alert("请求(" + url + ")失败:\n" + err.message); console.log(err)})
 }
 
-export default {get, post}
+export function remove(url, params) {
+  axios.delete(url, {
+    params: params,
+  }).then(res => alert("请求成功")).catch(err => {alert("请求(" + url + ")失败:\n" + err.message); console.log(err)})
+}
+export default {get, post, remove}
