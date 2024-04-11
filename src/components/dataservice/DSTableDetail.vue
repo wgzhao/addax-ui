@@ -164,7 +164,7 @@ const doAction = (item, idx) => {
 }
 
 const getContent = (f) => {
-    axios.get("/log" + "logFileContent", {
+    axios.get("/log/logFileContent", {
         params: {
             f: f
         }
