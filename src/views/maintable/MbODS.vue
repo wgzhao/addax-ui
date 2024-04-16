@@ -70,8 +70,7 @@
      </div>
 </template>
 
-<script setup>
-import axios from 'axios';
+<script setup lang="ts">
 import {ref} from 'vue'
 import OdsService from '@/service/odsService'
 import LogService from '@/service/logService'
@@ -82,6 +81,9 @@ import TableUsed from '@/components/ods/TableUsed.vue';
 import AddaxResult from '@/components/ods/AddaxResult.vue';
 import BatchAdd from '@/components/ods/BatchAdd.vue';
 import LogFiles from '@/components/ods/LogFiles.vue';
+
+import {createSort} from '@/utils'
+import { stringifyQuery } from 'vue-router';
 
 const ods = ref([],)
 const search = ref("")
@@ -186,6 +188,7 @@ const doEtl = (ctype) =>  {
 }
 const loadItems =  ({page, itemsPerPage, sortBy}) => {
     loading.value = true;
+    // const sort = createSort(sortBy)
     OdsService.fetchOdsList(page -1, itemsPerPage, search.value).then(res => {
         ods.value = res.data["content"];
         totalItems.value = res.data["totalPages"];

@@ -143,7 +143,7 @@
 </template>
 <script setup>
 import {ref, onMounted} from 'vue'
-import SpService from '@/service/spService'
+import {spService} from '@/service/spService'
 
 const props = defineProps(['spId'])
 
@@ -155,8 +155,8 @@ const needs = ref([])
 const variant = ref('outlined')
 
 const fetchData = () => {
-    SpService.fetchSpMainDetail(props.spId).then(res => spDetail.value = res.data);
-    SpService.fetchSpThrough(props.spId).then(res => needs.value = res.data);
+    spService.fetchSpMainDetail(props.spId).then(res => spDetail.value = res.data);
+    spService.fetchSpThrough(props.spId).then(res => needs.value = res.data);
 }
 
 const saveData = () => {

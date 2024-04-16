@@ -1,12 +1,12 @@
-import axios from 'axios'
 import { ref } from 'vue'
+import {requests} from '@/utils/requests'
 
 const fetchImpdbs = ()  => {
     const impdbs = ref([])
     const error = ref('')
 
     const load = async () => {
-        axios.get('/impdb/list')
+        requests.get('/impdb/list')
             .then(response => {
                 this.impdbs.value = response.data
                 return response

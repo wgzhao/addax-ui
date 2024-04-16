@@ -21,7 +21,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue'
-import SpService from '@/service/spService'
+import {spService} from '@/service/spService'
 import {HighCode} from 'vue-highlight-code'
 import 'vue-highlight-code/dist/style.css'
 
@@ -38,7 +38,7 @@ const headers = ref([
 const data = ref()
 
 const fetchData = () => {
-    SpService.fetchSpCmdList(props.spId).then(res => data.value = res.data);
+    spService.fetchSpCmdList(props.spId).then(res => data.value = res.data);
 }
 
 onMounted(() => {

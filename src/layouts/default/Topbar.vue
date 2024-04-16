@@ -47,14 +47,23 @@
                     </span>
                 </a>
             <!-- Nav Item - User Information -->
+            <div v-if="user">
             <li class="nav-item dropdown no-arrow">
                 <!-- <NavbarThemeSwitcher class="me-2" /> -->
-                <a class="nav-link" href="#">
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                <a  class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user }} </span>
                     <img class="img-profile rounded-circle" width="80%" src="/src/assets/images/undraw_profile.svg">
                 </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="#">Activity Log</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+                </ul>
                 <!-- Dropdown - User Information -->
             </li>
+            </div>
 
         </ul>
         </div>
@@ -63,8 +72,10 @@
     
     <!-- End of Topbar -->
 </template>
-<script setup>
+<script setup lang="ts">
 import { useTheme } from 'vuetify'
+import {ref} from 'vue'
+import router from '@/router'
 const { global } = useTheme()
 // set the default theme
 if (localStorage.getItem('theme') === null) {
@@ -73,12 +84,20 @@ if (localStorage.getItem('theme') === null) {
 } else {
     global.name.value = localStorage.getItem('theme')
 }
-
+const user = ref()
+if (localStorage.getItem("userinfo") != null ) {
+    user.value = JSON.parse(localStorage.getItem("userinfo")).username
+}
 const toggleTheme = () => {
     // global.name.value = themes.value[idx.value].name
     // currentTheme.toggleTheme()
     global.name.value = global.name.value === 'light' ? 'dark' : 'light'
     localStorage.setItem('theme', global.name.value)
+}
+const logout = () => {
+    localStorage.removeItem('userinfo')
+    localStorage.removeItem('token')
+    router.push({name: 'home'})
 }
 </script>
 <style>

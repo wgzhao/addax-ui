@@ -39,13 +39,13 @@
 </template>
 
 <script>
-import axios from 'axios'
 import SpDetail from '@/components/sp/SpDetail.vue'
 import SpCmdList from '@/components/sp/SpCmdList.vue'
 import SceneList from '@/components/sp/SceneList.vue'
 import SpLineage from '@/components/sp/SpLineage.vue'
 import SpRequiresList from '@/components/sp/SpRequiresList.vue'
 import ShowLogs from '@/components/sp/ShowLogs.vue'
+import {requests} from '@/utils/requests'
 
 export default {
   data() {
@@ -100,7 +100,7 @@ export default {
 
     initData() {
       // Initial data
-      axios.get("/maintable/sp/list").then(resp => this.impSps = resp.data);
+      requests.get("/maintable/sp/list").then(resp => this.impSps = resp.data);
     },
   },
 

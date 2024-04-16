@@ -11,7 +11,7 @@
 </template>
 <script setup>
 import {ref, onMounted} from 'vue'
-import SpService from '@/service/spService'
+import {spService} from '@/service/spService'
 const props = defineProps(['spId'])
 const headers = ref([
     {title: "编号", key: "NEEDS"},
@@ -21,7 +21,7 @@ const headers = ref([
 ])
 const data = ref([])
 const fetchData = () => {
-    SpService.fetchSpPrequires(props.spId).then(res => data.value = res.data);
+    spService.fetchSpPrequires(props.spId).then(res => data.value = res.data);
 }
 onMounted(() => {
     fetchData()

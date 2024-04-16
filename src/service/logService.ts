@@ -1,14 +1,13 @@
 // 采集日志
-import {ref} from 'vue';
-import axios from "axios";
+import {requests} from '@/utils/requests'
 
 // find all files matching the pattern
-const getLogFiles = (pattern) => {
-    return axios.get("/log/logFiles/" + pattern);
+const getLogFiles = (pattern: string) => {
+    return requests.get("/log/logFiles/" + pattern);
 }
 // get the content of special file
 const getContent = (f) => {
-    return axios.get("/log/logFileContent", {
+    return requests.get("/log/logFileContent", {
         params: {
             f: f
         }

@@ -1,21 +1,21 @@
 // 数据源管理接口
-import axios from 'axios'
+import {requests} from '@/utils/requests'
 const apiPrefix = "/maintable/datasource"
 
 const list = () => {
-    return axios.get(apiPrefix);
+    return requests.get(apiPrefix);
 }
 
 const get = (id) => {
-    return axios.get(apiPrefix + "/" + id);
+    return requests.get(apiPrefix + "/" + id);
 }
 
 const save = (data) => {
-    return axios.post(apiPrefix, data);
+    return requests.post(apiPrefix, data);
 }
 
 const deleteItem = (id) => {
-    return axios.delete(apiPrefix + "/" + id);
+    return requests.delete(apiPrefix + "/" + id);
 }
 
 export default {list, get, save, deleteItem}

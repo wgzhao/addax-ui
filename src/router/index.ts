@@ -26,12 +26,13 @@ import PlanTask from '@/views/maintable/PlanTask.vue'
 // demo
 import Demo from '@/views/Demo.vue'
 
-
+import Login from '@/views/Login'
 
 // import 'mdb-vue-ui-kit/css/mdb.min.css';
 
-const routes = [
+const routes: Array<Map<any, any>> = [
     { path: '/', name: 'Home', title: "Home", icon: "fa-home", component: Home},
+    { path: '/login', name: 'Login', title: "Login", icon: "fa-sign-in-alt", component: Login, visible: false},
     { path: '/etl', name: 'ETL', title: "采集监控", icon: "fa-dashboard", component: ETL},
     { path: '/spmonitor', name: 'spmonitor', title: "SP监控", icon: "fa-desktop", component: SpMonitor},
     { path: '/taskgroup', name: 'taskgroup', title: "任务组", icon: "fa-tasks", component: TaskGroup},
