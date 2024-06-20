@@ -1,20 +1,20 @@
-import { createVuetify } from 'vuetify'
-import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
-import * as components from 'vuetify/components'
-import theme from './theme.js'
+import { createVuetify } from "vuetify";
+import "@mdi/font/css/materialdesignicons.css";
+import "vuetify/styles";
+// import theme from "./theme.js";
 const vuetify = createVuetify({
-    components,
     // directives,
-    theme,
+    theme: {
+        defaultTheme: "dark",
+    },
     icons: {
-      defaultSet: 'mdi',
+        defaultSet: "mdi",
     },
     defaults: {
         VTextField: {
-          variant: 'outlined',
+            variant: "outlined",
         },
-    }
-  })
+    },
+});
 
-  export default vuetify
+export default vuetify;

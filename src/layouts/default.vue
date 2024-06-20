@@ -1,28 +1,16 @@
 <script setup>
-import Topbar from './default/Topbar.vue'
-import Footer from './default/Footer.vue';
+import Topbar from "./default/Topbar.vue";
+import Footer from "./default/Footer.vue";
 </script>
 
 <template>
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-        <!-- <Nav /> -->
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Main Content -->
-            <div id="content">
-                <!-- Topbar -->
-                <Topbar />
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    <router-view></router-view>
-                </div>
-            </div>
-            <!-- Footer -->
-           <Footer />
-            <!-- End of Footer -->
+    <v-app>
+        <div id="wrapper">
+            <Topbar />
+            <v-main>
+                <router-view></router-view>
+            </v-main>
+            <Footer />
         </div>
-        <!-- End of Content Wrapper -->
-    </div>
-    <!-- End of Page Wrapper -->
+    </v-app>
 </template>

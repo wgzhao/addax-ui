@@ -1,30 +1,12 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"> -->
-    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script> -->
-    <link rel="stylesheet" type="text/css" href="/loader.css">
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-    <script>
-      const loaderColor = localStorage.getItem('sneat-initial-loader-bg') || '#FFFFFF'
-      const primaryColor = localStorage.getItem('sneat-initial-loader-color') || '#696CFF'
-  
-      if (loaderColor)
-        document.documentElement.style.setProperty('--initial-loader-bg', loaderColor)
-  
-      if (primaryColor)
-        document.documentElement.style.setProperty('--initial-loader-color', primaryColor)
-    </script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="module" src="/src/main.js"></script>
+    </body>
 </html>
-<style>
-  tbody tr:nth-of-type(odd) {
-    background-color:  gray-800;
-  }
-</style>
