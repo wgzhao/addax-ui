@@ -1,9 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import defaultLayout from "@/layouts/default.vue";
 </script>
 
 <template>
-    <v-app>
-        <defaultLayout />
-    </v-app>
+    <defaultLayout />
 </template>

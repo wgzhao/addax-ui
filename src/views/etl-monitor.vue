@@ -14,9 +14,9 @@
         </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, onMounted} from 'vue'
-import ETLService from '@/service/etlService'
+import {etlService} from '@/service/etlService'
 
 const data = ref([
     {
@@ -106,10 +106,10 @@ const data = ref([
 
 
 const getData = async () => {
-    data.value[0]['data'] = ETLService.fetchAccomplishList();
-    data.value[1]['data'] = ETLService.fetchSpecialTask();
-    data.value[2]['data'] = ETLService.fetchRejectTask();
-    data.value[3]['data'] = ETLService.fetchRealtimeTask();
+    data.value[0]['data'] = etlService.fetchAccomplishList();
+    data.value[1]['data'] = etlService.fetchSpecialTask();
+    data.value[2]['data'] = etlService.fetchRejectTask();
+    data.value[3]['data'] = etlService.fetchRealtimeTask();
 }
 
 onMounted(() => {

@@ -13,7 +13,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import SpService from '@/service/spService';
+import {spService} from '@/service/spService';
 const props = defineProps(['spId'])
 const headers = ref([
         { title: '场景类别', value: 'kindName', align:"center" },
@@ -22,7 +22,7 @@ const headers = ref([
 const data = ref()
 
 const fetchData = () => {
-    SpService.fetchSpSceneList(props.spId).then(res => data.value = res.data);
+    spService.fetchSpSceneList(props.spId).then(res => data.value = res.data);
 }
 onMounted(() => {
     fetchData()

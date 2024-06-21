@@ -21,7 +21,7 @@
 </template>
 <script setup>
 import {onMounted, ref} from 'vue'
-import LogService from '@/service/logService.js';
+import LogService from '@/service/logService';
 const props = defineProps(["spId"])
 const fContent = ref()
 const filename = ref()

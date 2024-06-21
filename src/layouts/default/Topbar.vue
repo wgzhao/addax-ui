@@ -2,27 +2,21 @@
     <v-app-bar class="bg-primary">
         <template v-slot:default>
             <v-app-bar-title>统一采集管理系统</v-app-bar-title>
-            <template v-for="item in $router.options.routes">
+            <template v-for="item in urls">
                 <div v-if="item.children">
                     <v-menu open-on-hover v-if="item.children">
                         <template v-slot:activator="{ props }">
-                            <v-btn
-                                v-bind="props"
-                                flat
-                                :to="{ name: item.name }"
-                            >
-                                {{ item.title }}</v-btn
-                            >
+                            <v-btn v-bind="props" flat> {{ item.title }}</v-btn>
                         </template>
                         <v-list v-for="child in item">
-                            <v-list-item :to="{ name: child.name }">
+                            <v-list-item :to="{ path: child.path }">
                                 {{ child.title }}
                             </v-list-item>
                         </v-list>
                     </v-menu>
                 </div>
                 <div v-else>
-                    <v-btn flat :to="{ name: item.name }">
+                    <v-btn flat :to="{ path: item.path }">
                         {{ item.title }}</v-btn
                     >
                 </div>
@@ -32,20 +26,75 @@
     <!-- End of Topbar -->
 </template>
 <script setup>
+import { ref } from "vue";
 import { useTheme } from "vuetify";
 const { global } = useTheme();
-// set the default theme
-if (localStorage.getItem("theme") === null) {
-    localStorage.setItem("theme", "dark");
-    global.name.value = "dark";
-} else {
-    global.name.value = localStorage.getItem("theme");
-}
 
-const toggleTheme = () => {
-    // global.name.value = themes.value[idx.value].name
-    // currentTheme.toggleTheme()
-    global.name.value = global.name.value === "light" ? "dark" : "light";
-    localStorage.setItem("theme", global.name.value);
-};
+const urls = ref([
+    {
+        path: "/",
+        name: "Home",
+        title: "Home",
+    },
+    {
+        path: "/etl-monitor",
+        name: "ETL",
+        title: "采集监控",
+    },
+    {
+        path: "/sp-monitor",
+        title: "SP监控",
+        icon: "fa-desktop",
+    },
+    {
+        path: "/task-group",
+        title: "任务组",
+    },
+    {
+        path: "/risk-monitor",
+        title: "风险点检测",
+    },
+    {
+        path: "/realtime",
+        title: "实时监控",
+    },
+    {
+        path: "/system-info",
+        title: "系统一览",
+    },
+    {
+        path: "/maintable",
+        title: "主表配置",
+        children: [
+            {
+                path: "/maintable/ods",
+                title: "ODS 采集",
+            },
+            {
+                path: "/maintable/sp",
+                title: "SP 计算",
+            },
+            {
+                path: "/maintable/data-service",
+                title: "数据服务",
+            },
+            {
+                path: "/maintable/plan-task",
+                title: "计划任务",
+            },
+            {
+                path: "/maintable/params",
+                title: "参数管理",
+            },
+            {
+                path: "/maintable/data-sources",
+                title: "数据源管理",
+            },
+        ],
+    },
+    {
+        path: "/demo",
+        title: "Demo",
+    },
+]);
 </script>

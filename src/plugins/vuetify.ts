@@ -1,14 +1,17 @@
 import { createVuetify } from "vuetify";
-import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
-// import theme from "./theme.js";
+import theme from "./theme";
+import { aliases, mdi } from "vuetify/iconsets/mdi";
+
 const vuetify = createVuetify({
     // directives,
-    theme: {
-        defaultTheme: "dark",
-    },
+    theme,
     icons: {
         defaultSet: "mdi",
+        aliases,
+        sets: {
+            mdi,
+        },
     },
     defaults: {
         VTextField: {
