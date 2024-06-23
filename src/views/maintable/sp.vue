@@ -69,7 +69,7 @@ import SceneList from "@/components/sp/SceneList.vue";
 import SpLineage from "@/components/sp/SpLineage.vue";
 import SpRequiresList from "@/components/sp/SpRequiresList.vue";
 import ShowLogs from "@/components/sp/ShowLogs.vue";
-import Request from "@/utils/requests";
+import Requests from "@/utils/requests";
 
 export default {
     data() {

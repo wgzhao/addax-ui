@@ -18,8 +18,6 @@
 
 </template>
 
-<script>
-export default {
-    props: ['form']
-}
+<script setup lang="ts">
+defineProps(['form']);
 </script>

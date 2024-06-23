@@ -19,7 +19,7 @@
             </v-card-text>
         </v-card>
 </template>
-<script setup>
+<script setup lang="ts">
 import {ref} from 'vue'
 import axios from 'axios';
 const props = defineProps(["d"])

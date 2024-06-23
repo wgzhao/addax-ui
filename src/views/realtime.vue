@@ -12,12 +12,12 @@
         </div>
     </div>
 </template>
-<script setup>
-import {ref} from 'vue'
-import axios from 'axios'
+<script setup lang="ts">
+import {onMounted, ref} from 'vue'
+import RealtimeService from "@/service/realtimeService.js";
 
 const planAll = ref([])
-const headers =  [
+const headers =  ref([
     { title: "计划类型", key: "pnTypeName" },
     { title: "计划名称", key: "spname" },
     {
@@ -31,9 +31,13 @@ const headers =  [
             { title: "CMD6", key: "c6" },
         ]
     }
-]
-     
- axios.get('/realtime/planAll').then(res => {planAll.value = res.data});
+])
+
+onMounted(() => {
+  RealtimeService.fetchPlanAll().then(res =>
+    planAll.value = res.data
+  );
+})
 
 </script>
 <style></style>

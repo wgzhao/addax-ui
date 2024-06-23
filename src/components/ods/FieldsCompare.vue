@@ -1,7 +1,7 @@
 <template>
     <!-- 字段对比 -->
     <v-card flat title="字段对比">
-        <div v-if="d.length == 0">无数据</div>
+        <div v-if="d.length === 0">无数据</div>
         <div v-else>
         <v-data-table
             :headers="headers"

@@ -120,8 +120,7 @@
     <!-- </v-sheet> -->
 </template>
 <script setup>
-import {ref, onMounted} from 'vue'
-import OdsService from '@/service/odsService'
+import OdsService from '@/service/maintable/odsService'
 const props = defineProps(["d"])
 
 const saveOds = () => {

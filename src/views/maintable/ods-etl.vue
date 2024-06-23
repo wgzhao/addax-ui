@@ -61,10 +61,10 @@
             <component :is="tabs[dynamicComponent]" :d="item"></component>
         </div>
       <!-- action response -->
-        <v-dialog v-model="alert.show" width="auto">
+        <v-dialog v-model="alertMsg.show" width="auto">
         <v-card>
-            <v-toolbar :color="alert.color" :title="alert.title"></v-toolbar>
-            <v-card-text><pre>{{ alert.text }}</pre></v-card-text>
+            <v-toolbar :color="alertMsg.color" :title="alertMsg.title"></v-toolbar>
+            <v-card-text><pre>{{ alertMsg.text }}</pre></v-card-text>
         </v-card>
         </v-dialog>
      </div>
@@ -72,8 +72,8 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
-import OdsService from '@/service/odsService'
-import LogService from '@/service/logService'
+import OdsService from '@/service/maintable/odsService'
+import LogService from '@/service/maintable/logService'
 import MainTableInfo from '@/components/ods//MainTable.vue';
 import FieldsCompare from '@/components/ods/FieldsCompare.vue';
 import CmdList from '@/components/ods/CmdList.vue';
@@ -81,9 +81,6 @@ import TableUsed from '@/components/ods/TableUsed.vue';
 import AddaxResult from '@/components/ods/AddaxResult.vue';
 import BatchAdd from '@/components/ods/BatchAdd.vue';
 import LogFiles from '@/components/ods/LogFiles.vue';
-
-import {createSort} from '@/utils'
-import { stringifyQuery } from 'vue-router';
 
 const ods = ref([],)
 const search = ref("")
@@ -120,7 +117,7 @@ const headers =  [
     { "title": "耗时", "value": "runtime", align: "center" },
     { "title": "操作", "value": "action", "sortable": false, align: "center" },
 ]
-const alert = ref({show: false,color: "",icon: "",text: ""})
+const alertMsg = ref({show: false,color: "",icon: "",text: "", title: ""})
 
 const doAction = (val, comp) => {
     // clear item
@@ -167,22 +164,20 @@ const doAction = (val, comp) => {
     dynamicComponent.value = comp;
 }
 
-const doEtl = (ctype) =>  {
-    axios.post("/maintable/ods/startEtl", {
-        "ctype": ctype
-    }).then(res => {
-        alert.value.show = true;
-        alert.value.color = "success";
-        alert.value.icon = "mdi-check-circle";
-        alert.value.title = "启动成功";
-        alert.value.text = res.data;
+const doEtl = (ctype: string) =>  {
+    OdsService.execETL(ctype).then(res => {
+        alertMsg.value.show = true;
+        alertMsg.value.color = "success";
+        alertMsg.value.icon = "mdi-check-circle";
+        alertMsg.value.title = "启动成功";
+        alertMsg.value.text = res.data;
     } )
     .catch(res => {
-        alert.value.show = true;
-        alert.value.color = "error";
-        alert.value.icon = "mdi-alert-circle";
-        alert.value.title = "启动失败";
-        alert.value.text = res.data;
+        alertMsg.value.show = true;
+        alertMsg.value.color = "error";
+        alertMsg.value.icon = "mdi-alert-circle";
+        alertMsg.value.title = "启动失败";
+        alertMsg.value.text = res.data;
     })
 
 }

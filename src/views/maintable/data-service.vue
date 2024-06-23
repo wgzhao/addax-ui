@@ -28,6 +28,9 @@ import {ref, onMounted, markRaw } from 'vue'
 
 import MainTableInfo from '@/components/dataservice/MainTableInfo.vue'
 import DSTableDetail from '@/components/dataservice/DSTableDetail.vue'
+
+import DataService from "@/service/maintable/dataService";
+
 const data = ref([])
 const param = ref(null)
 const key = ref(null)
@@ -51,9 +54,7 @@ const actionList = ref([
     {comp: dst, title: "推送表"},
     {comp: "ScheduleLog", title:"调度日志"}
         ])   
-const fetchData = ()  => {
-            axios.get('/maintable/dataService/list').then(res => { data.value = res.data });
-        }
+
 
 const  doAction = (val, comp) => {
             key.value = val
@@ -61,7 +62,7 @@ const  doAction = (val, comp) => {
             param.value = val
         }
 onMounted(() => {
-   fetchData() 
+  DataService.list().then(res => { data.value = res.data });
 })
 </script>
 <style></style>

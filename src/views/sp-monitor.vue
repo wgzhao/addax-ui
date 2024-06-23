@@ -2,7 +2,7 @@
     <!-- SP 监控页面 -->
     <template v-for="d in data">
         <div class="v-row">
-            <div class="v-col v-col-12">
+            <div class="v-col v-col-12 mt-2 mb-2">
                 <v-card :title="d.title">
                     <v-card-text>
                     <v-data-table :items="d.data" :headers="d.headers" density="default"></v-data-table>
@@ -13,17 +13,12 @@
     </template>
 </template>
 <script setup>
-import axios from 'axios';
 import { ref, onUnmounted } from 'vue';
+import SpMonitorService  from "@/service/spMonitorService";
 
-const pipelines = ref([])
-const validSp = ref([])
-const validSpCnt = ref([])
-const errorTasks = ref([])
 const data = ref([
     {
         name: 'validChkSp',
-        api: 'validChkSp',
         title: "SP计算的有效性检测结果",
         data: [],
         headers: [
@@ -35,7 +30,6 @@ const data = ref([
     },
     {
         name: "pipeline",
-        api: "pipeline",
         title: "SP计算相关流水",
         data: [],
         headers: [
@@ -47,7 +41,6 @@ const data = ref([
     },
     {
         name: "totalExec",
-        api: "totalExec",
         title: "SP整体执行情况",
         data: [],
         headers: [
@@ -76,9 +69,10 @@ const data = ref([
 ])
 
 const initData = () => {
-    for (const row in data.value) {
-        axios.get('/sp/' + data.value[row].api).then(res => { data.value[row].data = res.data });
-    }
+    SpMonitorService.fetchValidChkSp().then(res => { data.value[0].data = res.data });
+    SpMonitorService.fetchPipeline().then(res => { data.value[1].data = res.data });
+    SpMonitorService.fetchTotalExec().then(res => { data.value[2].data = res.data });
+    SpMonitorService.fetchErrorTasks().then(res => { data.value[3].data = res.data });
 }
 
 initData();

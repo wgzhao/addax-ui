@@ -18,7 +18,6 @@
     </template>
 </template>
 <script setup>
-import axios from 'axios'
 import RiskService from '@/service/riskService'
 
 import { ref, onUnmounted } from 'vue';

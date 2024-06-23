@@ -133,7 +133,7 @@
                     </v-container>
                         <v-card-actions>
                             <v-btn type="submit" class="btn btn-primary">
-                                {{mode == 'add' ? 'Add': 'Save'}}</v-btn>
+                              {{ mode === 'add' ? 'Add' : 'Save' }}</v-btn>
                             <v-btn type="reset">Cancel</v-btn>
                         </v-card-actions>
                     </v-card>
@@ -144,7 +144,7 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import DSService from '@/service/datasourceService'
+import DSService from '@/service/maintable/datasourceService'
 
 const variant = ref('outlined')
 const impdbs = ref([])
@@ -166,9 +166,9 @@ const actions = [
 ]
 
 const formTitle = computed(() => {
-    if (mode.value == 'add') {
+    if (mode.value === 'add') {
         return '新增数据源'
-    } else if (mode.value == 'edit')  {
+    } else if (mode.value === 'edit')  {
         return '编辑数据源'
     } else {
         return '数据源详情'
@@ -200,7 +200,7 @@ const addDataSource = () => {
     }
 
 const saveData = () => {
-    if (mode.value == 'add' || mode.value == 'edit') {
+    if (mode.value === 'add' || mode.value === 'edit') {
         DSService.save(sourceItem.value)
         .then(resp => alert("保存成功"))
         .catch(error => {alert("保存失败:" + error)})

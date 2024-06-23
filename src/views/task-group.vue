@@ -26,8 +26,9 @@
     </v-card>
 </template>
 <script setup>
-import axios from 'axios';
-import { ref, watch, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
+import TaskGroupService from "@/service/taskGroupService";
+
 const tab = ref(0);
 const headers = ref([
     {
@@ -139,11 +140,23 @@ const headers = ref([
 ])
 
 watchEffect(async() => {
-    if (headers.value[tab.value].data == null) {
-        const url = '/taskGroup/' + headers.value[tab.value].api
-        const res = await axios.get(url);
-        headers.value[tab.value].data = res.data;
-    }
+    TaskGroupService.fetchTotalExec().then(res => {
+      headers.value[0].data = res.data;
+      headers.value[1].data = res.data}
+    );
+
+    TaskGroupService.fetchFlagGenTime().then(res => {
+      headers.value[2].data = res.data;
+    });
+    TaskGroupService.fetchDataServiceExecTime().then(res => {
+      headers.value[3].data = res.data;
+    });
+    TaskGroupService.fetchDataServiceExecTimeout().then(res => {
+      headers.value[4].data = res.data;
+    });
+    TaskGroupService.fetchTargetComplete().then(res => {
+      headers.value[5].data = res.data;
+    });
 })
 </script>
 <style></style>

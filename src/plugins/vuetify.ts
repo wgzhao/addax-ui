@@ -1,11 +1,13 @@
 import { createVuetify } from "vuetify";
 import "vuetify/styles";
-import theme from "./theme";
+// import theme from "./theme";
+import '@mdi/font/css/materialdesignicons.css'
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 
-const vuetify = createVuetify({
-    // directives,
-    theme,
+export default createVuetify({
+    theme: {
+        defaultTheme: "dark",
+    },
     icons: {
         defaultSet: "mdi",
         aliases,
@@ -20,4 +22,3 @@ const vuetify = createVuetify({
     },
 });
 
-export default vuetify;
