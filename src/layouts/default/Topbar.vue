@@ -8,7 +8,7 @@
             <v-btn v-bind="props" flat> {{ item.title }}</v-btn>
           </template>
           <v-list density="compact" v-for="(child, index) in item.children">
-            <v-list-item  :key="index" :to="{ path: child.path }">
+            <v-list-item :key="index" :to="{ path: child.path }">
               {{ child.title }}
             </v-list-item>
           </v-list>
@@ -24,7 +24,7 @@
   <!-- End of Topbar -->
 </template>
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
 // import {useTheme} from "vuetify";
 
 // const {global} = useTheme();

@@ -1,22 +1,34 @@
 <script setup lang="ts">
-defineProps(['filePath', 'data'])
+import { ref, onMounted, onUnmounted } from "vue";
+
+defineProps(["filename", "fcontent"]);
+const dialog = ref(true);
+
+onMounted(() => {
+  console.log("LogModal mounted");
+  dialog.value = true;
+});
+
+onUnmounted(() => {
+  console.log("LogModal unmounted");
+  dialog.value = false;
+});
 </script>
 
 <template>
-<v-dialog  max-width="290">
+  <v-dialog max-width="800" v-model="dialog">
     <v-card>
-        <v-card-title class="headline">Use Google's location service?</v-card-title>
-        <v-card-text>Let Google help apps determine location. This means sending anonymous location data to
-            Google, even when no apps are running.</v-card-text>
-        <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialog = false">Disagree</v-btn>
-            <v-btn color="green darken-1" text @click="dialog = false">Agree</v-btn>
-        </v-card-actions>
+      <v-card-title class="headline">
+        {{ filename }}
+      </v-card-title>
+      <v-card-text>
+        {{ fcontent }}
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="green darken-1" @click="dialog = false">Close</v-btn>
+      </v-card-actions>
     </v-card>
-</v-dialog>
+  </v-dialog>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
