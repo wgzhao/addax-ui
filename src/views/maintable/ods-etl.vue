@@ -1,7 +1,5 @@
 <template>
   <!-- 主表配置 -- ODS 采集配置-->
-  <div class="row">
-    <div class="col-6">
       <v-card flat title="主表配置 - ODS 采集配置">
         <template v-slot:text>
           <v-row justify="center" align="center">
@@ -22,10 +20,9 @@
               <v-btn
                 variant="tonal"
                 prepend-icon="mdi-plus"
-                @click="showBatchAdd = true"
+                @click="showModal['BatchAdd'] = true"
                 >批量新增表</v-btn
               >
-              <BatchAdd :show="showBatchAdd" @close="showBatchAdd = false" />
             </v-col>
             <v-col cols="auto">
               <v-btn
@@ -80,10 +77,9 @@
           </v-data-table-server>
         </v-card-text>
       </v-card>
-    </div>
-    <div class="col-6">
-      <component :is="tabs[dynamicComponent]" :d="item"></component>
-    </div>
+<!--    <div class="col-6">-->
+<!--      <component :is="tabs[dynamicComponent]" :d="item"></component>-->
+<!--    </div>-->
     <!-- action response -->
     <v-dialog v-model="alertMsg.show" width="auto">
       <v-card>
@@ -93,7 +89,21 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-  </div>
+
+  <!-- modal -->
+  <!-- 批量新增表 -->
+<!--  <template v-for="(item, index) in selectOptions" :key="index">-->
+<!--    <component :is="tabs[index]" v-model="showModal[item.value]" @close="showModal[item.value] = false" :d="item" />-->
+<!--  </template>-->
+
+  <BatchAdd v-model="showModal['BatchAdd']"  />
+  <MainTableInfo v-model="showModal['MainTableInfo']"  :d="item"/>
+  <FieldsCompare v-model="showModal['FieldsCompare']" @close="showModal['FieldsCompare'] = false" :d="item"/>
+  <CmdList v-model="showModal['CmdList']" :d="item"/>
+  <TableUsed v-if="showModal['TableUsed']" @close="showModal['TableUsed'] = false" :d="item"/>
+  <AddaxResult v-if="showModal['AddaxResult']" @close="showModal['AddaxResult'] = false" :d="item"/>
+  <LogFiles v-model="showModal['LogFiles1']" @close="showModal['LogFiles1'] = false" :d="item"/>
+  <LogFiles v-model="showModal['LogFiles2']" @close="showModal['LogFiles2'] = false" :d="item"/>
 </template>
 
 <script setup lang="ts">
@@ -115,7 +125,7 @@ const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const loading = ref(true);
 const dynamicComponent = ref(null);
-const tabs = {
+const tabs = ref([
   MainTableInfo,
   FieldsCompare,
   CmdList,
@@ -123,7 +133,8 @@ const tabs = {
   AddaxResult,
   BatchAdd,
   LogFiles,
-};
+]);
+
 const selectOptions = [
   { text: "主表信息", value: "MainTableInfo" },
   { text: "字段对比", value: "FieldsCompare" },
@@ -151,9 +162,19 @@ const headers = [
 ];
 const alertMsg = ref({ show: false, color: "", icon: "", text: "", title: "" });
 
-const showBatchAdd = ref(false);
+const showModal = ref({
+  "MainTableInfo": false,
+  "FieldsCompare": false,
+  "CmdList": false,
+  "TableUsed": false,
+  "AddaxResult": false,
+  "BatchAdd": false,
+  "LogFiles1": false,
+  "LogFiles2": false,
 
-const doAction = (val, comp) => {
+})
+
+const doAction = (val: any, comp: string) => {
   // clear item
   item.value = "";
   console.log("invoke " + comp);
@@ -190,6 +211,7 @@ const doAction = (val, comp) => {
       item.value = res.data;
       return res.data;
     });
+    showModal.value[comp] = true;
     comp = "LogFiles";
   } else if (comp == "LogFiles2") {
     // 调度日志
@@ -197,12 +219,14 @@ const doAction = (val, comp) => {
       item.value = res.data;
       return res.data;
     });
+    showModal.value[comp] = true;
     comp = "LogFiles";
   } else {
     item.value = val;
   }
   console.log("change dynamic component to " + comp);
-  dynamicComponent.value = comp;
+  // dynamicComponent.value = comp;
+  showModal.value[comp] = true;
 };
 
 const doEtl = (ctype: string) => {
@@ -236,4 +260,5 @@ const searchOds = () => {
   loadItems({ page: 0, itemsPerPage: itemsPerPage.value, sortBy: null });
 };
 </script>
-<style></style>
+<style scoped>
+</style>

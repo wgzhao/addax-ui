@@ -1,13 +1,6 @@
 <template>
   <!-- ODS 采集 - 批量新增表 -->
-  <Teleport to="body">
-    <div
-      class="modal"
-      aria-labelledby="modal-title"
-      aria-modal="true"
-      v-if="show"
-    >
-      <div class="fixed inset-0 bg-black-500" aria-hidden="true"></div>
+  <v-dialog min-width="800" v-model="dialog">
       <v-form v-model="valid" @submit.prevent>
         <v-card>
           <template v-slot:text>
@@ -93,14 +86,15 @@
           </v-card-actions>
         </v-card>
       </v-form>
-    </div>
-  </Teleport>
+  </v-dialog>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
-defineProps(["d", "show"]);
+defineProps(["d"]);
+
+const dialog = defineModel();
 
 const valid = ref(true);
 
@@ -186,13 +180,5 @@ onMounted(() => {
   fetchSourceData();
 });
 </script>
-<style scoped>
-.modal {
-  position: fixed;
-  justify-content: center;
-  z-index: 999;
-  top: 20%;
-  left: 20%;
-  width: 800px;
-}
+<style>
 </style>

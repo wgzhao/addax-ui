@@ -1,6 +1,7 @@
 <template>
   <!-- ODS 主表信息 ODS采集主表配置-->
   <!-- <v-sheet class="mx-auto"> -->
+  <v-dialog min-width="800" v-model="dialog">
   <v-form fast-fail @submit.prevent="saveOds">
     <v-card flat title="ODS采集主表配置">
       <v-container>
@@ -186,18 +187,22 @@
         </v-row>
       </v-container>
       <v-card-actions>
-        <v-btn type="submit" class="btn btn-primary">
+        <v-btn type="submit" class="btn btn-primary bg-primary">
           {{ mode == "add" ? "Add" : "Save" }}</v-btn
         >
-        <v-btn type="reset">Cancel</v-btn>
+        <v-btn type="reset" class="bg-primary">Cancel</v-btn>
+        <v-btn @click="dialog = false" class="bg-secondary">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
   <!-- </v-sheet> -->
+  </v-dialog>
 </template>
 <script setup>
 import OdsService from "@/service/maintable/odsService";
-const props = defineProps(["d"]);
+const props = defineProps(["d" ]);
+
+const dialog = defineModel();
 
 const saveOds = () => {
   props.d["souSysid"] = props.d["destOwner"].substring(3);
