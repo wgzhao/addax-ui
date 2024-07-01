@@ -58,6 +58,10 @@ const urls = ref([
     title: "实时监控",
   },
   {
+    path: "/closed-check",
+    title: "盘后检查",
+  },
+  {
     path: "/system-info",
     title: "系统一览",
   },
