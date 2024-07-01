@@ -9,39 +9,39 @@ console.log(axios.defaults.baseURL);
 const userinfo = JSON.parse(localStorage.getItem("userinfo"));
 
 if (userinfo != null) {
-    const token = userinfo.token;
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  const token = userinfo.token;
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
 axios.interceptors.response.use(
-    function (response) {
-        return response;
-    },
-    function (error) {
-        if (error.response.status === 401) {
-            router.push("/login");
-            // router.push('/login')
-        }
-        return Promise.reject(error);
-    },
+  function (response) {
+    return response;
+  },
+  function (error) {
+    if (error.response.status === 401) {
+      router.push("/login");
+      // router.push('/login')
+    }
+    return Promise.reject(error);
+  },
 );
 
 class Requests {
-    get(url: string, params?: Map<any, any>) {
-        return axios.get(url, { params: params });
-    }
+  get(url: string, params?: Map<any, any>) {
+    return axios.get(url, { params: params });
+  }
 
-    post(url: string, data: Map<any, any>) {
-        return axios.post(url, data);
-    }
+  post(url: string, data: Map<any, any>) {
+    return axios.post(url, data);
+  }
 
-    delete(url: string, params?: Map<any, any>) {
-        return axios.delete(url, { params });
-    }
+  delete(url: string, params?: Map<any, any>) {
+    return axios.delete(url, { params });
+  }
 
-    put(url: string, data: Map<any, any>) {
-        return axios.put(url, data);
-    }
+  put(url: string, data: Map<any, any>) {
+    return axios.put(url, data);
+  }
 }
 // export function get(url, params) {
 //   const data = ref()

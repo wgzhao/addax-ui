@@ -1,27 +1,27 @@
 import Requests from "@/utils/requests";
 
 class TaskGroupService {
-    prefix = "/taskGroup";
+  prefix = "/taskGroup";
 
-    fetchTotalExec(): Promise<any> {
-        return Requests.get(this.prefix + "/totalExec");
-    }
+  fetchTotalExec(): Promise<any> {
+    return Requests.get(this.prefix + "/totalExec");
+  }
 
-    fetchFlagGenTime(): Promise<any> {
-        return Requests.get(this.prefix + "/flagGenTime");
-    }
+  fetchFlagGenTime(): Promise<any> {
+    return Requests.get(this.prefix + "/flagGenTime");
+  }
 
-    fetchDataServiceExecTime(): Promise<any> {
-        return Requests.get(this.prefix + "/dataServiceExecTime");
-    }
+  fetchDataServiceExecTime(): Promise<any> {
+    return Requests.get(this.prefix + "/dataServiceExecTime");
+  }
 
-    fetchDataServiceExecTimeout(): Promise<any> {
-        return Requests.get(this.prefix + "/dataServiceExecTimeout");
-    }
+  fetchDataServiceExecTimeout(): Promise<any> {
+    return Requests.get(this.prefix + "/dataServiceExecTimeout");
+  }
 
-    fetchTargetComplete(): Promise<any> {
-        return Requests.get(this.prefix + "/targetComplete");
-    }
+  fetchTargetComplete(): Promise<any> {
+    return Requests.get(this.prefix + "/targetComplete");
+  }
 }
 
-export default  new TaskGroupService();
+export default new TaskGroupService();

@@ -17,5 +17,5 @@ import "highlight.js/styles/github-dark.css";
 import "highlight.js/lib/common";
 
 export function registerPlugins(app: App) {
-    app.use(vuetify).use(router).use(HljsVuePlugin);
+  app.use(vuetify).use(router).use(HljsVuePlugin);
 }

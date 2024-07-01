@@ -78,6 +78,7 @@ html {
   }
 }
 
-.v-data-table tbody tr td, thead tr th {
+.v-data-table tbody tr td,
+thead tr th {
   padding: 10px !important;
 }
