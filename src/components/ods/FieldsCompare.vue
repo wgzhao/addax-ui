@@ -1,56 +1,42 @@
 <template>
   <!-- 字段对比 -->
-  <v-dialog min-width="800" v-model="dialog">
-    <v-card>
-      <v-list-item class="px-6" height="88">
-        <template #title>
-          字段对比
-        </template>
-        <template #append>
-          <v-btn class="text-none" color="primary" text="close" variant="text"
-                 @click="dialog=false"></v-btn>
-        </template>
-      </v-list-item>
-      <v-card-text>
-        <div v-if="d.length === 0">无数据</div>
-        <div v-else>
-          <v-data-table :headers="headers" :items="d" density="compact">
-            <template v-slot:item="{ item }">
-              <tr>
-                <td rowspan="3">{{ item.IDX }}</td>
-              </tr>
-              <tr class="bg-gray">
-                <td>源表</td>
-                <td>{{ item.COLUMN_NAME_ORIG }}</td>
-                <td>{{ item.DATA_TYPE }}</td>
-                <td>{{ item.DATA_LENGTH }}</td>
-                <td>{{ item.DATA_PRECISION }}</td>
-                <td>{{ item.DATA_SCALE }}</td>
-                <td>{{ item.COLUMN_COMMENT }}</td>
-                <td>{{ item.TABLE_COMMENT }}</td>
-              </tr>
-              <tr class="bg-secondary">
-                <td>目标表</td>
-                <td>{{ item.COL_NAME }}</td>
-                <td>{{ item.COL_TYPE_FULL }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{{ item.COL_COMMENT }}</td>
-                <td>{{ item.TBL_COMMENT }}</td>
-              </tr>
-            </template>
-          </v-data-table>
-        </div>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  <dialog-comp title="字段对比" v-model="dialog">
+    <v-data-table :headers="headers" :items="d" density="compact" no-data-text="无数据">
+      <template v-slot:item="{ item }">
+        <tr>
+          <td rowspan="3">{{ item.IDX }}</td>
+        </tr>
+        <tr class="bg-gray">
+          <td>源表</td>
+          <td>{{ item.COLUMN_NAME_ORIG }}</td>
+          <td>{{ item.DATA_TYPE }}</td>
+          <td>{{ item.DATA_LENGTH }}</td>
+          <td>{{ item.DATA_PRECISION }}</td>
+          <td>{{ item.DATA_SCALE }}</td>
+          <td>{{ item.COLUMN_COMMENT }}</td>
+          <td>{{ item.TABLE_COMMENT }}</td>
+        </tr>
+        <tr class="bg-secondary">
+          <td>目标表</td>
+          <td>{{ item.COL_NAME }}</td>
+          <td>{{ item.COL_TYPE_FULL }}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>{{ item.COL_COMMENT }}</td>
+          <td>{{ item.TBL_COMMENT }}</td>
+        </tr>
+      </template>
+    </v-data-table>
+  </dialog-comp>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import OdsService from "@/service/maintable/odsService";
+import DialogComp from './DialogComp.vue'
 
-defineProps(["d"]);
-
+const props = defineProps(["d"]);
+const item = ref()
 const dialog = defineModel({ required: true, default: true });
 
 const headers = ref([
@@ -103,5 +89,16 @@ const headers1 = ref([
 
   // }
 ]);
+onMounted(() => {
+  console.log(props.d);
+  OdsService.fetchFieldsCompare(props.d.value)
+    .then((res) => {
+      item.value = res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 </script>
-<style></style>
+<style>
+</style>

@@ -1,113 +1,76 @@
 <template>
   <!-- 主表配置 -- ODS 采集配置-->
-      <v-card flat title="主表配置 - ODS 采集配置">
-        <template v-slot:text>
-          <v-row justify="center" align="center">
-            <v-col cols="col-4">
-              <v-text-field
-                v-model="search"
-                density="compact"
-                label="Search"
-                prepend-inner-icon="mdi-magnify"
-                single-line
-                variant="outlined"
-                hide-details
-                @keyup.enter="searchOds"
-                @click:append-inner="searchOds"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="auto">
-              <v-btn
-                variant="tonal"
-                prepend-icon="mdi-plus"
-                @click="showModal['BatchAdd'] = true"
-                >批量新增表</v-btn
-              >
-            </v-col>
-            <v-col cols="auto">
-              <v-btn
-                variant="tonal"
-                prepend-icon="mdi-play"
-                @click="doEtl('source')"
-                >启动表更新</v-btn
-              >
-            </v-col>
-            <v-col cols="auto">
-              <v-btn
-                variant="tonal"
-                prepend-icon="mdi-play"
-                @click="doEtl('sp')"
-                >启动采集</v-btn
-              >
-            </v-col>
-          </v-row>
-        </template>
-        <v-card-text>
-          <v-data-table-server
-            density="default"
-            :items="ods"
-            :headers="headers"
-            v-model:item-per-page="itemsPerPage"
-            :items-length="totalItems"
-            item-value="name"
-            :loading="loading"
-            @update:options="loadItems"
-          >
-            <template v-slot:item.action="{ item }">
-              <!-- add link for selectOption -->
-              <v-menu>
-                <template v-slot:activator="{ props }">
-                  <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
-                </template>
-                <v-list>
-                  <v-list-item
-                    slim
-                    density="compact"
-                    v-for="(op, i) in selectOptions"
-                    :key="i"
-                    @click="doAction(item, op.value)"
-                  >
-                    <v-list-item-title class="text-button">{{
-                      op.text
-                    }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
+  <v-card flat title="主表配置 - ODS 采集配置">
+    <template v-slot:text>
+      <v-row justify="center" align="center">
+        <v-col cols="col-4">
+          <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
+            variant="outlined" hide-details @keyup.enter="searchOds" @click:append-inner="searchOds"></v-text-field>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn variant="tonal" prepend-icon="mdi-plus" @click="showModal['BatchAdd'] = true">批量新增表</v-btn>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('source')">启动表更新</v-btn>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('sp')">启动采集</v-btn>
+        </v-col>
+      </v-row>
+    </template>
+    <v-card-text>
+      <v-data-table-server density="compact" :items="ods" :headers="headers" :item-per-page="itemsPerPage"
+        :items-length="totalItems" item-value="name" :loading="loading" @update:options="loadItems">
+        <template v-slot:item.action="{ item }">
+          <!-- add link for selectOption -->
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
             </template>
-          </v-data-table-server>
-        </v-card-text>
-      </v-card>
-<!--    <div class="col-6">-->
-<!--      <component :is="tabs[dynamicComponent]" :d="item"></component>-->
-<!--    </div>-->
-    <!-- action response -->
-    <v-dialog v-model="alertMsg.show" width="auto">
-      <v-card>
-        <v-toolbar :color="alertMsg.color" :title="alertMsg.title"></v-toolbar>
-        <v-card-text>
-          <pre>{{ alertMsg.text }}</pre>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+            <v-list>
+              <v-list-item slim density="compact" v-for="(op, i) in selectOptions" :key="i"
+                @click="doAction(item, op.value)">
+                <v-list-item-title class="text-button">{{
+                  op.text
+                }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </template>
+      </v-data-table-server>
+    </v-card-text>
+  </v-card>
+  <!--    <div class="col-6">-->
+  <!--      <component :is="tabs[dynamicComponent]" :d="item"></component>-->
+  <!--    </div>-->
+  <!-- action response -->
+  <v-dialog v-model="alertMsg.show" width="auto">
+    <v-card>
+      <v-toolbar :color="alertMsg.color" :title="alertMsg.title"></v-toolbar>
+      <v-card-text>
+        <pre>{{ alertMsg.text }}</pre>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 
   <!-- modal -->
   <!-- 批量新增表 -->
-<!--  <template v-for="(item, index) in selectOptions" :key="index">-->
-<!--    <component :is="tabs[index]" v-model="showModal[item.value]" @close="showModal[item.value] = false" :d="item" />-->
-<!--  </template>-->
+  <!--  <template v-for="(item, index) in selectOptions" :key="index">-->
+  <!--    <component :is="tabs[index]" v-model="showModal[item.value]" @close="showModal[item.value] = false" :d="item" />-->
+  <!--  </template>-->
 
-  <BatchAdd v-model="showModal['BatchAdd']"  />
-  <MainTableInfo v-model="showModal['MainTableInfo']"  :d="item"/>
-  <FieldsCompare v-model="showModal['FieldsCompare']" @close="showModal['FieldsCompare'] = false" :d="item"/>
-  <CmdList v-model="showModal['CmdList']" :d="item"/>
-  <TableUsed v-if="showModal['TableUsed']" @close="showModal['TableUsed'] = false" :d="item"/>
-  <AddaxResult v-if="showModal['AddaxResult']" @close="showModal['AddaxResult'] = false" :d="item"/>
-  <LogFiles v-model="showModal['LogFiles1']" @close="showModal['LogFiles1'] = false" :d="item"/>
-  <LogFiles v-model="showModal['LogFiles2']" @close="showModal['LogFiles2'] = false" :d="item"/>
+  <BatchAdd v-model="showModal['BatchAdd']" v-if="showModal['BatchAdd']" />
+  <MainTableInfo v-model="showModal['MainTableInfo']" v-if="showModal['MainTableInfo']" :d="item" />
+  <FieldsCompare v-model="showModal['FieldsCompare']" v-if="showModal['FieldsCompare']" :d="item" />
+  <CmdList v-model="showModal['CmdList']" v-if="showModal['CmdList']" :d="item" />
+  <TableUsed v-model="showModal['TableUsed']" v-if="showModal['TableUsed']" :d="item" />
+  <AddaxResult v-model="showModal['AddaxResult']" v-if="showModal['AddaxResult']" :d="item" />
+  <LogFiles v-model="showModal['LogFiles1']" v-if="showModal['LogFiles1']" :d="item" />
+  <LogFiles v-model="showModal['LogFiles2']" v-if="showModal['LogFiles2']" :d="item" />
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, provide } from "vue";
 import OdsService from "@/service/maintable/odsService";
 import LogService from "@/service/maintable/logService";
 import MainTableInfo from "@/components/ods//MainTable.vue";
@@ -177,23 +140,24 @@ const showModal = ref({
 const doAction = (val: any, comp: string) => {
   // clear item
   item.value = "";
-  console.log("invoke " + comp);
-  if (comp == "FieldsCompare") {
-    OdsService.fetchFieldsCompare(val.tid)
-      .then((res) => {
-        item.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } else if (comp == "CmdList") {
-    OdsService.fetchCmdList(val.tid)
-      .then((res) => {
-        item.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  if (comp == "LogFiles1") {
+    // 命令日志
+    LogService.getLogFiles(val.spname).then((res) => {
+      item.value = res.data;
+    });
+    showModal.value[comp] = true;
+    return;
+  }
+  if (comp == "LogFiles2") {
+    // 调度日志
+    LogService.getLogFiles("tuna_sp_etl_" + val.tid).then((res) => {
+      item.value = res.data;
+    });
+    showModal.value[comp] = true;
+    return;
+  }
+  if (comp == "FieldsCompare" || comp == "CmdList") {
+    item.value = val.tid;
   } else if (comp == "TableUsed") {
     OdsService.fetchTableUsed(
       val.destOwner + "." + val.destTablename,
@@ -205,22 +169,6 @@ const doAction = (val: any, comp: string) => {
     OdsService.fetchAddaxResult(val.spname).then((res) => {
       item.value = res.data;
     });
-  } else if (comp == "LogFiles1") {
-    // 命令日志
-    LogService.getLogFiles(val.spname).then((res) => {
-      item.value = res.data;
-      return res.data;
-    });
-    showModal.value[comp] = true;
-    comp = "LogFiles";
-  } else if (comp == "LogFiles2") {
-    // 调度日志
-    LogService.getLogFiles("tuna_sp_etl_" + val.tid).then((res) => {
-      item.value = res.data;
-      return res.data;
-    });
-    showModal.value[comp] = true;
-    comp = "LogFiles";
   } else {
     item.value = val;
   }
@@ -246,7 +194,7 @@ const doEtl = (ctype: string) => {
       alertMsg.value.text = res.data;
     });
 };
-const loadItems = ({ page, itemsPerPage, sortBy }) => {
+const loadItems = ({ page: number, itemsPerPage: number, sortBy: any }) => {
   loading.value = true;
   // const sort = createSort(sortBy)
   OdsService.fetchOdsList(page - 1, itemsPerPage, search.value).then((res) => {

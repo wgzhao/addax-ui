@@ -1,20 +1,16 @@
 <template>
   <!-- 根据 SPNAME 获取 Addax 最近15条采集信息 -->
-  <v-card flat title="按照名称显示最近15条记录">
-    <v-data-table-virtual
-      v-if="d"
-      :items="d"
-      :headers="headers"
-      density="compact"
-      class="elevation-1"
-    >
+  <dialog-comp title="按照名称显示最近15条记录" v-model="dialog">
+    <v-data-table-virtual v-if="d" :items="d" :headers="headers" density="compact" class="elevation-1">
     </v-data-table-virtual>
-  </v-card>
+  </dialog-comp>
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import DialogComp from './DialogComp.vue'
 
 defineProps(["d"]);
+const dialog = defineModel({ required: true, default: true })
 
 const headers = ref([
   { title: "日期", value: "startDay" },
@@ -28,4 +24,5 @@ const headers = ref([
   { title: "错误记录数", value: "totalErr" },
 ]);
 </script>
-<style></style>
+<style>
+</style>

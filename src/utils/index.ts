@@ -29,3 +29,5 @@ export const createSort = (sortBy) => {
   // merge sorkKey and sortOrder a dict
   return { sortKey: sortKey.join(), sortOrder: sortOrder.join() };
 };
+
+export const injectDialogKey = Symbol();

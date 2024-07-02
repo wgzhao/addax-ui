@@ -1,15 +1,14 @@
 <template>
   <!-- 调度和命令日志 -->
-  <v-dialog v-model="dialog">
-    <v-list lines="one" density="compact">
-      <v-list-subheader>调度/命令日志</v-list-subheader>
-      <v-list-item v-for="(f, index) in props.d" :key="index">
-        <v-list-item-title>
-          <a href="#"  class="text-sm" :key="index" @click.prevent="getContent(f)">{{ f }}</a>
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-dialog>
+  <dialog-comp v-mode="dialog" title="调度/命令日志">
+  <v-list lines="one" density="compact">
+    <v-list-item v-for="(f, index) in props.d" :key="index">
+      <v-list-item-title>
+        <a href="#"  class="text-sm" :key="index" @click.prevent="getContent(f)">{{ f }}</a>
+      </v-list-item-title>
+    </v-list-item>
+  </v-list>
+  </dialog-comp>
 
   <!-- log content dialog -->
   <v-dialog  class="overflow-visible" v-model="fDialog">
@@ -31,6 +30,7 @@
 import { ref } from "vue";
 
 const dialog = defineModel({ required: true, default: true });
+import DialogComp from './DialogComp.vue'
 
 import LogService from "@/service/maintable/logService";
 

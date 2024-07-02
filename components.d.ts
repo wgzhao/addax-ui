@@ -11,6 +11,7 @@ declare module 'vue' {
     BatchAdd: typeof import('./src/components/ods/BatchAdd.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     CmdList: typeof import('./src/components/ods/CmdList.vue')['default']
+    DialogComp: typeof import('./src/components/ods/DialogComp.vue')['default']
     DSTableDetail: typeof import('./src/components/dataservice/DSTableDetail.vue')['default']
     DSTableFields: typeof import('./src/components/dataservice/DSTableFields.vue')['default']
     FieldsCompare: typeof import('./src/components/ods/FieldsCompare.vue')['default']

@@ -1,100 +1,47 @@
 <template>
   <!-- ODS 采集 - 批量新增表 -->
-  <v-dialog min-width="800" v-model="dialog">
-      <v-form v-model="valid" @submit.prevent>
-        <v-card>
-          <template v-slot:text>
-            <v-row justify="center">
-              <v-col cols="col-2 ml-auto">
-                <v-btn color="primary" class="mb-2" @click="addItem"
-                  >新增一行</v-btn
-                >
-              </v-col>
-              <v-col cols="col-2 ml-auto">
-                <v-btn color="primary" class="mb-2" @click="saveItems"
-                  >保存</v-btn
-                >
-              </v-col>
-              <v-col cols="col-2 ml-auto">
-                <v-btn color="primary" @click="$emit('close')">关闭</v-btn>
-              </v-col>
-            </v-row>
-          </template>
-          <v-card-text>
-            <v-data-table-virtual
-              :items="data"
-              :headers="headers"
-              density="compact"
-              height="400"
-            >
-              <template v-slot:item="{ item, index }">
-                <tr>
-                  <td>
-                    <v-select
-                      required
-                      label="Select"
-                      density="compact"
-                      :items="sourceSystemList"
-                      item-title="NAME"
-                      item-value="SYSID"
-                      single-line
-                      v-model="item.souSysid"
-                    >
-                    </v-select>
-                  </td>
-                  <td>
-                    <v-text-field
-                      density="compact"
-                      v-model="item.souFilter"
-                      required
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      density="compact"
-                      v-model="item.souOwner"
-                      required
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      density="compact"
-                      v-model="item.souTablename"
-                      required
-                    ></v-text-field>
-                  </td>
-                  <td>
-                    <v-text-field
-                      density="compact"
-                      v-model="item.destTablename"
-                      :value="item.souTablename.toUpperCase()"
-                    ></v-text-field>
-                  </td>
-                  <td class="d-flex justify-center">
-                    <v-icon size="x-large" @click="deleteItem(index)"
-                      >mdi-delete</v-icon
-                    >
-                  </td>
-                </tr>
-              </template>
-            </v-data-table-virtual>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" @click="addItem">新增一行</v-btn>
-            <v-btn color="primary" @click="saveItems">保存</v-btn>
-            <v-btn color="primary" @click="$emit('close')">关闭</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-  </v-dialog>
+  <dialog-comp v-model="dialog" title="批量新增表">
+    <template #header>
+      <v-btn color="primary" class="flex px-2 mr-5" @click="addItem">新增一行</v-btn>
+      <v-btn color="primary" class="flex px-2" @click="saveItems">保存</v-btn>
+    </template>
+    <v-data-table-virtual :items="data" :headers="headers" density="compact">
+      <template v-slot:item="{ item, index }">
+        <tr>
+          <td>
+            <v-select required label="Select" density="compact" :items="sourceSystemList" item-title="NAME"
+              item-value="SYSID" single-line v-model="item.souSysid">
+            </v-select>
+          </td>
+          <td>
+            <v-text-field density="compact" v-model="item.souFilter" required></v-text-field>
+          </td>
+          <td>
+            <v-text-field density="compact" v-model="item.souOwner" required></v-text-field>
+          </td>
+          <td>
+            <v-text-field density="compact" v-model="item.souTablename" required></v-text-field>
+          </td>
+          <td>
+            <v-text-field density="compact" v-model="item.destTablename"
+              :value="item.souTablename.toUpperCase()"></v-text-field>
+          </td>
+          <td class="d-flex justify-center">
+            <v-icon size="x-large" @click="deleteItem(index)">mdi-delete</v-icon>
+          </td>
+        </tr>
+      </template>
+    </v-data-table-virtual>
+  </dialog-comp>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import DialogComp from './DialogComp.vue'
 import axios from "axios";
 
 defineProps(["d"]);
 
-const dialog = defineModel();
+const dialog = defineModel({ required: true, type: Boolean, default: true });
 
 const valid = ref(true);
 
