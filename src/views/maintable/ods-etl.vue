@@ -194,7 +194,7 @@ const doEtl = (ctype: string) => {
       alertMsg.value.text = res.data;
     });
 };
-const loadItems = ({ page: number, itemsPerPage: number, sortBy: any }) => {
+const loadItems = ({ page, itemsPerPage, sortBy }) => {
   loading.value = true;
   // const sort = createSort(sortBy)
   OdsService.fetchOdsList(page - 1, itemsPerPage, search.value).then((res) => {

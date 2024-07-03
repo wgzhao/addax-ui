@@ -7,7 +7,7 @@ import Footer from "./default/Footer.vue";
   <v-app>
     <div class="px-2">
       <Topbar />
-      <v-main>
+      <v-main class="align-center justify-center" style="min-height: 600px;">
         <router-view></router-view>
       </v-main>
       <Footer />

@@ -1,4 +1,5 @@
 <template>
+  <v-footer>
   <div class="v-row">
     <div class="v-col col-12" justify="center">
       <span class="justify-center">
@@ -10,4 +11,7 @@
       <span class="d-md-flex gap-x-4 text-primary d-none"> </span>
     </div>
   </div>
+  </v-footer>
 </template>
+<script setup lang="ts">
+</script>
