@@ -20,27 +20,27 @@ export default defineConfig(({ mode }) => {
         routesFolder: [
           {
             src: "src/views",
-            path: "",
-          },
-        ],
+            path: ""
+          }
+        ]
       }),
       Layouts(),
       Vue({
-        template: { transformAssetUrls },
+        template: { transformAssetUrls }
       }),
       // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
       Vuetify({
         autoImport: true,
         styles: {
-          configFile: "src/styles/settings.scss",
-        },
+          configFile: "src/styles/settings.scss"
+        }
       }),
-      Components(),
+      Components()
     ],
     define: { "process.env": {} },
     resolve: {
       alias: {
-        "@": fileURLToPath(new URL("./src", import.meta.url)),
+        "@": fileURLToPath(new URL("./src", import.meta.url))
       },
       extensions: [
         ".js",
@@ -50,8 +50,8 @@ export default defineConfig(({ mode }) => {
         ".ts",
         ".tsx",
         ".vue",
-        ".json",
-      ],
+        ".json"
+      ]
     },
     server: {
       host: "0.0.0.0",
@@ -59,9 +59,9 @@ export default defineConfig(({ mode }) => {
       proxy: {
         [env.VITE_API_BASE_URL]: {
           target: env.VITE_API_HOST,
-          changeOrigin: false,
-        },
-      },
-    },
+          changeOrigin: false
+        }
+      }
+    }
   };
 });

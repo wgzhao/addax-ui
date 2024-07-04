@@ -8,7 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement,
+  ArcElement
 } from "chart.js";
 import { Pie } from "vue-chartjs";
 
@@ -26,9 +26,9 @@ export default {
             data: [55, 30, 15],
             backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"],
             hoverBackgroundColor: ["#2e59d9", "#17a673", "#2c9faf"],
-            hoverBorderColor: "rgba(234, 236, 244, 1)",
-          },
-        ],
+            hoverBorderColor: "rgba(234, 236, 244, 1)"
+          }
+        ]
       },
       options: {
         maintainAspectRatio: false,
@@ -40,20 +40,20 @@ export default {
           xPadding: 15,
           yPadding: 15,
           displayColors: false,
-          caretPadding: 10,
+          caretPadding: 10
         },
         cutoutPercentage: 80,
         responsive: true,
         maintainAspectRatio: false,
-        cutout: "80%",
+        cutout: "80%"
       },
       plugins: {
         legend: {
-          display: false,
-        },
-      },
+          display: false
+        }
+      }
     };
   },
-  components: { Pie },
+  components: { Pie }
 };
 </script>

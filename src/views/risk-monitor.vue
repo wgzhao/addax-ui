@@ -38,21 +38,21 @@ const titles = [
   { item: "sysRisk", title: "系统风险检测结果" },
   {
     item: "odsFieldChange",
-    title: "ODS采集源库的字段变更提醒(T-1日结构与T日结构对比)",
+    title: "ODS采集源库的字段变更提醒(T-1日结构与T日结构对比)"
   },
-  { item: "smsDetail", title: "短信发送情况" },
+  { item: "smsDetail", title: "短信发送情况" }
 ];
 
 const data = ref({
   sysRisk: [],
   odsFieldChange: [],
-  smsDetail: [],
+  smsDetail: []
 });
 const headers = {
   sysRisk: [
     { title: "类别", key: "chkKind" },
     { title: "名称", key: "chkName" },
-    { title: "风险提示", key: "chkContent" },
+    { title: "风险提示", key: "chkContent" }
   ],
   odsFieldChange: [
     { title: "连接名", key: "souDbConn" },
@@ -67,27 +67,27 @@ const headers = {
         {
           title: "类型",
           key: "dataType",
-          value: (item) => `${item.dataTypeLast} -> ${item.dataType}`,
+          value: item => `${item.dataTypeLast} -> ${item.dataType}`
         },
         {
           title: "长度",
           key: "dataLen",
-          value: (item) => `${item.dataLengthLast} -> ${item.dataLength}`,
+          value: item => `${item.dataLengthLast} -> ${item.dataLength}`
         },
         {
           title: "精度",
           key: "dataPrec",
-          value: (item) => `${item.dataPrecisionLast} -> ${item.dataPrecision}`,
+          value: item => `${item.dataPrecisionLast} -> ${item.dataPrecision}`
         },
         {
           title: "小数位",
           key: "dataScale",
-          value: (item) => `${item.dataScaleLast} -> ${item.dataScale}`,
-        },
-      ],
+          value: item => `${item.dataScaleLast} -> ${item.dataScale}`
+        }
+      ]
     },
     { title: "现状更新时间", key: "dwCltDate" },
-    { title: "升级前更新时间", key: "dwCltDateLast" },
+    { title: "升级前更新时间", key: "dwCltDateLast" }
   ],
   smsDetail: [
     {
@@ -95,11 +95,11 @@ const headers = {
       value: "msg",
       width: "70%",
       cellProps: ({ value }) => ({
-        class: value.includes("失败") ? "bg-danger" : "",
-      }),
+        class: value.includes("失败") ? "bg-danger" : ""
+      })
     },
-    { title: "发送时间", value: "dwCltDate" },
-  ],
+    { title: "发送时间", value: "dwCltDate" }
+  ]
 };
 // 系统风险
 
@@ -108,15 +108,15 @@ const search = ref(null);
 
 // 获取数据
 const fetchData = () => {
-  RiskService.sysRisks().then((res) => {
+  RiskService.sysRisks().then(res => {
     data.value["sysRisk"] = res.data;
     // sysRisk.value = res.data;
   });
-  RiskService.fieldsChanges().then((res) => {
+  RiskService.fieldsChanges().then(res => {
     data.value["odsFieldChange"] = res.data;
     // odsFieldChange.value = res.data;
   });
-  RiskService.smsDetails().then((res) => {
+  RiskService.smsDetails().then(res => {
     data.value["smsDetail"] = res.data;
     // smsDetail.value = res.data;
   });
@@ -126,7 +126,7 @@ const timer = setInterval(
   () => {
     fetchData();
   },
-  1000 * 60 * 1,
+  1000 * 60 * 1
 );
 
 onUnmounted(() => {

@@ -53,12 +53,12 @@ const headers = ref([
   { title: "开始时间", value: "startTime" },
   { title: "结束时间", value: "endTime" },
   { title: "耗时", value: "runtime" },
-  { title: "操作", value: "action", sortable: false },
+  { title: "操作", value: "action", sortable: false }
 ]);
 const actionList = ref([
   { comp: mti, title: "主表信息" },
   { comp: dst, title: "推送表" },
-  { comp: "ScheduleLog", title: "调度日志" },
+  { comp: "ScheduleLog", title: "调度日志" }
 ]);
 
 const doAction = (val, comp) => {
@@ -67,7 +67,7 @@ const doAction = (val, comp) => {
   param.value = val;
 };
 onMounted(() => {
-  DataService.list().then((res) => {
+  DataService.list().then(res => {
     data.value = res.data;
   });
 });

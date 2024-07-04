@@ -5,7 +5,7 @@ class AuthService {
   login(user: User) {
     return Requests.post("/auth/login", {
       username: user.username,
-      password: user.password,
+      password: user.password
     });
   }
 
@@ -16,7 +16,7 @@ class AuthService {
   register(user: User) {
     return Requests.post("/auth/register", {
       username: user.username,
-      password: user.password,
+      password: user.password
     });
   }
 }

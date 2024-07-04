@@ -6,12 +6,12 @@ import { watch } from "vue";
 const themes = [
   {
     name: "light",
-    icon: "fa-regular fa-sun",
+    icon: "fa-regular fa-sun"
   },
   {
     name: "dark",
-    icon: "fa-regular fa-moon",
-  },
+    icon: "fa-regular fa-moon"
+  }
 ];
 
 const IconBtn = {
@@ -20,12 +20,12 @@ const IconBtn = {
   color: "default",
   variant: "text",
   VIcon: {
-    size: 24,
-  },
+    size: 24
+  }
 };
 const VTooltip = {
   // set v-tooltip default location to top
-  location: "top",
+  location: "top"
 };
 
 // const props = defineProps({
@@ -40,10 +40,10 @@ const { name: themeName, global: globalTheme } = useTheme();
 const {
   state: currentThemeName,
   next: getNextThemeName,
-  index: currentThemeIndex,
+  index: currentThemeIndex
 } = useCycleList(
-  themes.map((t) => t.name),
-  { initialValue: themeName },
+  themes.map(t => t.name),
+  { initialValue: themeName }
 );
 
 const changeTheme = () => {
@@ -53,9 +53,9 @@ const changeTheme = () => {
 // Update icon if theme is changed from other sources
 watch(
   () => globalTheme.name.value,
-  (val) => {
+  val => {
     currentThemeName.value = val;
-  },
+  }
 );
 </script>
 

@@ -3,8 +3,8 @@ import Requests from "@/utils/requests";
 const sysRisks = () => {
   return requests
     .get("/risk/sysRisk")
-    .then((res) => res.json())
-    .then((res) => {
+    .then(res => res.json())
+    .then(res => {
       return res;
     });
   // return get('/risk/sysRisk', {'a': 'b'}).value

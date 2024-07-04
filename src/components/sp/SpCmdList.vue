@@ -42,12 +42,12 @@ const headers = ref([
   { title: "执行开始时间", key: "startTime" },
   { title: "执行结束时间", key: "endTime" },
   { title: "状态", key: "flag" },
-  { title: "", key: "data-table-expand" },
+  { title: "", key: "data-table-expand" }
 ]);
 const data = ref();
 
 const fetchData = () => {
-  spService.fetchSpCmdList(props.spId).then((res) => (data.value = res.data));
+  spService.fetchSpCmdList(props.spId).then(res => (data.value = res.data));
 };
 
 onMounted(() => {

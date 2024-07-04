@@ -3,12 +3,12 @@ import { defineStore } from "pinia";
 const themes = ref({
   light: {
     name: "light",
-    icon: "fas fa-sun",
+    icon: "fas fa-sun"
   },
   dark: {
     name: "dark",
-    icon: "fas fa-moon",
-  },
+    icon: "fas fa-moon"
+  }
 });
 export const themeStore = defineStore({
   id: "curTheme",
@@ -24,6 +24,6 @@ export const themeStore = defineStore({
     },
     getIcon() {
       return this.theme == "light" ? "fas fa-sun" : "fas fa-moon";
-    },
-  },
+    }
+  }
 });

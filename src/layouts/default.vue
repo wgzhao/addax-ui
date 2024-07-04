@@ -5,12 +5,10 @@ import Footer from "./default/Footer.vue";
 
 <template>
   <v-app>
-    <div class="px-2">
-      <Topbar />
-      <v-main class="align-center justify-center" style="min-height: 600px;">
-        <router-view></router-view>
-      </v-main>
-      <Footer />
-    </div>
+    <Topbar />
+    <v-main class="align-center justify-center" style="min-height: 600px">
+      <router-view />
+    </v-main>
+    <Footer />
   </v-app>
 </template>

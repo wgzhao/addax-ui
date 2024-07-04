@@ -82,7 +82,7 @@ export default {
         { title: "开始时间", value: "startTime" },
         { title: "结束时间", value: "endTime" },
         { title: "耗时(秒)", value: "runtime" },
-        { title: "操作", value: "actions" },
+        { title: "操作", value: "actions" }
       ],
       selectOptions: [
         { title: "主表详情", value: "SpDetail" },
@@ -91,8 +91,8 @@ export default {
         { title: "调度日志", value: "ShowLogs2" },
         { title: "使用场景", value: "SceneList" },
         { title: "计算溯源", value: "SpLineage" },
-        { title: "前置情况", value: "SpRequiresList" },
-      ],
+        { title: "前置情况", value: "SpRequiresList" }
+      ]
     };
   },
   components: {
@@ -101,7 +101,7 @@ export default {
     SceneList,
     SpRequiresList,
     SpLineage,
-    ShowLogs,
+    ShowLogs
   },
   methods: {
     doAction(comp, val) {
@@ -125,16 +125,16 @@ export default {
     initData() {
       // Initial data
       Requests.get("/maintable/sp/list").then(
-        (resp) => (this.impSps = resp.data),
+        resp => (this.impSps = resp.data)
       );
-    },
+    }
   },
 
   mounted() {
     {
       this.initData();
     }
-  },
+  }
 };
 </script>
 <style></style>

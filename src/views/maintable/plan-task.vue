@@ -31,8 +31,8 @@ export default {
         { title: "执行开始时间", key: "startTime" },
         { title: "执行结束时间", key: "endTime" },
         { title: "耗时", key: "runtime" },
-        { title: "操作", key: "", value: "actions" },
-      ],
+        { title: "操作", key: "", value: "actions" }
+      ]
     };
   },
   mounted() {
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get("/maintable/plantask/list").then((res) => {
+      axios.get("/maintable/plantask/list").then(res => {
         this.data = res.data;
       });
     },
@@ -64,8 +64,8 @@ export default {
       } else {
         return "blue";
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style></style>

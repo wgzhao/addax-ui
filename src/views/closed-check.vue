@@ -21,10 +21,10 @@ const headers = ref([
   { title: "表名", value: "TBLNAME" },
   { title: "T-1记录数", value: "CNT_LTD" },
   { title: "T日记录数", value: "CNT_TD" },
-  { title: "记录比对差额", value: "CNT_ERR" },
+  { title: "记录比对差额", value: "CNT_ERR" }
 ]);
 onMounted(() => {
-  CloseCheckService.fetchAbnormalRecord().then((res) => {
+  CloseCheckService.fetchAbnormalRecord().then(res => {
     abnormalRecord.value = res.data;
   });
 });

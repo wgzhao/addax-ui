@@ -9,7 +9,7 @@ class OdsService {
     return Requests.get(this.prefix, {
       page: page,
       pageSize: pageSize,
-      q: q,
+      q: q
     });
   }
 
@@ -18,7 +18,7 @@ class OdsService {
     return Requests.get(this.prefix + "/search", {
       q: q,
       page: page,
-      pageSize: pageSize,
+      pageSize: pageSize
     });
   }
 
@@ -42,7 +42,7 @@ class OdsService {
   fetchTableUsed(sysid: string, tbl: string) {
     return Requests.get(this.prefix + "/scene", {
       tbl: tbl,
-      sysId: sysid,
+      sysId: sysid
     });
   }
 

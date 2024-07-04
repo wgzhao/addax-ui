@@ -35,13 +35,13 @@ const headers = ref([
       { title: "CMD3", key: "c3" },
       { title: "CMD4", key: "c4" },
       { title: "CMD5", key: "c5" },
-      { title: "CMD6", key: "c6" },
-    ],
-  },
+      { title: "CMD6", key: "c6" }
+    ]
+  }
 ]);
 
 onMounted(() => {
-  RealtimeService.fetchPlanAll().then((res) => (planAll.value = res.data));
+  RealtimeService.fetchPlanAll().then(res => (planAll.value = res.data));
 });
 </script>
 <style></style>

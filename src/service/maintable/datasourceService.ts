@@ -6,15 +6,15 @@ const list = () => {
   return Requests.get(apiPrefix);
 };
 
-const get = (id) => {
+const get = id => {
   return Requests.get(apiPrefix + "/" + id);
 };
 
-const save = (data) => {
+const save = data => {
   return Requests.post(apiPrefix, data);
 };
 
-const deleteItem = (id) => {
+const deleteItem = id => {
   return Requests.delete(apiPrefix + "/" + id);
 };
 

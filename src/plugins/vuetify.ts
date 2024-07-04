@@ -6,18 +6,18 @@ import { aliases, mdi } from "vuetify/iconsets/mdi";
 
 export default createVuetify({
   theme: {
-    defaultTheme: "dark",
+    defaultTheme: "dark"
   },
   icons: {
     defaultSet: "mdi",
     aliases,
     sets: {
-      mdi,
-    },
+      mdi
+    }
   },
   defaults: {
     VTextField: {
-      variant: "outlined",
-    },
-  },
+      variant: "outlined"
+    }
+  }
 });

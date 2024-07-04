@@ -36,5 +36,5 @@ export default {
   deleteDict,
   listDictItems,
   createOrUpdateDictItem,
-  deleteDictItem,
+  deleteDictItem
 };

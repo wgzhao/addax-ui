@@ -252,8 +252,8 @@ const variant = ref("outlined");
 const fetchData = () => {
   spService
     .fetchSpMainDetail(props.spId)
-    .then((res) => (spDetail.value = res.data));
-  spService.fetchSpThrough(props.spId).then((res) => (needs.value = res.data));
+    .then(res => (spDetail.value = res.data));
+  spService.fetchSpThrough(props.spId).then(res => (needs.value = res.data));
 };
 
 const saveData = () => {

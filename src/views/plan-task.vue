@@ -23,10 +23,10 @@ export default {
         pageLength: 10,
         lengthMenu: [
           [10, 25, 50, -1],
-          [10, 25, 50, "All"],
+          [10, 25, 50, "All"]
         ],
         buttons: ["copy", "excel", "pdf"],
-        dom: "Bfrltip",
+        dom: "Bfrltip"
       },
       headers: [
         { key: "runFreq", title: "频率", width: "5%" },
@@ -35,8 +35,8 @@ export default {
         { key: "startTime", title: "开始时间", width: "10%" },
         { key: "endTime", title: "结束时间", width: "10%" },
         { key: "runtime", title: "耗时(秒)", width: "5%" },
-        { key: "actions", title: "操作", value: "" },
-      ],
+        { key: "actions", title: "操作", value: "" }
+      ]
     };
   },
   components: {},
@@ -59,7 +59,7 @@ export default {
     },
     closeModal() {
       this.isModalVisible = false;
-    },
-  },
+    }
+  }
 };
 </script>

@@ -81,7 +81,7 @@ const etlAndDsHeaders = ref([
   { title: "系统编号", key: "sysid" },
   { title: "系统名称", key: "sysName" },
   { title: "连接串", key: "dbConstr" },
-  { title: "登录用户", key: "dbUser" },
+  { title: "登录用户", key: "dbUser" }
 ]);
 const etlInfoHeaders = ref([
   { title: "系统名称", key: "sysName" },
@@ -89,23 +89,23 @@ const etlInfoHeaders = ref([
   { title: "源表名", key: "souTablename" },
   { title: "源表筛选", key: "souFilter" },
   { title: "目标用户", key: "destOwner" },
-  { title: "目标表名", key: "destTablename" },
+  { title: "目标表名", key: "destTablename" }
 ]);
 const dsInfoHeaders = ref([
   { title: "任务组", key: "DS_NAME" },
   { title: "目标表", key: "TBLNAME" },
   { title: "推送开始时间", key: "START_TIME" },
-  { title: "推送结束时间", key: "END_TIME" },
+  { title: "推送结束时间", key: "END_TIME" }
 ]);
 
 const fetchData = () => {
-  SystemInfoService.getEtlAndDs(filter.value).then((res) => {
+  SystemInfoService.getEtlAndDs(filter.value).then(res => {
     etlAndDs.value = res.data;
   });
-  SystemInfoService.getEtlInfo(filter.value).then((res) => {
+  SystemInfoService.getEtlInfo(filter.value).then(res => {
     etlInfo.value = res.data;
   });
-  SystemInfoService.getDsInfo(filter.value).then((res) => {
+  SystemInfoService.getDsInfo(filter.value).then(res => {
     dsInfo.value = res.data;
   });
 };

@@ -241,13 +241,13 @@ const headers = [
   { title: "名称", key: "dbName" },
   { title: "采集编号", key: "dbIdEtl" },
   { title: "服务编号", key: "dbIdDs" },
-  { title: "操作", value: "actions", align: "center" },
+  { title: "操作", value: "actions", align: "center" }
 ];
 const actions = [
   { text: "详情", value: "show" },
   { text: "编辑", value: "edit" },
   { text: "使用场景", value: "scene" },
-  { text: "探索源库", value: "explore" },
+  { text: "探索源库", value: "explore" }
 ];
 
 const formTitle = computed(() => {
@@ -262,11 +262,11 @@ const formTitle = computed(() => {
 
 const retrieveImpDB = () => {
   DSService.list()
-    .then((resp) => {
+    .then(resp => {
       impdbs.value = resp.data;
       return resp;
     })
-    .catch((error) => {
+    .catch(error => {
       console.log(error);
     });
 };
@@ -274,11 +274,11 @@ const retrieveImpDB = () => {
 const doAction = (id, ctype) => {
   mode.value = ctype;
   DSService.get(id)
-    .then((resp) => {
+    .then(resp => {
       sourceItem.value = resp.data;
       return resp;
     })
-    .catch((error) => {
+    .catch(error => {
       return error;
     });
 };
@@ -291,8 +291,8 @@ const addDataSource = () => {
 const saveData = () => {
   if (mode.value === "add" || mode.value === "edit") {
     DSService.save(sourceItem.value)
-      .then((resp) => alert("保存成功"))
-      .catch((error) => {
+      .then(resp => alert("保存成功"))
+      .catch(error => {
         alert("保存失败:" + error);
       });
 
@@ -306,11 +306,11 @@ const saveData = () => {
 
 onMounted(() => {
   DSService.list()
-    .then((resp) => {
+    .then(resp => {
       impdbs.value = resp.data;
       return resp;
     })
-    .catch((error) => {
+    .catch(error => {
       return error;
     });
 });

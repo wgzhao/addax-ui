@@ -32,8 +32,8 @@ const theme = {
         "grey-900": "#212121",
         "perfect-scrollbar-thumb": "#DBDADE",
         "skin-bordered-background": "#fff",
-        "skin-bordered-surface": "#fff",
-      },
+        "skin-bordered-surface": "#fff"
+      }
     },
     dark: {
       dark: true,
@@ -65,10 +65,10 @@ const theme = {
         "grey-900": "#E7E9F6",
         "perfect-scrollbar-thumb": "#4A5072",
         "skin-bordered-background": "#2b2c40",
-        "skin-bordered-surface": "#2b2c40",
-      },
-    },
-  },
+        "skin-bordered-surface": "#2b2c40"
+      }
+    }
+  }
 };
 
 export default theme;

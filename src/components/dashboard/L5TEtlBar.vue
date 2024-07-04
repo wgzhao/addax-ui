@@ -12,7 +12,7 @@ import {
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale,
+  LinearScale
 } from "chart.js";
 
 ChartJS.register(
@@ -21,7 +21,7 @@ ChartJS.register(
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale,
+  LinearScale
 );
 
 export default {
@@ -38,19 +38,19 @@ export default {
             backgroundColor: "#42b983",
             parsing: {
               xAxisKey: "FID",
-              yAxisKey: "RUNTIME",
-            },
-          },
+              yAxisKey: "RUNTIME"
+            }
+          }
         ],
         options: {
           responsive: true,
           parsing: {
             xAxisKey: "FID",
-            yAxisKey: "RUNTIME",
+            yAxisKey: "RUNTIME"
           },
-          stack: "FID",
-        },
-      },
+          stack: "FID"
+        }
+      }
     };
   },
   mounted() {
@@ -58,12 +58,12 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get("/dashboard/last5DaysEtlTime").then((res) => {
+      axios.get("/dashboard/last5DaysEtlTime").then(res => {
         this.data = res.data;
       });
-    },
+    }
   },
-  components: { Bar },
+  components: { Bar }
 };
 </script>
 <style></style>

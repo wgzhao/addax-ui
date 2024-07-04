@@ -118,34 +118,34 @@ const dsHeaders = ref([
   {
     title: "源筛选条件(trino置空筛选logdate)",
     value: "souFilter",
-    width: "10%",
+    width: "10%"
   },
   { title: "前置SQL", value: "preSql" },
   { title: "后置SQL", value: "postSql" },
   {
     title: "额外的字段映射<br>(多个字段用;分隔)",
     value: "colMap",
-    width: "10%",
+    width: "10%"
   },
   { title: "状态", value: "flag" },
   { title: "hdp", value: "souIshdp" },
   { title: "开始时间", value: "startTime" },
   { title: "结束时间", value: "endTime" },
-  { title: "配置信息", value: "actions", width: "10%" },
+  { title: "配置信息", value: "actions", width: "10%" }
 ]);
 const actions = ref([
   {
     title: "字段",
     type: "fields",
     comp: "DSTableFields",
-    api: "dsTableFields/",
+    api: "dsTableFields/"
   },
   { title: "JSON", type: "jobConf", comp: "JobConf", api: "jobConf/" },
-  { title: "日志", type: "logFiles", comp: "LogFiles", api: "logFiles/" },
+  { title: "日志", type: "logFiles", comp: "LogFiles", api: "logFiles/" }
 ]);
 
 const fetchData = () => {
-  axios.get(apiPrefix.value + "dsTable/" + props.d).then((res) => {
+  axios.get(apiPrefix.value + "dsTable/" + props.d).then(res => {
     data.value = res.data;
     return res.data;
   });
@@ -167,8 +167,8 @@ const fieldsHeaders = ref([
       { title: "字段类型", key: "DATA_TYPE" },
       { title: "字段长度", key: "DATA_LENGTH" },
       { title: "数值型长度", key: "DATA_PRECISION" },
-      { title: "数值型精度", key: "DATA_SCALE" },
-    ],
+      { title: "数值型精度", key: "DATA_SCALE" }
+    ]
   },
   {
     title: "源表",
@@ -176,9 +176,9 @@ const fieldsHeaders = ref([
     align: "center",
     children: [
       { title: "字段名", key: "COL_NAME" },
-      { title: "字段类型", key: "COL_TYPE" },
-    ],
-  },
+      { title: "字段类型", key: "COL_TYPE" }
+    ]
+  }
 ]);
 // actions
 const doAction = (item, idx) => {
@@ -186,7 +186,7 @@ const doAction = (item, idx) => {
     formTitle.value = item.destTablename + " 字段对比";
     axios
       .get(apiPrefix.value + actions.value[idx].api + item.tblId)
-      .then((res) => {
+      .then(res => {
         childData.value = res.data;
         return res.data;
       });
@@ -198,7 +198,7 @@ const doAction = (item, idx) => {
     formTitle.value = spName + " 的运行日志";
     axios
       .get("/log/" + actions.value[idx].api + "tuna_addax_" + item.tblId)
-      .then((res) => {
+      .then(res => {
         childData.value = res.data;
         return res.data;
       });
@@ -207,14 +207,14 @@ const doAction = (item, idx) => {
   // dialog.value = true
 };
 
-const getContent = (f) => {
+const getContent = f => {
   axios
     .get("/log/logFileContent", {
       params: {
-        f: f,
-      },
+        f: f
+      }
     })
-    .then((res) => {
+    .then(res => {
       fContent.value = res.data;
       return res.data;
     });

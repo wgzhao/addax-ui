@@ -2,32 +2,59 @@
   <!-- ODS 采集 - 批量新增表 -->
   <dialog-comp v-model="dialog" title="批量新增表">
     <template #header>
-      <v-btn color="primary" class="flex px-2 mr-5" @click="addItem">新增一行</v-btn>
+      <v-btn color="primary" class="flex px-2 mr-5" @click="addItem"
+        >新增一行</v-btn
+      >
       <v-btn color="primary" class="flex px-2" @click="saveItems">保存</v-btn>
     </template>
     <v-data-table-virtual :items="data" :headers="headers" density="compact">
       <template v-slot:item="{ item, index }">
         <tr>
           <td>
-            <v-select required label="Select" density="compact" :items="sourceSystemList" item-title="NAME"
-              item-value="SYSID" single-line v-model="item.souSysid">
+            <v-select
+              required
+              label="Select"
+              density="compact"
+              :items="sourceSystemList"
+              item-title="NAME"
+              item-value="SYSID"
+              single-line
+              v-model="item.souSysid"
+            >
             </v-select>
           </td>
           <td>
-            <v-text-field density="compact" v-model="item.souFilter" required></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="item.souFilter"
+              required
+            ></v-text-field>
           </td>
           <td>
-            <v-text-field density="compact" v-model="item.souOwner" required></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="item.souOwner"
+              required
+            ></v-text-field>
           </td>
           <td>
-            <v-text-field density="compact" v-model="item.souTablename" required></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="item.souTablename"
+              required
+            ></v-text-field>
           </td>
           <td>
-            <v-text-field density="compact" v-model="item.destTablename"
-              :value="item.souTablename.toUpperCase()"></v-text-field>
+            <v-text-field
+              density="compact"
+              v-model="item.destTablename"
+              :value="item.souTablename.toUpperCase()"
+            ></v-text-field>
           </td>
           <td class="d-flex justify-center">
-            <v-icon size="x-large" @click="deleteItem(index)">mdi-delete</v-icon>
+            <v-icon size="x-large" @click="deleteItem(index)"
+              >mdi-delete</v-icon
+            >
           </td>
         </tr>
       </template>
@@ -36,7 +63,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import DialogComp from './DialogComp.vue'
+import DialogComp from "./DialogComp.vue";
 import axios from "axios";
 
 defineProps(["d"]);
@@ -51,7 +78,7 @@ const headers = ref([
   { title: "源用户", key: "souOwner" },
   { title: "源表名", key: "souTablename" },
   { title: "目标表", key: "destTablename" },
-  { title: "Action", value: "action" },
+  { title: "Action", value: "action" }
 ]);
 
 const data = ref([
@@ -61,8 +88,8 @@ const data = ref([
     souOwner: "",
     souTablename: "",
     destTablename: "",
-    destPardKind: "",
-  },
+    destPardKind: ""
+  }
 ]);
 
 const defaultItem = ref({
@@ -71,12 +98,12 @@ const defaultItem = ref({
   souOwner: "",
   souTablename: "",
   destTablename: "",
-  destPardKind: "",
+  destPardKind: ""
 });
 
 const sourceSystemList = ref([]);
 const fetchSourceData = () => {
-  axios.get("/maintable/ods/sourceSystem").then((res) => {
+  axios.get("/maintable/ods/sourceSystem").then(res => {
     sourceSystemList.value = res.data;
   });
 };
@@ -93,7 +120,7 @@ const addItem = () => {
 const saveItems = () => {
   // set destPardKind for each item
   // rule: if(or(A2 = "JY", A2 = "J2", A2 = "WD"), 'N', 'D')
-  data.value.forEach((item) => {
+  data.value.forEach(item => {
     if (
       item.souSysid == "JY" ||
       item.souSysid == "J2" ||
@@ -112,13 +139,13 @@ const saveItems = () => {
   axios
     .post("/maintable/ods/batchSave", data.value, {
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     })
-    .then((res) => {
+    .then(res => {
       console.log(res.data);
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
   // console.log(data.value)
@@ -127,5 +154,4 @@ onMounted(() => {
   fetchSourceData();
 });
 </script>
-<style>
-</style>
+<style></style>

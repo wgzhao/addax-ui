@@ -1,16 +1,27 @@
 <template>
   <!-- 命令列表 -->
   <dialog-comp title="命令列表" v-model="dialog">
-    <v-data-table :headers="headers" :items="d" density="compact" no-data-text="无数据" v-model:expanded="expanded"
-      show-expand item-value="comText">
+    <v-data-table
+      :headers="headers"
+      :items="d"
+      density="compact"
+      no-data-text="无数据"
+      v-model:expanded="expanded"
+      show-expand
+      item-value="comText"
+    >
       <template v-slot:item.flag="{ value }">
         <v-chip :color="getColor(value)">{{ value }}</v-chip>
       </template>
       <template v-slot:expanded-row="{ columns, item }">
         <tr>
           <td :colspan="columns.length">
-            <highlightjs :language="item.comKind === 'addax' ? 'json' : 'sql'" height="400" :copy="false"
-              :code="item.comText" />
+            <highlightjs
+              :language="item.comKind === 'addax' ? 'json' : 'sql'"
+              height="400"
+              :copy="false"
+              :code="item.comText"
+            />
           </td>
         </tr>
       </template>
@@ -22,9 +33,9 @@ import { ref } from "vue";
 import OdsService from "@/service/maintable/odsService";
 import DialogComp from "./DialogComp.vue";
 
-const dialog = defineModel({ required: true, default: true })
+const dialog = defineModel({ required: true, default: true });
 const props = defineProps(["d"]);
-const item=ref()
+const item = ref();
 const expanded = ref([]);
 const headers = ref([
   { title: "执行顺序", key: "comIdx" },
@@ -48,13 +59,12 @@ const getColor = (flag: string) => {
 
 onMounted(() => {
   OdsService.fetchCmdList(props.d.value)
-    .then((res) => {
+    .then(res => {
       item.value = res.data;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 });
 </script>
-<style>
-</style>
+<style></style>

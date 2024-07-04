@@ -1,4 +1,4 @@
-export const hexToRgb = (hex) => {
+export const hexToRgb = hex => {
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 
@@ -13,7 +13,7 @@ export const hexToRgb = (hex) => {
     : null;
 };
 
-export const createSort = (sortBy) => {
+export const createSort = sortBy => {
   let sortKey: Array<string> = [];
   let sortOrder: Array<string> = [];
   if (sortBy.length) {

@@ -48,7 +48,7 @@ import { authService } from "@/service/auth.service";
 const form = ref(false);
 const auth = ref({
   username: "admin",
-  password: "389f89beb8d7",
+  password: "389f89beb8d7"
 });
 
 const loading = ref<boolean>(false);
@@ -66,14 +66,14 @@ function required(v: string): boolean | string {
 function login() {
   // reset the error message
   // clearMessages();
-  authService.login(auth.value).then((res) => {
+  authService.login(auth.value).then(res => {
     if (res.data.accessToken == null) {
       alert("登录失败");
     } else {
       let data = {
         token: res.data.accessToken,
         username: auth.value.username,
-        role: "",
+        role: ""
       };
       localStorage.setItem("userinfo", JSON.stringify(data));
       // // update the authorization header

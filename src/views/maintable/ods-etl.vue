@@ -4,23 +4,52 @@
     <template v-slot:text>
       <v-row justify="center" align="center">
         <v-col cols="col-4">
-          <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
-            variant="outlined" hide-details @keyup.enter="searchOds" @click:append-inner="searchOds"></v-text-field>
+          <v-text-field
+            v-model="search"
+            density="compact"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            single-line
+            variant="outlined"
+            hide-details
+            @keyup.enter="searchOds"
+            @click:append-inner="searchOds"
+          ></v-text-field>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-plus" @click="showModal['BatchAdd'] = true">批量新增表</v-btn>
+          <v-btn
+            variant="tonal"
+            prepend-icon="mdi-plus"
+            @click="showModal['BatchAdd'] = true"
+            >批量新增表</v-btn
+          >
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('source')">启动表更新</v-btn>
+          <v-btn
+            variant="tonal"
+            prepend-icon="mdi-play"
+            @click="doEtl('source')"
+            >启动表更新</v-btn
+          >
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('sp')">启动采集</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('sp')"
+            >启动采集</v-btn
+          >
         </v-col>
       </v-row>
     </template>
     <v-card-text>
-      <v-data-table-server density="compact" :items="ods" :headers="headers" :item-per-page="itemsPerPage"
-        :items-length="totalItems" item-value="name" :loading="loading" @update:options="loadItems">
+      <v-data-table-server
+        density="compact"
+        :items="ods"
+        :headers="headers"
+        :item-per-page="itemsPerPage"
+        :items-length="totalItems"
+        item-value="name"
+        :loading="loading"
+        @update:options="loadItems"
+      >
         <template v-slot:item.action="{ item }">
           <!-- add link for selectOption -->
           <v-menu>
@@ -28,8 +57,13 @@
               <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
             </template>
             <v-list>
-              <v-list-item slim density="compact" v-for="(op, i) in selectOptions" :key="i"
-                @click="doAction(item, op.value)">
+              <v-list-item
+                slim
+                density="compact"
+                v-for="(op, i) in selectOptions"
+                :key="i"
+                @click="doAction(item, op.value)"
+              >
                 <v-list-item-title class="text-button">{{
                   op.text
                 }}</v-list-item-title>
@@ -60,13 +94,41 @@
   <!--  </template>-->
 
   <BatchAdd v-model="showModal['BatchAdd']" v-if="showModal['BatchAdd']" />
-  <MainTableInfo v-model="showModal['MainTableInfo']" v-if="showModal['MainTableInfo']" :d="item" />
-  <FieldsCompare v-model="showModal['FieldsCompare']" v-if="showModal['FieldsCompare']" :d="item" />
-  <CmdList v-model="showModal['CmdList']" v-if="showModal['CmdList']" :d="item" />
-  <TableUsed v-model="showModal['TableUsed']" v-if="showModal['TableUsed']" :d="item" />
-  <AddaxResult v-model="showModal['AddaxResult']" v-if="showModal['AddaxResult']" :d="item" />
-  <LogFiles v-model="showModal['LogFiles1']" v-if="showModal['LogFiles1']" :d="item" />
-  <LogFiles v-model="showModal['LogFiles2']" v-if="showModal['LogFiles2']" :d="item" />
+  <MainTableInfo
+    v-model="showModal['MainTableInfo']"
+    v-if="showModal['MainTableInfo']"
+    :d="item"
+  />
+  <FieldsCompare
+    v-model="showModal['FieldsCompare']"
+    v-if="showModal['FieldsCompare']"
+    :d="item"
+  />
+  <CmdList
+    v-model="showModal['CmdList']"
+    v-if="showModal['CmdList']"
+    :d="item"
+  />
+  <TableUsed
+    v-model="showModal['TableUsed']"
+    v-if="showModal['TableUsed']"
+    :d="item"
+  />
+  <AddaxResult
+    v-model="showModal['AddaxResult']"
+    v-if="showModal['AddaxResult']"
+    :d="item"
+  />
+  <LogFiles
+    v-model="showModal['LogFiles1']"
+    v-if="showModal['LogFiles1']"
+    :d="item"
+  />
+  <LogFiles
+    v-model="showModal['LogFiles2']"
+    v-if="showModal['LogFiles2']"
+    :d="item"
+  />
 </template>
 
 <script setup lang="ts">
@@ -95,7 +157,7 @@ const tabs = ref([
   TableUsed,
   AddaxResult,
   BatchAdd,
-  LogFiles,
+  LogFiles
 ]);
 
 const selectOptions = [
@@ -105,7 +167,7 @@ const selectOptions = [
   { text: "使用场景", value: "TableUsed" },
   { text: "addax结果", value: "AddaxResult" },
   { text: "命令日志", value: "LogFiles1" },
-  { text: "调度日志", value: "LogFiles2" },
+  { text: "调度日志", value: "LogFiles2" }
 ];
 const headers = [
   {
@@ -113,7 +175,7 @@ const headers = [
     align: "center",
     sortable: false,
     value: "destOwner",
-    sort: "asc",
+    sort: "asc"
   },
   { title: "系统名称", value: "sysName", align: "center" },
   { title: "源用户", value: "souOwner", align: "center", sort: "asc" },
@@ -121,28 +183,27 @@ const headers = [
   { title: "状态", value: "flag", align: "center" },
   { title: "剩余", value: "retryCnt", align: "center" },
   { title: "耗时", value: "runtime", align: "center" },
-  { title: "操作", value: "action", sortable: false, align: "center" },
+  { title: "操作", value: "action", sortable: false, align: "center" }
 ];
 const alertMsg = ref({ show: false, color: "", icon: "", text: "", title: "" });
 
 const showModal = ref({
-  "MainTableInfo": false,
-  "FieldsCompare": false,
-  "CmdList": false,
-  "TableUsed": false,
-  "AddaxResult": false,
-  "BatchAdd": false,
-  "LogFiles1": false,
-  "LogFiles2": false,
-
-})
+  MainTableInfo: false,
+  FieldsCompare: false,
+  CmdList: false,
+  TableUsed: false,
+  AddaxResult: false,
+  BatchAdd: false,
+  LogFiles1: false,
+  LogFiles2: false
+});
 
 const doAction = (val: any, comp: string) => {
   // clear item
   item.value = "";
   if (comp == "LogFiles1") {
     // 命令日志
-    LogService.getLogFiles(val.spname).then((res) => {
+    LogService.getLogFiles(val.spname).then(res => {
       item.value = res.data;
     });
     showModal.value[comp] = true;
@@ -150,7 +211,7 @@ const doAction = (val: any, comp: string) => {
   }
   if (comp == "LogFiles2") {
     // 调度日志
-    LogService.getLogFiles("tuna_sp_etl_" + val.tid).then((res) => {
+    LogService.getLogFiles("tuna_sp_etl_" + val.tid).then(res => {
       item.value = res.data;
     });
     showModal.value[comp] = true;
@@ -161,12 +222,12 @@ const doAction = (val: any, comp: string) => {
   } else if (comp == "TableUsed") {
     OdsService.fetchTableUsed(
       val.destOwner + "." + val.destTablename,
-      val.sysid,
-    ).then((res) => {
+      val.sysid
+    ).then(res => {
       item.value = res.data;
     });
   } else if (comp == "AddaxResult") {
-    OdsService.fetchAddaxResult(val.spname).then((res) => {
+    OdsService.fetchAddaxResult(val.spname).then(res => {
       item.value = res.data;
     });
   } else {
@@ -179,14 +240,14 @@ const doAction = (val: any, comp: string) => {
 
 const doEtl = (ctype: string) => {
   OdsService.execETL(ctype)
-    .then((res) => {
+    .then(res => {
       alertMsg.value.show = true;
       alertMsg.value.color = "success";
       alertMsg.value.icon = "mdi-check-circle";
       alertMsg.value.title = "启动成功";
       alertMsg.value.text = res.data;
     })
-    .catch((res) => {
+    .catch(res => {
       alertMsg.value.show = true;
       alertMsg.value.color = "error";
       alertMsg.value.icon = "mdi-alert-circle";
@@ -197,7 +258,7 @@ const doEtl = (ctype: string) => {
 const loadItems = ({ page, itemsPerPage, sortBy }) => {
   loading.value = true;
   // const sort = createSort(sortBy)
-  OdsService.fetchOdsList(page - 1, itemsPerPage, search.value).then((res) => {
+  OdsService.fetchOdsList(page - 1, itemsPerPage, search.value).then(res => {
     ods.value = res.data["content"];
     totalItems.value = res.data["totalPages"];
     loading.value = false;
@@ -208,5 +269,4 @@ const searchOds = () => {
   loadItems({ page: 0, itemsPerPage: itemsPerPage.value, sortBy: null });
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

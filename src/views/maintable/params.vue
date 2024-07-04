@@ -125,14 +125,14 @@ const headers = [
   { title: "参数名称", value: "dictName", width: "25%" },
   { title: "参数分类", value: "dictClass", width: "10%" },
   { title: "参数说明", value: "remark", width: "50%" },
-  { title: "#", value: "actions", width: "5%" },
+  { title: "#", value: "actions", width: "5%" }
 ];
 const dictionaryHeaders = [
   { title: "参数值", value: "entryCode" },
   { title: "参数项", value: "entryValue" },
   { title: "参数名称", value: "entryContent" },
   { title: "备注", value: "remark" },
-  { title: "Action", value: "actions", width: "5%" },
+  { title: "Action", value: "actions", width: "5%" }
 ];
 const dialog = ref(false);
 const dialogDelete = ref(false);
@@ -159,17 +159,17 @@ const closeDelete = () => {
     editedIndex.value = -1;
   });
 };
-watch(dialog, async (newVal) => {
+watch(dialog, async newVal => {
   dialog.value = newVal || close();
 });
 
-watch(dialogDelete, async (newVal) => {
+watch(dialogDelete, async newVal => {
   dialogDelete.value = newVal || closeDelete();
 });
 
-const getDictionary = (code) => {
+const getDictionary = code => {
   currEntryCode.value = code;
-  DictService.listDictItems(code).then((res) => {
+  DictService.listDictItems(code).then(res => {
     dictionaries.value = res.data;
   });
 };
@@ -185,13 +185,13 @@ const addItem = () => {
 
   dialog.value = !dialog.value;
 };
-const editItem = (item) => {
+const editItem = item => {
   editedIndex.value = dictionaries.value.indexOf(item);
   editedItem.value = Object.assign({}, item);
   dialog.value = true;
 };
 
-const deleteItem = (item) => {
+const deleteItem = item => {
   editedIndex.value = dictionaries.value.indexOf(item);
   editedItem.value = Object.assign({}, item);
   dialogDelete.value = true;
@@ -208,14 +208,14 @@ const saveDictionary = () => {
     dictionaries.value.push(editedItem.value);
   }
   // save
-  DictService.createOrUpdateDictItem(editedItem.value).then((res) => {
+  DictService.createOrUpdateDictItem(editedItem.value).then(res => {
     console.log(res.data);
     return res.data;
   });
   close();
 };
 onMounted(() => {
-  DictService.listDicts().then((res) => {
+  DictService.listDicts().then(res => {
     dicts.value = res.data;
     return res.data;
   });

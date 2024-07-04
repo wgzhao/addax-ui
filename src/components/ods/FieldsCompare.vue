@@ -1,7 +1,12 @@
 <template>
   <!-- 字段对比 -->
   <dialog-comp title="字段对比" v-model="dialog">
-    <v-data-table :headers="headers" :items="d" density="compact" no-data-text="无数据">
+    <v-data-table
+      :headers="headers"
+      :items="d"
+      density="compact"
+      no-data-text="无数据"
+    >
       <template v-slot:item="{ item }">
         <tr>
           <td rowspan="3">{{ item.IDX }}</td>
@@ -33,10 +38,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import OdsService from "@/service/maintable/odsService";
-import DialogComp from './DialogComp.vue'
+import DialogComp from "./DialogComp.vue";
 
 const props = defineProps(["d"]);
-const item = ref()
+const item = ref();
 const dialog = defineModel({ required: true, default: true });
 
 const headers = ref([
@@ -92,13 +97,12 @@ const headers1 = ref([
 onMounted(() => {
   console.log(props.d);
   OdsService.fetchFieldsCompare(props.d.value)
-    .then((res) => {
+    .then(res => {
       item.value = res.data;
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 });
 </script>
-<style>
-</style>
+<style></style>

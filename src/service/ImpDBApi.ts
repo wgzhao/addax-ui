@@ -7,11 +7,11 @@ const fetchImpdbs = () => {
 
   const load = async () => {
     Requests.get("/impdb/list")
-      .then((response) => {
+      .then(response => {
         this.impdbs.value = response.data;
         return response;
       })
-      .catch((error) => {
+      .catch(error => {
         error.value = "Not available at the moment";
       });
   };

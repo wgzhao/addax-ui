@@ -42,16 +42,16 @@ const data = ref([
           {
             title: "完成率",
             key: "overPrec",
-            value: (item) => `${Math.round(item.overPrec * 100)}%`,
+            value: item => `${Math.round(item.overPrec * 100)}%`,
             cellProps: ({ value }) => ({
-              class: value == "100%" ? "text-success" : "text-warning",
-            }),
+              class: value == "100%" ? "text-success" : "text-warning"
+            })
           },
           { title: "运行", key: "runCnt" },
           { title: "错误", key: "errCnt" },
           { title: "未执行", key: "noCnt" },
-          { title: "未建表", key: "waitCnt" },
-        ],
+          { title: "未建表", key: "waitCnt" }
+        ]
       },
       {
         title: "T-1 日",
@@ -59,8 +59,8 @@ const data = ref([
         children: [
           { title: "开始时间", key: "startTimeLtd" },
           { title: "结束时间", key: "endTimeLtd" },
-          { title: "耗时(秒)", key: "runtimeLtd" },
-        ],
+          { title: "耗时(秒)", key: "runtimeLtd" }
+        ]
       },
       {
         title: "T 日",
@@ -68,10 +68,10 @@ const data = ref([
         children: [
           { title: "开始时间", key: "startTimeTd" },
           { title: "结束时间", key: "endTimeTd" },
-          { title: "耗时", key: "runtimeTd" },
-        ],
-      },
-    ],
+          { title: "耗时", key: "runtimeTd" }
+        ]
+      }
+    ]
   },
   {
     name: "specialTask",
@@ -87,12 +87,12 @@ const data = ref([
         title: "耗时",
         key: "RUNTIME",
         cellProps: ({ value }) => ({
-          class: value > 1000 ? "text-warning" : "",
-        }),
+          class: value > 1000 ? "text-warning" : ""
+        })
       },
       { title: "开始时间", key: "START_TIME" },
-      { title: "结束时间", key: "END_TIME" },
-    ],
+      { title: "结束时间", key: "END_TIME" }
+    ]
   },
   {
     name: "rejectTask",
@@ -104,8 +104,8 @@ const data = ref([
       { title: "任务名称", key: "jobname" },
       { title: "拒绝行", key: "totalErr" },
       { title: "拒绝行", key: "startTs" },
-      { title: "拒绝行", key: "endTs" },
-    ],
+      { title: "拒绝行", key: "endTs" }
+    ]
   },
   {
     name: "realtimeTask",
@@ -118,22 +118,22 @@ const data = ref([
       { title: "下一次", key: "NEXT_TIMES" },
       { title: "任务名称", key: "SPNAME" },
       { title: "开始时间", key: "START_TIME" },
-      { title: "结束时间", key: "END_TIME" },
-    ],
-  },
+      { title: "结束时间", key: "END_TIME" }
+    ]
+  }
 ]);
 
 const getData = async () => {
-  etlService.fetchAccomplishList().then((res) => {
+  etlService.fetchAccomplishList().then(res => {
     data.value[0]["data"] = res.data;
   });
-  etlService.fetchSpecialTask().then((res) => {
+  etlService.fetchSpecialTask().then(res => {
     data.value[1]["data"] = res.data;
   });
-  etlService.fetchRejectTask().then((res) => {
+  etlService.fetchRejectTask().then(res => {
     data.value[2]["data"] = res.data;
   });
-  etlService.fetchRealtimeTask().then((res) => {
+  etlService.fetchRealtimeTask().then(res => {
     data.value[3]["data"] = res.data;
   });
 };

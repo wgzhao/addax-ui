@@ -20,8 +20,8 @@ const headers = ref([
       { title: "字段类型", key: "DATA_TYPE" },
       { title: "字段长度", key: "DATA_LENGTH" },
       { title: "数值型长度", key: "DATA_PRECISION" },
-      { title: "数值型精度", key: "DATA_SCALE" },
-    ],
+      { title: "数值型精度", key: "DATA_SCALE" }
+    ]
   },
   {
     title: "源表",
@@ -29,17 +29,15 @@ const headers = ref([
     align: "center",
     children: [
       { title: "字段名", key: "COL_NAME" },
-      { title: "字段类型", key: "COL_TYPE" },
-    ],
-  },
+      { title: "字段类型", key: "COL_TYPE" }
+    ]
+  }
 ]);
 const fetchData = () => {
-  axios
-    .get("/maintable/dataService/dsTableFields/" + props.param)
-    .then((res) => {
-      data.value = res.data;
-      return res.data;
-    });
+  axios.get("/maintable/dataService/dsTableFields/" + props.param).then(res => {
+    data.value = res.data;
+    return res.data;
+  });
 };
 
 onMounted(() => {

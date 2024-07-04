@@ -31,8 +31,8 @@ class SpService {
     return Requests.get(mainSpApi.value + "/scene", {
       params: {
         tbl: tbl,
-        sysId: spId,
-      },
+        sysId: spId
+      }
     });
   }
 

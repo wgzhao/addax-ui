@@ -8,7 +8,7 @@ const getLogFiles = (pattern: string) => {
 // get the content of special file
 const getContent = (f: string) => {
   return Requests.get("/log/logFileContent", {
-    f: f,
+    f: f
   });
 };
 

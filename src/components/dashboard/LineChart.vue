@@ -19,7 +19,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler,
+  Filler
 } from "chart.js";
 import { Line } from "vue-chartjs";
 
@@ -34,7 +34,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler,
+  Filler
 );
 const last12MonthsEtlData = ref();
 const areaData = ref({
@@ -53,28 +53,28 @@ const areaData = ref({
       pointHitRadius: 10,
       pointBorderWidth: 2,
       fill: true,
-      data: last12MonthsEtlData.value,
-    },
-  ],
+      data: last12MonthsEtlData.value
+    }
+  ]
 });
 const areaOtions = ref({
   maintainAspectRatio: false,
   parsing: {
     xAxisKey: "month",
-    yAxisKey: "num",
+    yAxisKey: "num"
   },
   layout: {
     padding: {
       left: 10,
       right: 25,
       top: 25,
-      bottom: 0,
-    },
+      bottom: 0
+    }
   },
   plugins: {
     legend: {
-      display: false,
-    },
+      display: false
+    }
   },
   tooltips: {
     titleMarginBottom: 10,
@@ -84,18 +84,18 @@ const areaOtions = ref({
     displayColors: false,
     intersect: false,
     mode: "index",
-    caretPadding: 10,
-  },
+    caretPadding: 10
+  }
 });
 
 const fetchAccumData = () => {
   axios
     .get("/dashboard/last12MonthsEtlData")
-    .then((res) => {
+    .then(res => {
       last12MonthsEtlData.value = res.data;
       console.log(last12MonthsEtlData.value);
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 };
 
 onMounted(() => {

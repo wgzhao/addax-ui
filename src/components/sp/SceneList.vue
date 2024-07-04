@@ -13,12 +13,12 @@ import { spService } from "@/service/spService";
 const props = defineProps(["spId"]);
 const headers = ref([
   { title: "场景类别", value: "kindName", align: "center" },
-  { title: "名称", value: "used", align: "center" },
+  { title: "名称", value: "used", align: "center" }
 ]);
 const data = ref();
 
 const fetchData = () => {
-  spService.fetchSpSceneList(props.spId).then((res) => (data.value = res.data));
+  spService.fetchSpSceneList(props.spId).then(res => (data.value = res.data));
 };
 onMounted(() => {
   fetchData();

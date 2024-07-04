@@ -121,7 +121,7 @@ export default {
   data() {
     return {
       ratios: [],
-      lastEtlData: 0.0,
+      lastEtlData: 0.0
     };
   },
   components: { LineChart, PieChart, L5TEtlBar },
@@ -133,7 +133,7 @@ export default {
   computed: {
     barWidthCalculated(val) {
       return {
-        width: val + "%",
+        width: val + "%"
       };
     },
     bgCalc(val) {
@@ -148,18 +148,16 @@ export default {
         return "bg-info";
       }
       return "bg-success";
-    },
+    }
   },
   methods: {
     fetchRatio() {
-      axios
-        .get("/etl/accomplishRatio")
-        .then((resp) => (this.ratios = resp.data));
+      axios.get("/etl/accomplishRatio").then(resp => (this.ratios = resp.data));
       axios
         .get("/dashboard/lastEtlData")
-        .then((res) => (this.lastEtlData = res.data));
-    },
-  },
+        .then(res => (this.lastEtlData = res.data));
+    }
+  }
 };
 </script>
 

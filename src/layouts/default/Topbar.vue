@@ -33,37 +33,37 @@ const urls = ref([
   {
     path: "/",
     name: "Home",
-    title: "Home",
+    title: "Home"
   },
   {
     path: "/etl-monitor",
     name: "ETL",
-    title: "采集监控",
+    title: "采集监控"
   },
   {
     path: "/sp-monitor",
     title: "SP监控",
-    icon: "fa-desktop",
+    icon: "fa-desktop"
   },
   {
     path: "/task-group",
-    title: "任务组",
+    title: "任务组"
   },
   {
     path: "/risk-monitor",
-    title: "风险点检测",
+    title: "风险点检测"
   },
   {
     path: "/realtime",
-    title: "实时监控",
+    title: "实时监控"
   },
   {
     path: "/closed-check",
-    title: "盘后检查",
+    title: "盘后检查"
   },
   {
     path: "/system-info",
-    title: "系统一览",
+    title: "系统一览"
   },
   {
     path: "/maintable",
@@ -71,33 +71,33 @@ const urls = ref([
     children: [
       {
         path: "/maintable/ods-etl",
-        title: "ODS 采集",
+        title: "ODS 采集"
       },
       {
         path: "/maintable/sp",
-        title: "SP 计算",
+        title: "SP 计算"
       },
       {
         path: "/maintable/data-service",
-        title: "数据服务",
+        title: "数据服务"
       },
       {
         path: "/maintable/plan-task",
-        title: "计划任务",
+        title: "计划任务"
       },
       {
         path: "/maintable/params",
-        title: "参数管理",
+        title: "参数管理"
       },
       {
         path: "/maintable/data-sources",
-        title: "数据源管理",
-      },
-    ],
+        title: "数据源管理"
+      }
+    ]
   },
   {
     path: "/demo",
-    title: "Demo",
-  },
+    title: "Demo"
+  }
 ]);
 </script>

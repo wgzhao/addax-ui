@@ -31,13 +31,13 @@ const filename = ref();
 const logs = ref([]);
 
 const fetchLogs = () => {
-  LogService.getLogFiles(props.spId).then((res) => {
+  LogService.getLogFiles(props.spId).then(res => {
     logs.value = res.data;
     return res.data;
   });
 };
-const getLog = (f) => {
-  LogService.getContent(f).then((res) => {
+const getLog = f => {
+  LogService.getContent(f).then(res => {
     fContent.value = res.data;
     filename.value = f;
   });

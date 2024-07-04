@@ -14,11 +14,11 @@ const headers = ref([
   { title: "编号", key: "NEEDS" },
   { title: "名称", key: "NEEDS_NAME" },
   { title: "状态", key: "NEEDS_FLAG" },
-  { title: "结束时间", key: "NEEDS_END_TIME" },
+  { title: "结束时间", key: "NEEDS_END_TIME" }
 ]);
 const data = ref([]);
 const fetchData = () => {
-  spService.fetchSpPrequires(props.spId).then((res) => (data.value = res.data));
+  spService.fetchSpPrequires(props.spId).then(res => (data.value = res.data));
 };
 onMounted(() => {
   fetchData();
