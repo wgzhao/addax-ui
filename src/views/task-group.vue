@@ -17,11 +17,12 @@
               <div class="v-col v-col-12">
                 <v-data-table
                   density="compact"
-                  v-if="val.data"
-                  :items="val.data"
+                  v-if="data[val.name].length > 0"
+                  :items="data[val.name]"
                   :headers="val.headers"
                   items-per-page="20"
                   hover
+                  no-data-text="暂无数据"
                 ></v-data-table>
               </div>
             </div>
@@ -36,12 +37,19 @@ import { ref, watchEffect } from "vue";
 import TaskGroupService from "@/service/taskGroupService";
 
 const tab = ref(0);
-const headers = ref([
+const data = ref({
+  "totalExec": [],
+  "totalExecsMore": [],
+  "flagGenTimes": [],
+  "dataServiceExecTime": [],
+  "dataServiceExecTimeout": [],
+  "targetComplete": []
+})
+const headers = [
   {
     name: "totalExec",
     api: "totalExec",
     title: "生成任务组的任务",
-    data: null,
     headers: [
       { title: "任务组", key: "taskGroup" },
       { title: "所属类别", key: "kind" },
@@ -83,7 +91,6 @@ const headers = ref([
     name: "totalExecsMore",
     api: "totalExec",
     title: "任务组调起的后续服务",
-    data: null,
     headers: [
       { title: "类别", key: "kind2" },
       { title: "类别", key: "dsName" },
@@ -104,7 +111,6 @@ const headers = ref([
     name: "flagGenTimes",
     api: "flagGenTime",
     title: "任务组生成时间",
-    data: null,
     headers: [
       { title: "任务组", key: "fid" },
       { title: "生成时间", key: "dwCltDate" }
@@ -114,7 +120,6 @@ const headers = ref([
     name: "dataServiceExecTime",
     api: "dataServiceExecTime",
     title: "数据服务执行情况",
-    data: null,
     headers: [
       { title: "任务组", key: "TASK_GROUP" },
       { title: "服务名称", key: "DS_NAME" },
@@ -129,7 +134,6 @@ const headers = ref([
     name: "dataServiceExecTimeout",
     api: "dataServiceExecTimeout",
     title: "数据服务执行时间超长",
-    data: null,
     headers: [
       { title: "类别", key: "KIND" },
       { title: "名称", key: "DS_NAME" },
@@ -142,7 +146,6 @@ const headers = ref([
     name: "targetComplete",
     api: "targetComplete",
     title: "按照目标系统的任务完成情况",
-    data: null,
     headers: [
       { title: "系统名称", key: "DEST_SYSNAME" },
       { title: "总任务数", key: "TOTAL_CNT" },
@@ -151,25 +154,28 @@ const headers = ref([
       { title: "错误数", key: "TD_ERR" }
     ]
   }
-]);
+]
 
 watchEffect(async () => {
   TaskGroupService.fetchTotalExec().then(res => {
-    headers.value[0].data = res.data;
-    headers.value[1].data = res.data;
+    data.value["totalExec"] = res.data;
+    data.value["totalExecsMore"] = res.data;
   });
 
   TaskGroupService.fetchFlagGenTime().then(res => {
-    headers.value[2].data = res.data;
+    data.value["flagGenTimes"] = res.data;
   });
+
   TaskGroupService.fetchDataServiceExecTime().then(res => {
-    headers.value[3].data = res.data;
+    data.value["dataServiceExecTime"] = res.data;
   });
+
   TaskGroupService.fetchDataServiceExecTimeout().then(res => {
-    headers.value[4].data = res.data;
+    data.value["dataServiceExecTimeout"] = res.data;
   });
+
   TaskGroupService.fetchTargetComplete().then(res => {
-    headers.value[5].data = res.data;
+    data.value["targetComplete"] = res.data;
   });
 });
 </script>
