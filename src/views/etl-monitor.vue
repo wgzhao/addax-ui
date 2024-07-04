@@ -1,12 +1,12 @@
 <template>
   <!-- 采集监控 -->
-  <template v-for="d in data">
+  <template v-for="d in headers">
     <div class="v-row">
       <div class="v-col col-12">
         <v-card flat :title="d.title">
           <v-card-text>
             <v-data-table
-              :items="d.data"
+              :items="data[d.name]"
               :headers="d.headers"
               density="compact"
               :sort-by="d.sortBy"
@@ -23,12 +23,17 @@
 import { ref, onMounted } from "vue";
 import { etlService } from "@/service/etlService";
 
-const data = ref([
+const data = ref({
+  "accomplishList": [],
+  "specialTask": [],
+  "rejectTask": [],
+  "realtimeTask": []
+})
+const headers = [
   {
     name: "accomplishList",
     api: "accomplishList",
     title: "数据源完成情况",
-    data: [],
     sortBy: [{ key: "overPrec", order: "asc" }],
     headers: [
       { title: "启动", key: "dbStart" },
@@ -77,7 +82,6 @@ const data = ref([
     name: "specialTask",
     api: "specialTask",
     title: "特殊任务提醒：错误、耗时过长、有重试、有拒绝行",
-    data: [],
     sortBy: [{ key: "RUNTIME", order: "desc" }],
     headers: [
       { title: "任务名", key: "SPNAME" },
@@ -98,7 +102,6 @@ const data = ref([
     name: "rejectTask",
     api: "rejectTask",
     title: "采集拒绝行信息",
-    data: [],
     sortBy: [{ key: "totalErr", order: "desc" }],
     headers: [
       { title: "任务名称", key: "jobname" },
@@ -111,7 +114,6 @@ const data = ref([
     name: "realtimeTask",
     api: "realtimeTask",
     title: "日间实时采集任务执行情况(最近1小时)",
-    data: [],
     sortBy: [],
     headers: [
       { title: "最近一次", key: "LAST_TIMES" },
@@ -121,20 +123,20 @@ const data = ref([
       { title: "结束时间", key: "END_TIME" }
     ]
   }
-]);
+];
 
 const getData = async () => {
   etlService.fetchAccomplishList().then(res => {
-    data.value[0]["data"] = res.data;
+    data.value["accomplishList"] = res.data;
   });
   etlService.fetchSpecialTask().then(res => {
-    data.value[1]["data"] = res.data;
+    data.value["specialTask"] = res.data;
   });
   etlService.fetchRejectTask().then(res => {
-    data.value[2]["data"] = res.data;
+    data.value["rejectTask"] = res.data;
   });
   etlService.fetchRealtimeTask().then(res => {
-    data.value[3]["data"] = res.data;
+    data.value["realtimeTask"] = res.data;
   });
 };
 
