@@ -5,7 +5,7 @@
     <a
       href="#"
       class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-      ><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a
+    ><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a
     >
   </div>
 
@@ -111,54 +111,41 @@
     </div>
   </div>
 </template>
-<script>
+<script setup lang="ts">
 import axios from "axios";
-import LineChart from "../components/dashboard/LineChart.vue";
-import PieChart from "../components/dashboard/PieChart.vue";
-import L5TEtlBar from "../components/dashboard/L5TEtlBar.vue";
+import { computed, ref } from "vue";
+import LineChart from "@/components/dashboard/LineChart.vue";
+import L5TEtlBar from "@/components/dashboard/L5TEtlBar.vue";
 
-export default {
-  data() {
-    return {
-      ratios: [],
-      lastEtlData: 0.0
-    };
-  },
-  components: { LineChart, PieChart, L5TEtlBar },
+const ratios = ref([]);
+const lastEtlData = ref(0.0);
 
-  // mounted() {
-  //     this.fetchRatio();
-  // },
+const barWidthCalculated = computed((val) => {
+  return {
+    width: val + "%"
+  };
+});
 
-  computed: {
-    barWidthCalculated(val) {
-      return {
-        width: val + "%"
-      };
-    },
-    bgCalc(val) {
-      console.log(val);
-      if (val <= 0.2) {
-        return "bg-danger";
-      }
-      if (val <= 0.4) {
-        return "bg-warning";
-      }
-      if (0.4 < val <= 0.8) {
-        return "bg-info";
-      }
-      return "bg-success";
-    }
-  },
-  methods: {
-    fetchRatio() {
-      axios.get("/etl/accomplishRatio").then(resp => (this.ratios = resp.data));
-      axios
-        .get("/dashboard/lastEtlData")
-        .then(res => (this.lastEtlData = res.data));
-    }
+const bgCalc = computed((val) => {
+  if (val <= 0.2) {
+    return "bg-danger";
   }
-};
+  if (val <= 0.4) {
+    return "bg-warning";
+  }
+  if (0.4 < val <= 0.8) {
+    return "bg-info";
+  }
+  return "bg-success";
+});
+
+function fetchRatio() {
+  axios.get("/etl/accomplishRatio").then(resp => (ratios.value = resp.data));
+  axios
+    .get("/dashboard/lastEtlData")
+    .then(res => (lastEtlData.value = res.data));
+}
+
 </script>
 
 <style scoped></style>

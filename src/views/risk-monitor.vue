@@ -5,7 +5,7 @@
       <div class="v-col v-col-12">
         <v-card :title="t.title">
           <v-card-text>
-            <template v-slot:text v-if="t.item == 'smsDetail'">
+            <template v-slot:text v-if="t.item === 'smsDetail'">
               <v-text-field
                 density="compact"
                 v-model="search"

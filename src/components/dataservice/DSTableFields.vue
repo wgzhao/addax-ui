@@ -3,7 +3,7 @@
 
   <v-data-table-virtual :headers="headers" height="400"> </v-data-table-virtual>
 </template>
-<script setup>
+<script setup lang="ts">
 import axios from "axios";
 import { ref, onMounted } from "vue";
 

@@ -1,8 +1,8 @@
 <template>
   <div>l5tdashboard</div>
-  <Bar id="l5tdashboard" :data="data" :options="options" />
+  <Bar id="l5tdashboard" :data="data" :options="data.options" />
 </template>
-<script>
+<script setup lang="ts">
 import axios from "axios";
 import { Bar } from "vue-chartjs";
 import {
@@ -14,6 +14,7 @@ import {
   CategoryScale,
   LinearScale
 } from "chart.js";
+import { onMounted, ref } from "vue";
 
 ChartJS.register(
   Title,
@@ -24,46 +25,34 @@ ChartJS.register(
   LinearScale
 );
 
-export default {
-  name: "L5TEtlBar",
-  setup() {},
-  data() {
-    return {
-      data: {
-        labels: ["BK", "CP", "DO", "FK", "GL", "GP", "H2", "H3", "HC", "HG"],
-        datasets: [
-          {
-            label: "20231222",
-            data: [],
-            backgroundColor: "#42b983",
-            parsing: {
-              xAxisKey: "FID",
-              yAxisKey: "RUNTIME"
-            }
-          }
-        ],
-        options: {
-          responsive: true,
-          parsing: {
-            xAxisKey: "FID",
-            yAxisKey: "RUNTIME"
-          },
-          stack: "FID"
-        }
+const data = ref({
+  labels: ["BK", "CP", "DO", "FK", "GL", "GP", "H2", "H3", "HC", "HG"],
+  datasets: [
+    {
+      label: "20231222",
+      data: [],
+      backgroundColor: "#42b983",
+      parsing: {
+        xAxisKey: "FID",
+        yAxisKey: "RUNTIME"
       }
-    };
-  },
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      axios.get("/dashboard/last5DaysEtlTime").then(res => {
-        this.data = res.data;
-      });
     }
-  },
-  components: { Bar }
-};
+  ],
+  options: {
+    responsive: true,
+    parsing: {
+      xAxisKey: "FID",
+      yAxisKey: "RUNTIME"
+    },
+    stack: "FID"
+  }
+});
+
+onMounted(() => {
+  axios.get("/dashboard/last5DaysEtlTime").then(res => {
+    data.value = res.data;
+  });
+});
+
 </script>
 <style></style>

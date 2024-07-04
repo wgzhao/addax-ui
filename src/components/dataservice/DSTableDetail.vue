@@ -99,7 +99,7 @@
     </v-card>
   </v-dialog>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { HighCode } from "vue-highlight-code";
 import "vue-highlight-code/dist/style.css";
@@ -110,7 +110,7 @@ const formTitle = ref("");
 const data = ref([]);
 const apiPrefix = ref("/maintable/dataService/");
 
-const dsHeaders = ref([
+const dsHeaders = [
   { title: "ID", value: "tblId", width: "2%" },
   { title: "目标库用户", value: "destOwner" },
   { title: "目标库表名", value: "destTablename" },
@@ -132,7 +132,8 @@ const dsHeaders = ref([
   { title: "开始时间", value: "startTime" },
   { title: "结束时间", value: "endTime" },
   { title: "配置信息", value: "actions", width: "10%" }
-]);
+];
+
 const actions = ref([
   {
     title: "字段",
@@ -142,7 +143,7 @@ const actions = ref([
   },
   { title: "JSON", type: "jobConf", comp: "JobConf", api: "jobConf/" },
   { title: "日志", type: "logFiles", comp: "LogFiles", api: "logFiles/" }
-]);
+])
 
 const fetchData = () => {
   axios.get(apiPrefix.value + "dsTable/" + props.d).then(res => {
@@ -157,7 +158,7 @@ onMounted(() => {
 const childData = ref([]);
 const fContent = ref(null);
 // 字段对比相关信息
-const fieldsHeaders = ref([
+const fieldsHeaders = [
   {
     title: "目标表",
     value: "",
@@ -179,9 +180,10 @@ const fieldsHeaders = ref([
       { title: "字段类型", key: "COL_TYPE" }
     ]
   }
-]);
+];
+
 // actions
-const doAction = (item, idx) => {
+const doAction = (item: any, idx: number) => {
   if (idx == 0) {
     formTitle.value = item.destTablename + " 字段对比";
     axios
@@ -207,7 +209,7 @@ const doAction = (item, idx) => {
   // dialog.value = true
 };
 
-const getContent = f => {
+const getContent = (f: string) => {
   axios
     .get("/log/logFileContent", {
       params: {

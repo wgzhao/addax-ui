@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useTheme } from "vuetify";
 import { useCycleList } from "@vueuse/core";
 import { watch } from "vue";

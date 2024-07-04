@@ -31,7 +31,7 @@
             <template v-slot:item.actions="{ item }">
               <v-menu>
                 <template v-slot:activator="{ props }">
-                  <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
+                  <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
                 </template>
                 <v-list>
                   <v-list-item
@@ -42,8 +42,9 @@
                     @click="doAction(op.value, item)"
                   >
                     <v-list-item-title class="text-button">{{
-                      op.title
-                    }}</v-list-item-title>
+                        op.title
+                      }}
+                    </v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -58,83 +59,67 @@
   </div>
 </template>
 
-<script>
-import SpDetail from "@/components/sp/SpDetail.vue";
-import SpCmdList from "@/components/sp/SpCmdList.vue";
-import SceneList from "@/components/sp/SceneList.vue";
-import SpLineage from "@/components/sp/SpLineage.vue";
-import SpRequiresList from "@/components/sp/SpRequiresList.vue";
-import ShowLogs from "@/components/sp/ShowLogs.vue";
+<script setup lang="ts">
+// import SpDetail from "@/components/sp/SpDetail.vue";
+// import SpCmdList from "@/components/sp/SpCmdList.vue";
+// import SceneList from "@/components/sp/SceneList.vue";
+// import SpLineage from "@/components/sp/SpLineage.vue";
+// import SpRequiresList from "@/components/sp/SpRequiresList.vue";
+// import ShowLogs from "@/components/sp/ShowLogs.vue";
 import Requests from "@/utils/requests";
+import { onMounted, ref } from "vue";
 
-export default {
-  data() {
-    return {
-      impSps: [],
-      spId: null,
-      uniqueKey: null,
-      currentComp: null,
-      search: null,
-      impHeaders: [
-        { title: "运行频率", value: "runFreq" },
-        { title: "状态", value: "flag" },
-        { title: "SP 名称", value: "spName" },
-        { title: "开始时间", value: "startTime" },
-        { title: "结束时间", value: "endTime" },
-        { title: "耗时(秒)", value: "runtime" },
-        { title: "操作", value: "actions" }
-      ],
-      selectOptions: [
-        { title: "主表详情", value: "SpDetail" },
-        { title: "命令列表", value: "SpCmdList" },
-        { title: "命令日志", value: "ShowLogs1" },
-        { title: "调度日志", value: "ShowLogs2" },
-        { title: "使用场景", value: "SceneList" },
-        { title: "计算溯源", value: "SpLineage" },
-        { title: "前置情况", value: "SpRequiresList" }
-      ]
-    };
-  },
-  components: {
-    SpDetail,
-    SpCmdList,
-    SceneList,
-    SpRequiresList,
-    SpLineage,
-    ShowLogs
-  },
-  methods: {
-    doAction(comp, val) {
-      console.log("invoke " + comp);
+const impSps = ref([]);
+const spId = ref<string>();
+const uniqueKey = ref();
+const currentComp = ref<string>();
+const search = ref();
+const impHeaders = [
+  { title: "运行频率", value: "runFreq" },
+  { title: "状态", value: "flag" },
+  { title: "SP 名称", value: "spName" },
+  { title: "开始时间", value: "startTime" },
+  { title: "结束时间", value: "endTime" },
+  { title: "耗时(秒)", value: "runtime" },
+  { title: "操作", value: "actions" }
+];
+const selectOptions = [
+  { title: "主表详情", value: "SpDetail" },
+  { title: "命令列表", value: "SpCmdList" },
+  { title: "命令日志", value: "ShowLogs1" },
+  { title: "调度日志", value: "ShowLogs2" },
+  { title: "使用场景", value: "SceneList" },
+  { title: "计算溯源", value: "SpLineage" },
+  { title: "前置情况", value: "SpRequiresList" }
+];
 
-      if (comp === "ShowLogs1") {
-        this.spId = val.spName;
-        this.uniqueKey = val.spId + "1";
-        this.currentComp = "ShowLogs";
-      } else if (comp === "ShowLogs2") {
-        this.spId = "tuna_sp_etl_" + val.spId;
-        this.uniqueKey = val.spId + "2";
-        this.currentComp = "ShowLogs";
-      } else {
-        this.spId = val.spId;
-        this.uniqueKey = val.spId;
-        this.currentComp = comp;
-      }
-    },
-
-    initData() {
-      // Initial data
-      Requests.get("/maintable/sp/list").then(
-        resp => (this.impSps = resp.data)
-      );
-    }
-  },
-
-  mounted() {
-    {
-      this.initData();
-    }
+function doAction(comp:string , val: any) {
+  console.log("invoke " + comp);
+  if (comp === "ShowLogs1") {
+    spId.value = val.spName;
+    uniqueKey.value = val.spId + "1";
+    currentComp.value = "ShowLogs";
+  } else if (comp === "ShowLogs2") {
+    spId.value = "tuna_sp_etl_" + val.spId;
+    uniqueKey.value = val.spId + "2";
+    currentComp.value = "ShowLogs";
+  } else {
+    spId.value = val.spId;
+    uniqueKey.value = val.spId;
+    currentComp.value = comp;
   }
 };
+
+function initData() {
+  // Initial data
+  Requests.get("/maintable/sp/list").then(
+    resp => (impSps.value = resp.data)
+  );
+}
+
+onMounted(() => {
+  initData();
+});
+
 </script>
 <style></style>

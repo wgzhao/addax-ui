@@ -22,7 +22,7 @@ import { onMounted, ref } from "vue";
 import RealtimeService from "@/service/realtimeService";
 
 const planAll = ref([]);
-const headers = ref([
+const headers = [
   { title: "计划类型", key: "pnTypeName" },
   { title: "计划名称", key: "spname" },
   {
@@ -38,7 +38,7 @@ const headers = ref([
       { title: "CMD6", key: "c6" }
     ]
   }
-]);
+];
 
 onMounted(() => {
   RealtimeService.fetchPlanAll().then(res => (planAll.value = res.data));

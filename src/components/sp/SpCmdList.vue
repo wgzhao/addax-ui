@@ -28,7 +28,7 @@
     </v-card-text>
   </v-card>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { spService } from "@/service/spService";
 import { HighCode } from "vue-highlight-code";

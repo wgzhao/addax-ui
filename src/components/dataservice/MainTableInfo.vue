@@ -191,7 +191,7 @@
     </v-form>
   </v-card>
 </template>
-<script setup>
+<script setup lang="ts">
 import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
 const props = defineProps(["d"]);

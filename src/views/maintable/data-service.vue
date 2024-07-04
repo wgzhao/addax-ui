@@ -43,7 +43,7 @@ const key = ref(null);
 const curComp = ref(null);
 const mti = markRaw(MainTableInfo);
 const dst = markRaw(DSTableDetail);
-const headers = ref([
+const headers = [
   { title: "目标系统", value: "destSysid" },
   { title: "频率", value: "runFreq" },
   { title: "任务组", value: "taskGroup" },
@@ -54,18 +54,20 @@ const headers = ref([
   { title: "结束时间", value: "endTime" },
   { title: "耗时", value: "runtime" },
   { title: "操作", value: "action", sortable: false }
-]);
-const actionList = ref([
+];
+
+const actionList = [
   { comp: mti, title: "主表信息" },
   { comp: dst, title: "推送表" },
   { comp: "ScheduleLog", title: "调度日志" }
-]);
+];
 
 const doAction = (val, comp) => {
   key.value = val;
   curComp.value = comp;
   param.value = val;
 };
+
 onMounted(() => {
   DataService.list().then(res => {
     data.value = res.data;

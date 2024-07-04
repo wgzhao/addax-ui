@@ -21,7 +21,7 @@
     </v-card-text>
   </v-card>
 </template>
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue";
 import LogService from "@/service/maintable/logService";
 
@@ -36,7 +36,7 @@ const fetchLogs = () => {
     return res.data;
   });
 };
-const getLog = f => {
+const getLog = (f: string) => {
   LogService.getContent(f).then(res => {
     fContent.value = res.data;
     filename.value = f;

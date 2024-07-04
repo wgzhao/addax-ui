@@ -13,59 +13,51 @@
     </template>
   </v-data-table>
 </template>
-<script>
+<script setup lang="ts">
 import axios from "axios";
+import { onMounted, ref } from "vue";
+const headers =  [
+  { title: "计划任务", key: "pnType" },
+  { title: "时间定点", key: "pnFixed" },
+  { title: "执行间隔（分钟）", key: "pnInterval" },
+  { title: "间隔时间范围", key: "pnRange" },
+  { title: "状态", key: "flag" },
+  { title: "符合", key: "bexit" },
+  { title: "执行开始时间", key: "startTime" },
+  { title: "执行结束时间", key: "endTime" },
+  { title: "耗时", key: "runtime" },
+  { title: "操作", key: "", value: "actions" }
+]
+const data = ref()
 
-export default {
-  name: "PlanTask",
-  data() {
-    return {
-      data: [],
-      headers: [
-        { title: "计划任务", key: "pnType" },
-        { title: "时间定点", key: "pnFixed" },
-        { title: "执行间隔（分钟）", key: "pnInterval" },
-        { title: "间隔时间范围", key: "pnRange" },
-        { title: "状态", key: "flag" },
-        { title: "符合", key: "bexit" },
-        { title: "执行开始时间", key: "startTime" },
-        { title: "执行结束时间", key: "endTime" },
-        { title: "耗时", key: "runtime" },
-        { title: "操作", key: "", value: "actions" }
-      ]
-    };
-  },
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      axios.get("/maintable/plantask/list").then(res => {
-        this.data = res.data;
-      });
-    },
-    getType(val) {
-      if (val == 0) {
-        return "每天";
-      }
-      if (val == 2) {
-        return "交易当天";
-      }
-      if (val == 3) {
-        return "交易日或标志";
-      }
-      return val;
-    },
-    getColor(flag) {
-      if (flag == "Y") {
-        return "green";
-      } else if (flag == "N") {
-        return "red";
-      } else {
-        return "blue";
-      }
-    }
+function getType(val: number) {
+  if (val == 0) {
+    return "每天";
   }
-};
+  if (val == 2) {
+    return "交易当天";
+  }
+  if (val == 3) {
+    return "交易日或标志";
+  }
+  return val;
+}
+
+function getColor(flag: string) {
+  if (flag == "Y") {
+    return "green";
+  } else if (flag == "N") {
+    return "red";
+  } else {
+    return "blue";
+  }
+}
+
+onMounted(() => {
+  axios.get("/maintable/plantask/list").then(res => {
+    data.value = res.data;
+  });
+});
+
 </script>
 <style></style>
