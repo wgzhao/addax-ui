@@ -5,7 +5,7 @@
     <a
       href="#"
       class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-    ><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a
+      ><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a
     >
   </div>
 
@@ -120,13 +120,13 @@ import L5TEtlBar from "@/components/dashboard/L5TEtlBar.vue";
 const ratios = ref([]);
 const lastEtlData = ref(0.0);
 
-const barWidthCalculated = computed((val) => {
+const barWidthCalculated = computed(val => {
   return {
     width: val + "%"
   };
 });
 
-const bgCalc = computed((val) => {
+const bgCalc = computed(val => {
   if (val <= 0.2) {
     return "bg-danger";
   }
@@ -145,7 +145,6 @@ function fetchRatio() {
     .get("/dashboard/lastEtlData")
     .then(res => (lastEtlData.value = res.data));
 }
-
 </script>
 
 <style scoped></style>

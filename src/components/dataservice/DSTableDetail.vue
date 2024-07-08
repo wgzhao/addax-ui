@@ -143,7 +143,7 @@ const actions = ref([
   },
   { title: "JSON", type: "jobConf", comp: "JobConf", api: "jobConf/" },
   { title: "日志", type: "logFiles", comp: "LogFiles", api: "logFiles/" }
-])
+]);
 
 const fetchData = () => {
   axios.get(apiPrefix.value + "dsTable/" + props.d).then(res => {

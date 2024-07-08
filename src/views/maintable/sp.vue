@@ -41,9 +41,8 @@
                     :key="i"
                     @click="doAction(op.value, item)"
                   >
-                    <v-list-item-title class="text-button">{{
-                        op.title
-                      }}
+                    <v-list-item-title class="text-button"
+                      >{{ op.title }}
                     </v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -93,7 +92,7 @@ const selectOptions = [
   { title: "前置情况", value: "SpRequiresList" }
 ];
 
-function doAction(comp:string , val: any) {
+function doAction(comp: string, val: any) {
   console.log("invoke " + comp);
   if (comp === "ShowLogs1") {
     spId.value = val.spName;
@@ -108,18 +107,15 @@ function doAction(comp:string , val: any) {
     uniqueKey.value = val.spId;
     currentComp.value = comp;
   }
-};
+}
 
 function initData() {
   // Initial data
-  Requests.get("/maintable/sp/list").then(
-    resp => (impSps.value = resp.data)
-  );
+  Requests.get("/maintable/sp/list").then(resp => (impSps.value = resp.data));
 }
 
 onMounted(() => {
   initData();
 });
-
 </script>
 <style></style>

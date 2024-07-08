@@ -88,10 +88,6 @@
   </v-dialog>
 
   <!-- modal -->
-  <!-- 批量新增表 -->
-  <!--  <template v-for="(item, index) in selectOptions" :key="index">-->
-  <!--    <component :is="tabs[index]" v-model="showModal[item.value]" @close="showModal[item.value] = false" :d="item" />-->
-  <!--  </template>-->
 
   <BatchAdd v-model="showModal['BatchAdd']" v-if="showModal['BatchAdd']" />
   <MainTableInfo
@@ -132,10 +128,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from "vue";
+import { ref } from "vue";
 import OdsService from "@/service/maintable/odsService";
-import LogService from "@/service/maintable/logService";
-import MainTableInfo from "@/components/ods//MainTable.vue";
+import MainTableInfo from "@/components/ods/MainTable.vue";
 import FieldsCompare from "@/components/ods/FieldsCompare.vue";
 import CmdList from "@/components/ods/CmdList.vue";
 import TableUsed from "@/components/ods/TableUsed.vue";
@@ -145,20 +140,10 @@ import LogFiles from "@/components/ods/LogFiles.vue";
 
 const ods = ref([]);
 const search = ref("");
-const item = ref("");
+const item = ref<String>("");
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const loading = ref(true);
-const dynamicComponent = ref(null);
-const tabs = ref([
-  MainTableInfo,
-  FieldsCompare,
-  CmdList,
-  TableUsed,
-  AddaxResult,
-  BatchAdd,
-  LogFiles
-]);
 
 const selectOptions = [
   { text: "主表信息", value: "MainTableInfo" },
@@ -201,40 +186,29 @@ const showModal = ref({
 const doAction = (val: any, comp: string) => {
   // clear item
   item.value = "";
+
   if (comp == "LogFiles1") {
     // 命令日志
-    LogService.getLogFiles(val.spname).then(res => {
-      item.value = res.data;
-    });
+    item.value = val.spname;
     showModal.value[comp] = true;
     return;
   }
   if (comp == "LogFiles2") {
     // 调度日志
-    LogService.getLogFiles("tuna_sp_etl_" + val.tid).then(res => {
-      item.value = res.data;
-    });
+    item.value = "tuna_sp_etl_" + val.tid;
     showModal.value[comp] = true;
     return;
   }
-  if (comp == "FieldsCompare" || comp == "CmdList") {
+
+  if (comp == "MainTableInfo" || comp == "FieldsCompare" || comp == "CmdList") {
     item.value = val.tid;
   } else if (comp == "TableUsed") {
-    OdsService.fetchTableUsed(
-      val.destOwner + "." + val.destTablename,
-      val.sysid
-    ).then(res => {
-      item.value = res.data;
-    });
+    item.value = val.destOwner + "." + val.destTablename + "|" + val.sysid;
   } else if (comp == "AddaxResult") {
-    OdsService.fetchAddaxResult(val.spname).then(res => {
-      item.value = res.data;
-    });
+    item.value = val.spname;
   } else {
     item.value = val;
   }
-  console.log("change dynamic component to " + comp);
-  // dynamicComponent.value = comp;
   showModal.value[comp] = true;
 };
 

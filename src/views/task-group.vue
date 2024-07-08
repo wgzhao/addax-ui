@@ -38,13 +38,13 @@ import TaskGroupService from "@/service/taskGroupService";
 
 const tab = ref(0);
 const data = ref({
-  "totalExec": [],
-  "totalExecsMore": [],
-  "flagGenTimes": [],
-  "dataServiceExecTime": [],
-  "dataServiceExecTimeout": [],
-  "targetComplete": []
-})
+  totalExec: [],
+  totalExecsMore: [],
+  flagGenTimes: [],
+  dataServiceExecTime: [],
+  dataServiceExecTimeout: [],
+  targetComplete: []
+});
 const headers = [
   {
     name: "totalExec",
@@ -154,7 +154,7 @@ const headers = [
       { title: "错误数", key: "TD_ERR" }
     ]
   }
-]
+];
 
 watchEffect(async () => {
   TaskGroupService.fetchTotalExec().then(res => {

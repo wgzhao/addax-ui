@@ -3,7 +3,7 @@
   <dialog-comp title="按照名称显示最近15条记录" v-model="dialog">
     <v-data-table-virtual
       v-if="d"
-      :items="d"
+      :items="results"
       :headers="headers"
       density="compact"
       class="elevation-1"
@@ -12,13 +12,15 @@
   </dialog-comp>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import DialogComp from "./DialogComp.vue";
+import OdsService from "@/service/maintable/odsService";
 
-defineProps(["d"]);
+const props = defineProps(["d"]);
+
 const dialog = defineModel({ required: true, default: true });
 
-const headers = ref([
+const headers = [
   { title: "日期", value: "startDay" },
   { title: "名称", value: "spname" },
   { title: "任务开始时间", value: "startTime" },
@@ -28,6 +30,14 @@ const headers = ref([
   { title: "速度（行）", value: "recSpeed" },
   { title: "总记录数", value: "totalRec" },
   { title: "错误记录数", value: "totalErr" }
-]);
+];
+
+const results = ref([]);
+
+onMounted(() => {
+  OdsService.fetchAddaxResult(props.d).then(res => {
+    results.value = res.data;
+  });
+});
 </script>
 <style></style>

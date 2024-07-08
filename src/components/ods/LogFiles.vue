@@ -2,11 +2,11 @@
   <!-- 调度和命令日志 -->
   <dialog-comp v-mode="dialog" title="调度/命令日志">
     <v-list lines="one" density="compact">
-      <v-list-item v-for="(f, index) in props.d" :key="index">
+      <v-list-item v-for="(f, index) in logList" :key="index">
         <v-list-item-title>
           <a
             href="#"
-            class="text-sm"
+            class="text-sm leading-3 text-decoration-none"
             :key="index"
             @click.prevent="getContent(f)"
             >{{ f }}</a
@@ -33,14 +33,13 @@
   </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-
-const dialog = defineModel({ required: true, default: true });
+import { ref, onMounted } from "vue";
 import DialogComp from "./DialogComp.vue";
-
 import LogService from "@/service/maintable/logService";
 
+const dialog = defineModel({ required: true, default: true });
 const props = defineProps(["d"]);
+
 const fContent = ref();
 const filename = ref();
 const fDialog = ref(false);
@@ -50,6 +49,8 @@ const closeDialog = () => {
   fContent.value = null;
 };
 
+const logList = ref([]);
+
 const getContent = (f: string) => {
   LogService.getContent(f).then((res: any) => {
     fContent.value = res.data;
@@ -57,5 +58,11 @@ const getContent = (f: string) => {
     fDialog.value = true;
   });
 };
+
+onMounted(() => {
+  LogService.getLogFiles(props.d).then(res => {
+    logList.value = res.data;
+  });
+});
 </script>
 <style></style>

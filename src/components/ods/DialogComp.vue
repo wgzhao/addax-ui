@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" @keyup.esc="dialog = false">
+  <v-dialog v-model="dialog" v-if="dialog" @keyup.esc="dialog = false">
     <v-card>
       <v-card-title>
         {{ title }}
@@ -15,7 +15,7 @@
         </template>
       </v-list-item>
       <v-card-text>
-        <slot name="default" />
+        <slot />
       </v-card-text>
       <v-card-actions v-if="$slots.actions">
         <slot name="actions" />

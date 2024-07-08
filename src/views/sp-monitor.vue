@@ -93,12 +93,9 @@ const initData = () => {
 
 initData();
 
-const timer = setInterval(
-  () => {
-    fetchData();
-  },
-  1000 * 60
-);
+const timer = setInterval(() => {
+  fetchData();
+}, 1000 * 60);
 
 onUnmounted(() => {
   clearInterval(timer);

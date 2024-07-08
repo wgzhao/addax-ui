@@ -3,7 +3,8 @@
   <dialog-comp title="字段对比" v-model="dialog">
     <v-data-table
       :headers="headers"
-      :items="d"
+      :items="fields"
+      hide-default-footer
       density="compact"
       no-data-text="无数据"
     >
@@ -21,7 +22,7 @@
           <td>{{ item.COLUMN_COMMENT }}</td>
           <td>{{ item.TABLE_COMMENT }}</td>
         </tr>
-        <tr class="bg-secondary">
+        <tr class="bg-gray-500">
           <td>目标表</td>
           <td>{{ item.COL_NAME }}</td>
           <td>{{ item.COL_TYPE_FULL }}</td>
@@ -40,8 +41,23 @@ import { ref, onMounted } from "vue";
 import OdsService from "@/service/maintable/odsService";
 import DialogComp from "./DialogComp.vue";
 
-const props = defineProps(["d"]);
-const item = ref();
+const props = defineProps({ d: String });
+
+interface Item {
+  IDX: number;
+  COLUMN_NAME_ORIG: string;
+  DATA_TYPE: string;
+  DATA_LENGTH: number;
+  DATA_PRECISION: number;
+  DATA_SCALE: number;
+  COLUMN_COMMENT: string;
+  TABLE_COMMENT: string;
+  COL_NAME: string;
+  COL_TYPE_FULL: string;
+  COL_COMMENT: string;
+  TBL_COMMENT: string;
+}
+const fields = ref<Item>();
 const dialog = defineModel({ required: true, default: true });
 
 const headers = ref([
@@ -95,10 +111,9 @@ const headers1 = ref([
   // }
 ]);
 onMounted(() => {
-  console.log(props.d);
-  OdsService.fetchFieldsCompare(props.d.value)
+  OdsService.fetchFieldsCompare(props.d)
     .then(res => {
-      item.value = res.data;
+      fields.value = res.data;
     })
     .catch(err => {
       console.log(err);

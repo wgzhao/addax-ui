@@ -24,11 +24,11 @@ import { ref, onMounted } from "vue";
 import { etlService } from "@/service/etlService";
 
 const data = ref({
-  "accomplishList": [],
-  "specialTask": [],
-  "rejectTask": [],
-  "realtimeTask": []
-})
+  accomplishList: [],
+  specialTask: [],
+  rejectTask: [],
+  realtimeTask: []
+});
 const headers = [
   {
     name: "accomplishList",

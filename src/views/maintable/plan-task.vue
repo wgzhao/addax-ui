@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import axios from "axios";
 import { onMounted, ref } from "vue";
-const headers =  [
+const headers = [
   { title: "计划任务", key: "pnType" },
   { title: "时间定点", key: "pnFixed" },
   { title: "执行间隔（分钟）", key: "pnInterval" },
@@ -27,8 +27,8 @@ const headers =  [
   { title: "执行结束时间", key: "endTime" },
   { title: "耗时", key: "runtime" },
   { title: "操作", key: "", value: "actions" }
-]
-const data = ref()
+];
+const data = ref();
 
 function getType(val: number) {
   if (val == 0) {
@@ -58,6 +58,5 @@ onMounted(() => {
     data.value = res.data;
   });
 });
-
 </script>
 <style></style>

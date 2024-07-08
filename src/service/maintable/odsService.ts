@@ -1,6 +1,5 @@
 // 主表配置 - ODS 采集配置 API
 import Requests from "@/utils/requests";
-import { c } from "unplugin-vue-router/options-EuMjkncO";
 
 class OdsService {
   prefix: string = "/maintable/ods";

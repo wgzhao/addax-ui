@@ -32,5 +32,4 @@ const options = {
 };
 
 const data = ref();
-
 </script>

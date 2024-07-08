@@ -53,6 +53,5 @@ onMounted(() => {
     data.value = res.data;
   });
 });
-
 </script>
 <style></style>
