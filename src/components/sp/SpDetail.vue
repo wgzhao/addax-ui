@@ -21,7 +21,7 @@
             "pnRange": null
         }
 
-        needs data sample 
+        needs data sample
         {
             "NEED_SOU": "PR",
             "NEED_SP": null,
@@ -247,7 +247,7 @@ const needs = ref([]);
 
 // input style default is outlined
 
-const variant = ref("outlined");
+const variant = "outlined";
 
 const fetchData = () => {
   spService
@@ -261,7 +261,6 @@ const saveData = () => {
 };
 onMounted(() => {
   fetchData();
-  console.log(spDetail);
 });
 </script>
 <style>

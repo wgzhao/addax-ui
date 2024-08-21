@@ -11,10 +11,10 @@
 import { ref, onMounted } from "vue";
 import { spService } from "@/service/spService";
 const props = defineProps(["spId"]);
-const headers = ref([
+const headers = [
   { title: "场景类别", value: "kindName", align: "center" },
   { title: "名称", value: "used", align: "center" }
-]);
+];
 const data = ref();
 
 const fetchData = () => {
