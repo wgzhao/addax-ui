@@ -57,7 +57,7 @@ class OdsService {
 
   // 6. 执行ETL
   execETL(ctype: string) {
-    return Requests.post(this.prefix + "/execETL/", { ctype: ctype });
+    return Requests.post(this.prefix + "/startEtl", { ctype: ctype });
   }
 }
 
