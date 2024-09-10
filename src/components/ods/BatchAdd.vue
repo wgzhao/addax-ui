@@ -70,8 +70,6 @@ defineProps(["d"]);
 
 const dialog = defineModel({ required: true, type: Boolean, default: true });
 
-const valid = ref(true);
-
 const headers = ref([
   { title: "源系统", key: "souSysid" },
   { title: "源筛选", key: "souFilter" },
