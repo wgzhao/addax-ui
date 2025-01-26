@@ -4,52 +4,23 @@
     <template v-slot:text>
       <v-row justify="center" align="center">
         <v-col cols="col-4">
-          <v-text-field
-            v-model="search"
-            density="compact"
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            single-line
-            variant="outlined"
-            hide-details
-            @keyup.enter="searchOds"
-            @click:append-inner="searchOds"
-          ></v-text-field>
+          <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
+            variant="outlined" hide-details @keyup.enter="searchOds" @click:append-inner="searchOds"></v-text-field>
         </v-col>
         <v-col cols="auto">
-          <v-btn
-            variant="tonal"
-            prepend-icon="mdi-plus"
-            @click="showModal['BatchAdd'] = true"
-            >批量新增表</v-btn
-          >
+          <v-btn variant="tonal" prepend-icon="mdi-plus" @click="showModal['BatchAdd'] = true">批量新增表</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn
-            variant="tonal"
-            prepend-icon="mdi-play"
-            @click="doEtl('source')"
-            >启动表更新</v-btn
-          >
+          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('source')">启动表更新</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('sp')"
-            >启动采集</v-btn
-          >
+          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('sp')">启动采集</v-btn>
         </v-col>
       </v-row>
     </template>
     <v-card-text>
-      <v-data-table-server
-        density="compact"
-        :items="ods"
-        :headers="headers"
-        :item-per-page="itemsPerPage"
-        :items-length="totalItems"
-        item-value="name"
-        :loading="loading"
-        @update:options="loadItems"
-      >
+      <v-data-table-server density="compact" :items="ods" :headers="headers" :item-per-page="itemsPerPage"
+        :items-length="totalItems" item-value="name" :loading="loading" @update:options="loadItems">
         <template v-slot:item.action="{ item }">
           <!-- add link for selectOption -->
           <v-menu>
@@ -57,13 +28,8 @@
               <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
             </template>
             <v-list>
-              <v-list-item
-                slim
-                density="compact"
-                v-for="(op, i) in selectOptions"
-                :key="i"
-                @click="doAction(item, op.value)"
-              >
+              <v-list-item slim density="compact" v-for="(op, i) in selectOptions" :key="i"
+                @click="doAction(item, op.value)">
                 <v-list-item-title class="text-button">{{
                   op.text
                 }}</v-list-item-title>
@@ -90,41 +56,13 @@
   <!-- modal -->
 
   <BatchAdd v-model="showModal['BatchAdd']" v-if="showModal['BatchAdd']" />
-  <MainTableInfo
-    v-model="showModal['MainTableInfo']"
-    v-if="showModal['MainTableInfo']"
-    :d="item"
-  />
-  <FieldsCompare
-    v-model="showModal['FieldsCompare']"
-    v-if="showModal['FieldsCompare']"
-    :d="item"
-  />
-  <CmdList
-    v-model="showModal['CmdList']"
-    v-if="showModal['CmdList']"
-    :d="item"
-  />
-  <TableUsed
-    v-model="showModal['TableUsed']"
-    v-if="showModal['TableUsed']"
-    :d="item"
-  />
-  <AddaxResult
-    v-model="showModal['AddaxResult']"
-    v-if="showModal['AddaxResult']"
-    :d="item"
-  />
-  <LogFiles
-    v-model="showModal['LogFiles1']"
-    v-if="showModal['LogFiles1']"
-    :d="item"
-  />
-  <LogFiles
-    v-model="showModal['LogFiles2']"
-    v-if="showModal['LogFiles2']"
-    :d="item"
-  />
+  <MainTableInfo v-model="showModal['MainTableInfo']" v-if="showModal['MainTableInfo']" :d="item" />
+  <FieldsCompare v-model="showModal['FieldsCompare']" v-if="showModal['FieldsCompare']" :d="item" />
+  <CmdList v-model="showModal['CmdList']" v-if="showModal['CmdList']" :d="item" />
+  <TableUsed v-model="showModal['TableUsed']" v-if="showModal['TableUsed']" :d="item" />
+  <AddaxResult v-model="showModal['AddaxResult']" v-if="showModal['AddaxResult']" :d="item" />
+  <LogFiles v-model="showModal['LogFiles1']" v-if="showModal['LogFiles1']" :d="item" />
+  <LogFiles v-model="showModal['LogFiles2']" v-if="showModal['LogFiles2']" :d="item" />
 </template>
 
 <script setup lang="ts">
@@ -140,7 +78,7 @@ import LogFiles from "@/components/ods/LogFiles.vue";
 
 const ods = ref([]);
 const search = ref("");
-const item = ref<String>("");
+const item = ref<any>("");
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const loading = ref(true);
@@ -183,7 +121,9 @@ const showModal = ref({
   LogFiles2: false
 });
 
-const doAction = (val: any, comp: string) => {
+type ShowModalKey = keyof typeof showModal.value;
+
+const doAction = (val: any, comp: ShowModalKey) => {
   // clear item
   item.value = "";
 
@@ -229,7 +169,13 @@ const doEtl = (ctype: string) => {
       alertMsg.value.text = res.data;
     });
 };
-const loadItems = ({ page, itemsPerPage, sortBy }) => {
+interface LoadItemsOptions {
+  page: number;
+  itemsPerPage: number;
+  sortBy: string | null;
+};
+
+const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
   loading.value = true;
   // const sort = createSort(sortBy)
   OdsService.fetchOdsList(page - 1, itemsPerPage, search.value).then(res => {
@@ -243,4 +189,5 @@ const searchOds = () => {
   loadItems({ page: 0, itemsPerPage: itemsPerPage.value, sortBy: null });
 };
 </script>
-<style scoped></style>
+<style scoped>
+</style>

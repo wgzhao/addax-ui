@@ -9,7 +9,6 @@ import { ref, onMounted } from "vue";
 
 const props = defineProps(["param"]);
 const data = ref([]);
-const dialog = ref(true);
 const headers = ref([
   {
     title: "目标表",
@@ -44,4 +43,5 @@ onMounted(() => {
   fetchData();
 });
 </script>
-<style></style>
+<style>
+</style>

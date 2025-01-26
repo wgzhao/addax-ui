@@ -15,21 +15,6 @@ const headers = [
   { key: "runtime", title: "耗时(秒)", width: "5%" },
   { key: "actions", title: "操作", value: "" }
 ];
-const options = {
-  response: true,
-  select: false,
-  paging: true,
-  searching: true,
-  info: true,
-  lengthChange: true,
-  pageLength: 10,
-  lengthMenu: [
-    [10, 25, 50, -1],
-    [10, 25, 50, "All"]
-  ],
-  buttons: ["copy", "excel", "pdf"],
-  dom: "Bfrltip"
-};
 
 const data = ref();
 </script>

@@ -3,15 +3,18 @@ import Requests from "@/utils/requests";
 class SystemInfoService {
   baseUrl = "systemInfo";
   getEtlAndDs(q?: string) {
-    return Requests.get(this.baseUrl + "/etlAndDs", { q: q });
+    const params  = q? new URLSearchParams({q: q}): undefined;
+    return Requests.get(this.baseUrl + "/etlAndDs", params);
   }
 
   getEtlInfo(q?: string) {
-    return Requests.get(this.baseUrl + "/etlInfo", { q: q });
+    const params  = q? new URLSearchParams({q: q}): undefined;
+    return Requests.get(this.baseUrl + "/etlInfo", params);
   }
 
   getDsInfo(q?: string) {
-    return Requests.get(this.baseUrl + "/dsInfo", { q: q });
+    const params  = q? new URLSearchParams({q: q}): undefined;
+    return Requests.get(this.baseUrl + "/dsInfo", params);
   }
 }
 

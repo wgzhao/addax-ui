@@ -14,7 +14,6 @@ import { Pie } from "vue-chartjs";
 
 ChartJS.register(ArcElement, PointElement, Title, Tooltip, Legend);
 
-const type = "doughnut";
 const data = {
   labels: ["Direct", "Referral", "Social"],
   datasets: [
@@ -40,12 +39,6 @@ const options = {
   },
   cutoutPercentage: 80,
   responsive: true,
-  maintainAspectRatio: false,
   cutout: "80%"
-};
-const plugins = {
-  legend: {
-    display: false
-  }
 };
 </script>
