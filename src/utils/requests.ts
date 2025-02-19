@@ -7,6 +7,12 @@ import router from "@/router";
 // axios.defaults.timeout = 5000;
 console.log("mode = " + import.meta.env.MODE);
 
+interface ResponseData<T> {
+  code: number;
+  message: string;
+  data: T;
+}
+
 // const userinfo = JSON.parse(localStorage.getItem("userinfo"));
 
 // if (userinfo != null) {
@@ -87,22 +93,22 @@ class Requests {
   // }
 
   // GET 方法
-  get<T = any>(url: string, params?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  get<T = any>(url: string, params?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
     return this.instance.get<T>(url, { params, ...config });
   }
 
   // POST 方法
-  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
     return this.instance.post<T>(url, data, { ...config });
   }
 
   // PUT 方法
-  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
     return this.instance.put<T>(url, data, { ...config });
   }
 
   // DELETE 方法
-  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
     return this.instance.delete<T>(url, { ...config });
   }
 }

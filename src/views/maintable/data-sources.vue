@@ -214,7 +214,7 @@ const saveData = () => {
 onMounted(() => {
   DSService.list()
     .then(resp => {
-      impdbs.value = resp.data;
+      impdbs.value = resp;
       return resp;
     })
     .catch(error => {

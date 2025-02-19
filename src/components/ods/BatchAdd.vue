@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import DialogComp from "./DialogComp.vue";
-import axios from "axios";
+import request from "@/utils/requests";
 
 defineProps(["d"]);
 
@@ -101,7 +101,7 @@ const defaultItem = ref({
 
 const sourceSystemList = ref([]);
 const fetchSourceData = () => {
-  axios.get("/maintable/ods/sourceSystem").then(res => {
+  request.get("/maintable/ods/sourceSystem").then(res => {
     sourceSystemList.value = res;
   });
 };
@@ -134,7 +134,7 @@ const saveItems = () => {
     }
   });
   // save data
-  axios
+  request
     .post("/maintable/ods/batchSave", data.value, {
       headers: {
         "Content-Type": "application/json"

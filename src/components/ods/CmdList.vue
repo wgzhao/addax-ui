@@ -1,6 +1,6 @@
 <template>
   <!-- 命令列表 -->
-  <dialog-comp title="命令列表" v-model="dialog">
+  <!-- <dialog-comp title="命令列表" v-model="dialog"> -->
     <v-data-table
       :headers="headers"
       :items="cmds"
@@ -27,15 +27,15 @@
         </tr>
       </template>
     </v-data-table>
-  </dialog-comp>
+  <!-- </dialog-comp> -->
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import OdsService from "@/service/maintable/odsService";
-import DialogComp from "./DialogComp.vue";
+// import DialogComp from "./DialogComp.vue";
 
-const dialog = defineModel({ required: true, default: true });
-const props = defineProps(["d"]);
+// const dialog = defineModel({ required: true, default: true });
+const props = defineProps({ tid: String });
 interface Item {
   comIdx: number;
   comKind: string;
@@ -68,7 +68,7 @@ function getColor(flag: string) {
 }
 
 onMounted(() => {
-  OdsService.fetchCmdList(props.d)
+  OdsService.fetchCmdList(props.tid)
     .then(res => {
       cmds.value = res;
     })

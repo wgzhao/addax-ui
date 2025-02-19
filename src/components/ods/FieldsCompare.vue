@@ -1,6 +1,6 @@
 <template>
   <!-- 字段对比 -->
-  <dialog-comp title="字段对比" v-model="dialog">
+  <!-- <dialog-comp title="字段对比" v-model="dialog"> -->
     <v-data-table
       :headers="headers"
       :items="fields"
@@ -34,14 +34,14 @@
         </tr>
       </template>
     </v-data-table>
-  </dialog-comp>
+  <!-- </dialog-comp> -->
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import OdsService from "@/service/maintable/odsService";
-import DialogComp from "./DialogComp.vue";
+// import DialogComp from "./DialogComp.vue";
 
-const props = defineProps({ d: String });
+const props = defineProps({ tid: String });
 
 interface Item {
   IDX: number;
@@ -58,7 +58,6 @@ interface Item {
   TBL_COMMENT: string;
 }
 const fields = ref<Item>();
-const dialog = defineModel({ required: true, default: true });
 
 const headers = ref([
   { title: "序号", key: "IDX" },
@@ -111,7 +110,7 @@ const headers1 = ref([
   // }
 ]);
 onMounted(() => {
-  OdsService.fetchFieldsCompare(props.d)
+  OdsService.fetchFieldsCompare(props.tid)
     .then(res => {
       fields.value = res;
     })

@@ -1,8 +1,8 @@
 <template>
   <!-- 表使用场景 -->
-  <v-dialog v-mode="dialog">
+  <!-- <v-dialog v-mode="dialog"> -->
     <v-data-table :items="used" :headers="headers" density="compact" />
-  </v-dialog>
+  <!-- </v-dialog> -->
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
@@ -10,7 +10,7 @@ import OdsService from "@/service/maintable/odsService";
 
 const dialog = defineModel({ required: true, default: true });
 
-const props = defineProps(["d"]);
+const props = defineProps({ tid: String });
 
 const headers = [
   { title: "场景类别", key: "kind" },
@@ -20,7 +20,7 @@ const headers = [
 const used = ref([]);
 
 onMounted(() => {
-  OdsService.fetchTableUsed(props.d.split("|")[0], props.d.split("|")[1]).then(
+  OdsService.fetchTableUsed(props.tid.split("|")[0], props.tid.split("|")[1]).then(
     res => {
       used.value = res;
     }

@@ -1,8 +1,8 @@
 <template>
   <!-- ODS 主表信息 ODS采集主表配置-->
   <!-- <v-sheet class="mx-auto"> -->
-  <dialog-comp v-model="dialog" title="ODS采集主表配置">
-    <v-form fast-fail @submit.prevent="saveOds">
+  <!-- <dialog-comp v-model="dialog" title="ODS采集主表配置"> -->
+    <v-form fast-fail @submit.prevent="saveOds" title="ODS采集主表配置">
       <v-container>
         <v-row>
           <v-col cols="12" md="3" class="m-0">
@@ -196,19 +196,51 @@
       </v-card-actions>
     </v-form>
     <!-- </v-sheet> -->
-  </dialog-comp>
+  <!-- </dialog-comp> -->
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import OdsService from "@/service/maintable/odsService";
-import DialogComp from "./DialogComp.vue";
-import MainTableType from "@/types/mainTable";
+// import MainTableType from "@/types/mainTable";
 
-const props = defineProps(["d"]);
+const props = defineProps({
+  tid: {
+    type: String,
+    required: true,
+  }
+}
+);
 
-const dialog = defineModel();
-
-const mainTable = ref<MainTableType>();
+const mainTable = ref({
+  sysName: "",
+  souFilter: "",
+  souOwner: "",
+  souTablename: "",
+  destTablename: "",
+  destPartKind: "",
+  flag: "",
+  retryCnt: 0,
+  paramSou: "",
+  bpreview: "",
+  bcreate: "",
+  bupdate: "",
+  realtimeInterval: "",
+  realtimeTaskgroup: "",
+  realtimeSouOwner: "",
+  realtimeSouFilter: "",
+  realtimeFixed: "",
+  etlKind: "",
+  realtimeIntervalRange: "",
+  souSplit: "",
+  afterRetryPntype: "",
+  afterRetryFixed: "",
+  startTime: "",
+  endTime: "",
+  runtime: "",
+  tid: "",
+  runtimeAdd: "",
+  remark: "",
+});
 
 const mode = ref("add");
 
@@ -224,8 +256,8 @@ const saveOds = () => {
 };
 
 onMounted(() => {
-  console.log("d = " + props.d);
-  OdsService.fetchOdsDetail(props.d).then(res => (mainTable.value = res));
+  console.log("d = " + props.tid);
+  OdsService.fetchOdsDetail(props.tid).then(res => (mainTable.value = res));
 });
 </script>
 <style>

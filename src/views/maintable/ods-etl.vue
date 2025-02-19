@@ -29,7 +29,8 @@
             </template>
             <v-list>
               <v-list-item slim density="compact" v-for="(op, i) in selectOptions" :key="i"
-                @click="doAction(item, op.value)">
+                @click="openDialog(op.value, item)"
+                >
                 <v-list-item-title class="text-button">{{
                   op.text
                 }}</v-list-item-title>
@@ -40,33 +41,63 @@
       </v-data-table-server>
     </v-card-text>
   </v-card>
+
+  <!-- 对话框 -->
+  <v-dialog v-model="dialogVisible" >
+      <v-card :style="{ width: '80vw', height: 'auto' }">
+        <v-card-title>
+          动态内容
+          <!-- <v-btn icon @click="closeDialog">
+            <v-icon>mdi-close</v-icon>
+          </v-btn> -->
+          <v-list-item class="px-2">
+          <slot name="header" />
+          <template #append>
+            <v-btn
+              class="btn btn-primary bg-primary"
+              text="关闭"
+              @click="closeDialog"
+            ></v-btn>
+          </template>
+        </v-list-item>
+        </v-card-title>
+
+        <v-divider />
+
+        <v-card-text>
+          <!-- 动态加载的内容 -->
+          <component :is="currentComponent"  v-bind="currentParams"/>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
   <!--    <div class="col-6">-->
   <!--      <component :is="tabs[dynamicComponent]" :d="item"></component>-->
   <!--    </div>-->
   <!-- action response -->
-  <v-dialog v-model="alertMsg.show" width="auto">
+  <!-- <v-dialog v-model="alertMsg.show" width="auto">
     <v-card>
       <v-toolbar :color="alertMsg.color" :title="alertMsg.title"></v-toolbar>
       <v-card-text>
         <pre>{{ alertMsg.text }}</pre>
       </v-card-text>
     </v-card>
-  </v-dialog>
+  </v-dialog> -->
 
   <!-- modal -->
 
-  <BatchAdd v-model="showModal['BatchAdd']" v-if="showModal['BatchAdd']" />
+  <!-- <BatchAdd v-model="showModal['BatchAdd']" v-if="showModal['BatchAdd']" />
   <MainTableInfo v-model="showModal['MainTableInfo']" v-if="showModal['MainTableInfo']" :d="item" />
   <FieldsCompare v-model="showModal['FieldsCompare']" v-if="showModal['FieldsCompare']" :d="item" />
   <CmdList v-model="showModal['CmdList']" v-if="showModal['CmdList']" :d="item" />
   <TableUsed v-model="showModal['TableUsed']" v-if="showModal['TableUsed']" :d="item" />
   <AddaxResult v-model="showModal['AddaxResult']" v-if="showModal['AddaxResult']" :d="item" />
   <LogFiles v-model="showModal['LogFiles1']" v-if="showModal['LogFiles1']" :d="item" />
-  <LogFiles v-model="showModal['LogFiles2']" v-if="showModal['LogFiles2']" :d="item" />
+  <LogFiles v-model="showModal['LogFiles2']" v-if="showModal['LogFiles2']" :d="item" /> -->
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, shallowRef } from "vue";
 import OdsService from "@/service/maintable/odsService";
 import MainTableInfo from "@/components/ods/MainTable.vue";
 import FieldsCompare from "@/components/ods/FieldsCompare.vue";
@@ -82,7 +113,21 @@ const item = ref<any>("");
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const loading = ref(true);
-
+const dialogVisible = ref(false);
+// 当前要显示的组件（默认值为 null，表示对话框无内容）
+// shallowRef 用于定义浅层响应式的引用，它不会递归地将对象或组件内部的数据设为响应式，因此适用于组件这种复杂对象。
+const currentComponent = shallowRef(null);
+// 传递给子组件的参数
+const currentParams = ref({});
+const componentMap = {
+  MainTableInfo,
+  FieldsCompare,
+  CmdList,
+  TableUsed,
+  AddaxResult,
+  BatchAdd,
+  LogFiles
+};
 const selectOptions = [
   { text: "主表信息", value: "MainTableInfo" },
   { text: "字段对比", value: "FieldsCompare" },
@@ -123,6 +168,44 @@ const showModal = ref({
 
 type ShowModalKey = keyof typeof showModal.value;
 
+// 打开对话框并加载相应的组件
+function openDialog(componentName, com: ShowModalKey) {
+  // console.log("currentComponent", componentName);
+  // console.log("currentParams", params);
+  currentComponent.value = componentMap[componentName]; // 动态切换组件
+  // currentParams.value = {tid: com.tid}; // 传递参数
+  setParams(componentName, com);
+  dialogVisible.value = true; // 打开对话框
+}
+
+// 关闭对话框
+function closeDialog() {
+  dialogVisible.value = false;
+  currentComponent.value = null; // 清空内容
+}
+
+function setParams(compName: string, comp: ShowModalKey) {
+  if (compName == "LogFiles1") {
+    // 命令日志
+    currentParams.value = { tid: comp.tid};
+    return;
+  }
+  if (compName == "LogFiles2") {
+    // 调度日志
+    currentParams.value = { tid: "tuna_sp_etl_" + comp.tid};
+    return;
+  }
+
+  if (compName == "MainTableInfo" || compName == "FieldsCompare" || compName == "CmdList") {
+    currentParams.value = { tid: comp.tid};
+  } else if (compName == "TableUsed") {
+    currentParams.value = { tid: comp.destOwner + "." + comp.destTablename + "|" + comp.sysid};
+  } else if (compName == "AddaxResult") {
+    currentParams.value = { tid: comp.spname};
+  } else {
+    currentParams.value = { tid: comp.tid};
+  }
+}
 const doAction = (val: any, comp: ShowModalKey) => {
   // clear item
   item.value = "";
