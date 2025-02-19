@@ -7,6 +7,7 @@
 // Plugins
 import vuetify from "./vuetify";
 import router from "@/router";
+import p from './pinia'
 
 // Types
 import type { App } from "vue";
@@ -17,5 +18,5 @@ import "highlight.js/styles/github-dark.css";
 import "highlight.js/lib/common";
 
 export function registerPlugins(app: App) {
-  app.use(vuetify).use(router).use(HljsVuePlugin);
+  app.use(vuetify).use(router).use(p).use(HljsVuePlugin);
 }

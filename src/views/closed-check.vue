@@ -26,7 +26,7 @@ const headers = [
 
 onMounted(() => {
   CloseCheckService.fetchAbnormalRecord().then(res => {
-    abnormalRecord.value = res.data;
+    abnormalRecord.value = res;
   });
 });
 </script>

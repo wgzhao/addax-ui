@@ -22,7 +22,7 @@ const used = ref([]);
 onMounted(() => {
   OdsService.fetchTableUsed(props.d.split("|")[0], props.d.split("|")[1]).then(
     res => {
-      used.value = res.data;
+      used.value = res;
     }
   );
 });

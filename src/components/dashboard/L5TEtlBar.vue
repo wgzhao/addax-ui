@@ -50,7 +50,7 @@ const data = ref({
 
 onMounted(() => {
   axios.get("/dashboard/last5DaysEtlTime").then(res => {
-    data.value = res.data;
+    data.value = res;
   });
 });
 </script>

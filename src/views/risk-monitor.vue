@@ -109,16 +109,16 @@ const search = ref(null);
 // 获取数据
 const fetchData = () => {
   RiskService.sysRisks().then(res => {
-    data.value["sysRisk"] = res.data;
-    // sysRisk.value = res.data;
+    data.value["sysRisk"] = res;
+    // sysRisk.value = res;
   });
   RiskService.fieldsChanges().then(res => {
-    data.value["odsFieldChange"] = res.data;
-    // odsFieldChange.value = res.data;
+    data.value["odsFieldChange"] = res;
+    // odsFieldChange.value = res;
   });
   RiskService.smsDetails().then(res => {
-    data.value["smsDetail"] = res.data;
-    // smsDetail.value = res.data;
+    data.value["smsDetail"] = res;
+    // smsDetail.value = res;
   });
 };
 

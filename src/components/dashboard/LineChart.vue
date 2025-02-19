@@ -8,7 +8,8 @@
   <div></div>
 </template>
 <script setup lang="ts">
-import axios from "axios";
+// import axios from "axios";
+import request from "@/utils/requests";
 import { ref, onMounted } from "vue";
 import {
   Chart as ChartJS,
@@ -89,10 +90,10 @@ const areaOtions = ref({
 });
 
 const fetchAccumData = () => {
-  axios
+  request
     .get("/dashboard/last12MonthsEtlData")
     .then(res => {
-      last12MonthsEtlData.value = res.data;
+      last12MonthsEtlData.value = res;
       console.log(last12MonthsEtlData.value);
     })
     .catch(err => console.log(err));

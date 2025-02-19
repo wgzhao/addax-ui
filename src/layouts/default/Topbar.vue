@@ -19,15 +19,23 @@
           </v-btn>
         </div>
       </template>
+      <v-btn v-if="username" >{{ username }}</v-btn>
+        <v-btn v-if="!username" :to="{path: '/login'}">
+              Login
+        </v-btn>
     </template>
   </v-app-bar>
   <!-- End of Topbar -->
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref,computed } from "vue";
+import { useAuthStore } from '@/stores/auth';
 // import {useTheme} from "vuetify";
 
 // const {global} = useTheme();
+const authStore = useAuthStore();
+    // 计算属性绑定用户名
+const username = computed(() => authStore.username);
 
 const urls = ref([
   {

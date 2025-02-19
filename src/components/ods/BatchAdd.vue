@@ -102,7 +102,7 @@ const defaultItem = ref({
 const sourceSystemList = ref([]);
 const fetchSourceData = () => {
   axios.get("/maintable/ods/sourceSystem").then(res => {
-    sourceSystemList.value = res.data;
+    sourceSystemList.value = res;
   });
 };
 

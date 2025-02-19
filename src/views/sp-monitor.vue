@@ -78,16 +78,16 @@ const data = ref([
 
 const initData = () => {
   SpMonitorService.fetchValidChkSp().then(res => {
-    data.value[0].data = res.data;
+    data.value[0].data = res;
   });
   SpMonitorService.fetchPipeline().then(res => {
-    data.value[1].data = res.data;
+    data.value[1].data = res;
   });
   SpMonitorService.fetchTotalExec().then(res => {
-    data.value[2].data = res.data;
+    data.value[2].data = res;
   });
   SpMonitorService.fetchErrorTasks().then(res => {
-    data.value[3].data = res.data;
+    data.value[3].data = res;
   });
 };
 

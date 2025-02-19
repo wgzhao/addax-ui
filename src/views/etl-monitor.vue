@@ -127,16 +127,16 @@ const headers = [
 
 const getData = async () => {
   etlService.fetchAccomplishList().then(res => {
-    data.value["accomplishList"] = res.data;
+    data.value["accomplishList"] = res;
   });
   etlService.fetchSpecialTask().then(res => {
-    data.value["specialTask"] = res.data;
+    data.value["specialTask"] = res;
   });
   etlService.fetchRejectTask().then(res => {
-    data.value["rejectTask"] = res.data;
+    data.value["rejectTask"] = res;
   });
   etlService.fetchRealtimeTask().then(res => {
-    data.value["realtimeTask"] = res.data;
+    data.value["realtimeTask"] = res;
   });
 };
 

@@ -159,14 +159,14 @@ const doEtl = (ctype: string) => {
       alertMsg.value.color = "success";
       alertMsg.value.icon = "mdi-check-circle";
       alertMsg.value.title = "启动成功";
-      alertMsg.value.text = res.data;
+      alertMsg.value.text = res;
     })
     .catch(res => {
       alertMsg.value.show = true;
       alertMsg.value.color = "error";
       alertMsg.value.icon = "mdi-alert-circle";
       alertMsg.value.title = "启动失败";
-      alertMsg.value.text = res.data;
+      alertMsg.value.text = res;
     });
 };
 interface LoadItemsOptions {
@@ -179,8 +179,8 @@ const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
   loading.value = true;
   // const sort = createSort(sortBy)
   OdsService.fetchOdsList(page - 1, itemsPerPage, search.value).then(res => {
-    ods.value = res.data["content"];
-    totalItems.value = res.data["totalPages"];
+    ods.value = res["content"];
+    totalItems.value = res["totalPages"];
     loading.value = false;
   });
 };

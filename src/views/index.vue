@@ -94,7 +94,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import axios from "axios";
+import request from '@/utils/requests';
 import { ref, onMounted } from "vue";
 import LineChart from "@/components/dashboard/LineChart.vue";
 import L5TEtlBar from "@/components/dashboard/L5TEtlBar.vue";
@@ -102,11 +102,15 @@ import L5TEtlBar from "@/components/dashboard/L5TEtlBar.vue";
 const ratios = ref([]);
 const lastEtlData = ref(0.0);
 
-function fetchRatio() {
-  axios.get("/etl/accomplishRatio").then(resp => (ratios.value = resp.data));
-  axios
-    .get("/dashboard/lastEtlData")
-    .then(res => (lastEtlData.value = res.data));
+const fetchRatio = async ()  => {
+  try {
+    const ar = await request.get("/etl/accomplishRatio");
+    const ed = await request.get("/dashboard/lastEtlData");
+    ratios.value = ar;
+    lastEtlData.value = ed;
+  } catch (error) {
+    console.error("Error fetching ratios:", error);
+  }
 }
 
 onMounted(() => {

@@ -225,7 +225,7 @@ const saveOds = () => {
 
 onMounted(() => {
   console.log("d = " + props.d);
-  OdsService.fetchOdsDetail(props.d).then(res => (mainTable.value = res.data));
+  OdsService.fetchOdsDetail(props.d).then(res => (mainTable.value = res));
 });
 </script>
 <style>

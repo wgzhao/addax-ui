@@ -42,6 +42,7 @@
 import axios from "axios";
 import { ref } from "vue";
 import router from "@/router";
+import { useAuthStore } from '@/stores/auth';
 
 import { authService } from "@/service/auth.service";
 
@@ -53,6 +54,7 @@ const auth = ref({
 
 const loading = ref<boolean>(false);
 const sessionExpired = ref<boolean>(false);
+const authStore = useAuthStore();
 
 function onSubmit() {
   if (!form.value) return;
@@ -67,18 +69,19 @@ function login() {
   // reset the error message
   // clearMessages();
   authService.login(auth.value).then(res => {
-    if (res.data.accessToken == null) {
+    console.log("res", res.accessToken);
+    if (res.accessToken == null) {
       alert("登录失败");
     } else {
-      let data = {
-        token: res.data.accessToken,
-        username: auth.value.username,
-        role: ""
-      };
-      localStorage.setItem("userinfo", JSON.stringify(data));
-      // // update the authorization header
-      axios.defaults.headers.common["Authorization"] =
-        `Bearer ${res.data.accessToken}`;
+      // let data = {
+      //   token: res.data.accessToken,
+      //   username: auth.value.username,
+      //   role: ""
+      // };
+      authStore.setToken(res.accessToken);
+      authStore.setUserName(auth.value.username);
+      // localStorage.setItem("userinfo", JSON.stringify(data));
+      router.push({ path: "/" });
     }
     router.push({ path: "/" });
   });

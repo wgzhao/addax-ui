@@ -158,24 +158,24 @@ const headers = [
 
 watchEffect(async () => {
   TaskGroupService.fetchTotalExec().then(res => {
-    data.value["totalExec"] = res.data;
-    data.value["totalExecsMore"] = res.data;
+    data.value["totalExec"] = res;
+    data.value["totalExecsMore"] = res;
   });
 
   TaskGroupService.fetchFlagGenTime().then(res => {
-    data.value["flagGenTimes"] = res.data;
+    data.value["flagGenTimes"] = res;
   });
 
   TaskGroupService.fetchDataServiceExecTime().then(res => {
-    data.value["dataServiceExecTime"] = res.data;
+    data.value["dataServiceExecTime"] = res;
   });
 
   TaskGroupService.fetchDataServiceExecTimeout().then(res => {
-    data.value["dataServiceExecTimeout"] = res.data;
+    data.value["dataServiceExecTimeout"] = res;
   });
 
   TaskGroupService.fetchTargetComplete().then(res => {
-    data.value["targetComplete"] = res.data;
+    data.value["targetComplete"] = res;
   });
 });
 </script>

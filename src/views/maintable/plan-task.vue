@@ -55,7 +55,7 @@ function getColor(flag: string) {
 
 onMounted(() => {
   axios.get("/maintable/plantask/list").then(res => {
-    data.value = res.data;
+    data.value = res;
   });
 });
 </script>

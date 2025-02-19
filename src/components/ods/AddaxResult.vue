@@ -36,7 +36,7 @@ const results = ref([]);
 
 onMounted(() => {
   OdsService.fetchAddaxResult(props.d).then(res => {
-    results.value = res.data;
+    results.value = res;
   });
 });
 </script>

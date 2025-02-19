@@ -147,8 +147,8 @@ const actions = ref([
 
 const fetchData = () => {
   axios.get(apiPrefix.value + "dsTable/" + props.d).then(res => {
-    data.value = res.data;
-    return res.data;
+    data.value = res;
+    return res;
   });
 };
 
@@ -189,8 +189,8 @@ const doAction = (item: any, idx: number) => {
     axios
       .get(apiPrefix.value + actions.value[idx].api + item.tblId)
       .then(res => {
-        childData.value = res.data;
-        return res.data;
+        childData.value = res;
+        return res;
       });
   } else if (idx == 1) {
     formTitle.value = item.destTablename + "  的采集任务配置";
@@ -201,8 +201,8 @@ const doAction = (item: any, idx: number) => {
     axios
       .get("/log/" + actions.value[idx].api + "tuna_addax_" + item.tblId)
       .then(res => {
-        childData.value = res.data;
-        return res.data;
+        childData.value = res;
+        return res;
       });
   }
   dialog.value[idx] = true;
@@ -217,8 +217,8 @@ const getContent = (f: string) => {
       }
     })
     .then(res => {
-      fContent.value = res.data;
-      return res.data;
+      fContent.value = res;
+      return res;
     });
 };
 </script>
