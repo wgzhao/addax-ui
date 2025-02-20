@@ -2,11 +2,28 @@
   <!-- 主表配置 -- ODS 采集配置-->
   <v-card flat title="主表配置 - ODS 采集配置">
     <template v-slot:text>
-      <v-row justify="center" align="center">
-        <v-col cols="col-4">
+      <v-row justify="center" align-content="center" >
+        <v-col cols="col-2">
           <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
-            variant="outlined" hide-details @keyup.enter="searchOds" @click:append-inner="searchOds"></v-text-field>
+            variant="outlined" hide-details @keyup.enter="searchOds" @click:append-inner="searchOds">
+            <template #prepend>
+              <span class="me-2">关键字查询</span>
+            </template>
+          </v-text-field>
         </v-col>
+        <v-col cols="auto">
+          <!-- 状态下拉框选择 statusOptions -->
+          <v-select v-model="runStatus" :items="statusOptions" item-title="text" item-value="value"  density="compact">
+            <template #prepend>
+              <span class="me-2">状态</span>
+            </template>
+          </v-select>
+        </v-col>
+        <!-- add search button -->
+        <v-col cols="auto">
+          <v-btn ariant="tonal" @click="searchOds">查询</v-btn>
+        </v-col>
+        <v-spacer />
         <v-col cols="auto">
           <v-btn variant="tonal" prepend-icon="mdi-plus" @click="showModal['BatchAdd'] = true">批量新增表</v-btn>
         </v-col>
@@ -46,7 +63,6 @@
   <v-dialog v-model="dialogVisible" >
       <v-card :style="{ width: '80vw', height: 'auto' }">
         <v-card-title>
-          动态内容
           <!-- <v-btn icon @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn> -->
@@ -71,29 +87,15 @@
       </v-card>
     </v-dialog>
 
-  <!--    <div class="col-6">-->
-  <!--      <component :is="tabs[dynamicComponent]" :d="item"></component>-->
-  <!--    </div>-->
-  <!-- action response -->
-  <!-- <v-dialog v-model="alertMsg.show" width="auto">
+  <v-dialog v-model="alertMsg.show" width="auto">
     <v-card>
       <v-toolbar :color="alertMsg.color" :title="alertMsg.title"></v-toolbar>
       <v-card-text>
         <pre>{{ alertMsg.text }}</pre>
       </v-card-text>
     </v-card>
-  </v-dialog> -->
+  </v-dialog>
 
-  <!-- modal -->
-
-  <!-- <BatchAdd v-model="showModal['BatchAdd']" v-if="showModal['BatchAdd']" />
-  <MainTableInfo v-model="showModal['MainTableInfo']" v-if="showModal['MainTableInfo']" :d="item" />
-  <FieldsCompare v-model="showModal['FieldsCompare']" v-if="showModal['FieldsCompare']" :d="item" />
-  <CmdList v-model="showModal['CmdList']" v-if="showModal['CmdList']" :d="item" />
-  <TableUsed v-model="showModal['TableUsed']" v-if="showModal['TableUsed']" :d="item" />
-  <AddaxResult v-model="showModal['AddaxResult']" v-if="showModal['AddaxResult']" :d="item" />
-  <LogFiles v-model="showModal['LogFiles1']" v-if="showModal['LogFiles1']" :d="item" />
-  <LogFiles v-model="showModal['LogFiles2']" v-if="showModal['LogFiles2']" :d="item" /> -->
 </template>
 
 <script setup lang="ts">
@@ -105,7 +107,8 @@ import CmdList from "@/components/ods/CmdList.vue";
 import TableUsed from "@/components/ods/TableUsed.vue";
 import AddaxResult from "@/components/ods/AddaxResult.vue";
 import BatchAdd from "@/components/ods/BatchAdd.vue";
-import LogFiles from "@/components/ods/LogFiles.vue";
+import LogFiles1 from "@/components/ods/LogFiles.vue";
+import LogFiles2 from "@/components/ods/LogFiles.vue";
 
 const ods = ref([]);
 const search = ref("");
@@ -126,8 +129,10 @@ const componentMap = {
   TableUsed,
   AddaxResult,
   BatchAdd,
-  LogFiles
+  LogFiles1,
+  LogFiles2
 };
+
 const selectOptions = [
   { text: "主表信息", value: "MainTableInfo" },
   { text: "字段对比", value: "FieldsCompare" },
@@ -137,6 +142,30 @@ const selectOptions = [
   { text: "命令日志", value: "LogFiles1" },
   { text: "调度日志", value: "LogFiles2" }
 ];
+
+const statusOptions = [
+  {
+    text: "R_正在运行", value: "R"
+  },
+  {
+    text: "Y_运行结束", value: "Y"
+  },
+  {
+    text: "E_运行错误", value: "E"
+  },
+  {
+    text: "W_等待", value: "W"
+  },
+  {
+    text: "N_未运行", value: "N"
+  },
+  {
+    text: "X_禁用", value: "X"
+  }
+];
+
+const runStatus = ref("");
+
 const headers = [
   {
     title: "目标用户",
@@ -172,8 +201,13 @@ type ShowModalKey = keyof typeof showModal.value;
 function openDialog(componentName, com: ShowModalKey) {
   // console.log("currentComponent", componentName);
   // console.log("currentParams", params);
-  currentComponent.value = componentMap[componentName]; // 动态切换组件
+  // if (componentName == "LogFiles1" || componentName == "LogFiles2") {
+  //   currentComponent.value = componentMap["LogFiles"];
+  // } else {
+  //   currentComponent.value = componentMap[componentName]; // 动态切换组件
+  // }
   // currentParams.value = {tid: com.tid}; // 传递参数
+  currentComponent.value = componentMap[componentName]
   setParams(componentName, com);
   dialogVisible.value = true; // 打开对话框
 }
@@ -206,34 +240,6 @@ function setParams(compName: string, comp: ShowModalKey) {
     currentParams.value = { tid: comp.tid};
   }
 }
-const doAction = (val: any, comp: ShowModalKey) => {
-  // clear item
-  item.value = "";
-
-  if (comp == "LogFiles1") {
-    // 命令日志
-    item.value = val.spname;
-    showModal.value[comp] = true;
-    return;
-  }
-  if (comp == "LogFiles2") {
-    // 调度日志
-    item.value = "tuna_sp_etl_" + val.tid;
-    showModal.value[comp] = true;
-    return;
-  }
-
-  if (comp == "MainTableInfo" || comp == "FieldsCompare" || comp == "CmdList") {
-    item.value = val.tid;
-  } else if (comp == "TableUsed") {
-    item.value = val.destOwner + "." + val.destTablename + "|" + val.sysid;
-  } else if (comp == "AddaxResult") {
-    item.value = val.spname;
-  } else {
-    item.value = val;
-  }
-  showModal.value[comp] = true;
-};
 
 const doEtl = (ctype: string) => {
   OdsService.execETL(ctype)
@@ -261,7 +267,7 @@ interface LoadItemsOptions {
 const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
   loading.value = true;
   // const sort = createSort(sortBy)
-  OdsService.fetchOdsList(page - 1, itemsPerPage, search.value).then(res => {
+  OdsService.fetchOdsList(page - 1, itemsPerPage, search.value, runStatus.value).then(res => {
     ods.value = res["content"];
     totalItems.value = res["totalPages"];
     loading.value = false;

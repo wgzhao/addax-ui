@@ -3,15 +3,16 @@
   <div class="row">
     <v-card flat title="数据源管理">
       <template v-slot:text>
-        <v-row justify="center" align="center">
+        <v-row justify="center" align-center="center">
           <v-col cols="col-4">
             <v-text-field v-model="searchValue" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
               single-line :variant="variant" hide-details></v-text-field>
           </v-col>
+          <v-spacer />
           <v-col cols="auto">
-            <button type="button" class="btn btn-primary" @click="addDataSource()">
+            <v-btn type="button" @click="addDataSource()">
               新增
-            </button>
+            </v-btn>
           </v-col>
         </v-row>
       </template>

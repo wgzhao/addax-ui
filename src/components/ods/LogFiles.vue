@@ -60,6 +60,7 @@ const getContent = (f: string) => {
 };
 
 onMounted(() => {
+  console.log("command log===>", props.tid);
   LogService.getLogFiles(props.tid).then(res => {
     logList.value = res;
   });

@@ -4,11 +4,12 @@ import Requests from "@/utils/requests";
 class OdsService {
   prefix: string = "/maintable/ods";
   // 0. 主表列表
-  fetchOdsList(page: number, pageSize: number, q: string) {
+  fetchOdsList(page: number, pageSize: number, q: string, runStatus?: string) {
     return Requests.get(this.prefix, {
       page: page,
       pageSize: pageSize,
-      q: q
+      q: q,
+      flag: runStatus
     });
   }
 
