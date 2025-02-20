@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AddaxResult: typeof import('./src/components/ods/AddaxResult.vue')['default']
+    AddDataSource: typeof import('./src/components/datasource/AddDataSource.vue')['default']
     BatchAdd: typeof import('./src/components/ods/BatchAdd.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     CmdList: typeof import('./src/components/ods/CmdList.vue')['default']

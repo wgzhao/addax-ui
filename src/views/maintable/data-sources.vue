@@ -10,7 +10,7 @@
           </v-col>
           <v-spacer />
           <v-col cols="auto">
-            <v-btn type="button" @click="addDataSource()">
+            <v-btn variant="tonal" @click="addDataSource()">
               新增
             </v-btn>
           </v-col>
@@ -24,20 +24,14 @@
                 <template v-slot:activator="{ props }">
                   <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
                 </template>
-                <v-list>
-                  <v-list-item
-                    slim
-                    density="compact"
-                    v-for="(op, i) in actions"
-                    :key="i"
-                    @click="doAction(item.id, op.value)"
-                  >
-                    <v-list-item-title class="text-button">{{
-                      op.text
-                    }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu> -->
+    <v-list>
+      <v-list-item slim density="compact" v-for="(op, i) in actions" :key="i" @click="doAction(item.id, op.value)">
+        <v-list-item-title class="text-button">{{
+          op.text
+          }}</v-list-item-title>
+      </v-list-item>
+    </v-list>
+    </v-menu> -->
             <v-btn class="btn btn-xs btn-info" @click="doAction(item.id, 'show')">详情</v-btn>
             <v-btn class="btn btn-xs btn-warning" @click="doAction(item.id, 'edit')">编辑</v-btn>
             <!-- <a href="#" class="btn btn-xs btn-info">使用场景</a>
@@ -49,106 +43,40 @@
   </div>
   <!-- form -->
   <v-dialog width="auto" v-model="isShow">
-    <v-form fast-fail @submit.prevent="saveData">
-      <v-card denstify title="数据源详情">
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="5">
-              <v-text-field :variant="variant" v-model="sourceItem.dbName" label="数据库名称"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="5">
-              <v-text-field :variant="variant" v-model="sourceItem.dbConstr" label="数据源链接串"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="2">
-              <v-switch v-model="sourceItem.bvalid" true-value="Y" false-value="N" color="primary" hide-details
-                :label="`${sourceItem.bvalid == 'Y' ? '启用' : '禁用'}`"></v-switch>
-            </v-col>
-          </v-row>
-          <v-row>
-            <div>
-              <h5 class="text-h8 mb-0 pb-0">采集信息</h5>
-            </div>
-            <v-divider></v-divider>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbIdEtl" label="采集编号"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbParalEtl" label="并发数"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbUserEtl" label="用户名"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbPassEtl" label="密码"></v-text-field>
-            </v-col>
-          </v-row>
+    <v-card :style="{ width: '80vw', height: 'auto' }">
+      <v-card-title>
+        {{ title}}
+        <!-- <v-btn icon @click="closeDialog">
+            <v-icon>mdi-close</v-icon>
+          </v-btn> -->
+        <v-list-item class="px-2">
+          <slot name="header" />
+          <template #append>
+            <v-btn class="btn btn-primary bg-primary" text="关闭" @click="isShow = false"></v-btn>
+          </template>
+        </v-list-item>
+      </v-card-title>
 
-          <v-row>
-            <div>
-              <h5 class="text-h8 mb-0 pb-0">数据服务信息</h5>
-            </div>
-            <v-divider></v-divider>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbIdDs" label="采集编号"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbParalDs" label="并发数"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbUserDs" label="用户名"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field :variant="variant" v-model="sourceItem.dbPassDs" label="密码"></v-text-field>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <div>
-              <h5 class="text-h8 mb-0 pb-0">采集扩展信息</h5>
-            </div>
-            <v-divider></v-divider>
-            <v-col cols="12" md="6">
-              <v-text-field :variant="variant" v-model="sourceItem.dbStartType" label="启动类型"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field :variant="variant" v-model="sourceItem.dbStart" label="启动时间"></v-text-field>
-            </v-col>
-            <v-col cols="12" md="12">
-              <v-textarea v-model="sourceItem.dbJudgeSql" label="判断脚本" auto-grow></v-textarea>
-            </v-col>
-            <v-col cols="12" md="12">
-              <v-textarea v-model="sourceItem.dbJudgePre" label="采集前置脚本" auto-grow></v-textarea>
-            </v-col>
-            <v-col cols="12" md="12">
-              <v-textarea v-model="sourceItem.conf" label="其他配置" auto-grow></v-textarea>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col cols="12" md="12">
-              <v-textarea v-model="sourceItem.dbRemark" label="备注信息" auto-grow></v-textarea>
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-card-actions>
-          <v-btn type="submit" class="btn btn-primary">
-            {{ mode === "add" ? "Add" : "Save" }}</v-btn>
-          <v-btn type="reset">Cancel</v-btn>
-        </v-card-actions>
+      <v-divider />
+      <v-card-text>
+        <AddDataSource v-bind="params" />
+      </v-card-text>
       </v-card>
-    </v-form>
   </v-dialog>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import DSService from "@/service/maintable/datasourceService";
+import AddDataSource  from "@/components/datasource/AddDataSource.vue";
 
-const variant = ref("outlined");
 const impdbs = ref([]);
 const isShow = ref(false)
 // 模式： show 显示，edit 编辑， add 新增
 const mode = ref("show");
+const title = computed(() => {
+  return mode.value === "show" ? "详情" : mode.value === "edit" ? "编辑" : "新增";
+});
 const sourceItem = ref({});
 const searchValue = ref("");
 const headers = [
@@ -164,6 +92,7 @@ const actions = [
   { text: "探索源库", value: "explore" }
 ];
 
+const params = ref({})
 const retrieveImpDB = () => {
   DSService.list()
     .then(resp => {
@@ -176,38 +105,20 @@ const retrieveImpDB = () => {
 };
 
 const doAction = (id, ctype) => {
+  params.value = {
+    sid: id,
+    mode: ctype
+  }
   isShow.value = true;
-  mode.value = ctype;
-  DSService.get(id)
-    .then(resp => {
-      sourceItem.value = resp.data;
-      return resp;
-    })
-    .catch(error => {
-      return error;
-    });
 };
 
 const addDataSource = () => {
-  mode.value = "add";
-  sourceItem.value = {};
-};
-
-const saveData = () => {
-  if (mode.value === "add" || mode.value === "edit") {
-    DSService.save(sourceItem.value)
-      .then(resp => {
-        alert("保存成功");
-        isShow.value = false;
-      })
-      .catch(error => {
-        alert("保存失败:" + error);
-      });
-
-    sourceItem.value = "";
-    // get data agtain, it's lazy
-    // retrieveImpDB()
+  console.log("addDataSource");
+  params.value = {
+    sid: "-1",
+    mode: "add"
   }
+  isShow.value = true;
 };
 
 // load data
@@ -223,5 +134,4 @@ onMounted(() => {
     });
 });
 </script>
-<style>
-</style>
+<style></style>
