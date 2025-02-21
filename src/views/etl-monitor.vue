@@ -40,6 +40,7 @@ const headers = [
       { title: "数据源", key: "sysname" },
       {
         title: "整体情况",
+        align: "center",
         value: "",
         children: [
           { title: "总数", key: "totalCnt" },
@@ -60,6 +61,7 @@ const headers = [
       },
       {
         title: "T-1 日",
+        align: "center",
         value: "",
         children: [
           { title: "开始时间", key: "startTimeLtd" },
@@ -69,6 +71,7 @@ const headers = [
       },
       {
         title: "T 日",
+        align: "center",
         value: "",
         children: [
           { title: "开始时间", key: "startTimeTd" },
@@ -144,3 +147,9 @@ onMounted(() => {
   getData();
 });
 </script>
+
+<style scoped>
+.v-data-table__th {
+  text-align: center !important; /* 强制设置居中 */
+}
+</style>

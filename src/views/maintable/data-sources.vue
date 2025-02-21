@@ -6,11 +6,11 @@
         <v-row justify="center" align-center="center">
           <v-col cols="col-4">
             <v-text-field v-model="searchValue" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
-              single-line :variant="variant" hide-details></v-text-field>
+              single-line hide-details></v-text-field>
           </v-col>
           <v-spacer />
           <v-col cols="auto">
-            <v-btn variant="tonal" @click="addDataSource()">
+            <v-btn variant="tonal" @click="doAction('-1', 'add')">
               新增
             </v-btn>
           </v-col>
@@ -19,21 +19,9 @@
       <v-card-text>
         <v-data-table :items="impdbs" :headers="headers" :search="searchValue" density="compact" items-per-page="20">
           <template v-slot:item.actions="{ item }">
-            <!-- add link for selectOption -->
-            <!-- <v-menu>
-                <template v-slot:activator="{ props }">
-                  <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
-                </template>
-    <v-list>
-      <v-list-item slim density="compact" v-for="(op, i) in actions" :key="i" @click="doAction(item.id, op.value)">
-        <v-list-item-title class="text-button">{{
-          op.text
-          }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-    </v-menu> -->
-            <v-btn class="btn btn-xs btn-info" @click="doAction(item.id, 'show')">详情</v-btn>
-            <v-btn class="btn btn-xs btn-warning" @click="doAction(item.id, 'edit')">编辑</v-btn>
+            <v-btn color="secondary" class="btn btn-xs btn-info mx-2" @click="doAction(item.id, 'show')">详情</v-btn>
+            <v-btn color="primary" class="btn btn-xs btn-warning mx-2" @click="doAction(item.id, 'edit')">编辑</v-btn>
+            <v-btn color="error" class="btn btn-xs btn-danger" @click="openDeleteDialog(item.id, item.dbName)">删除</v-btn>
             <!-- <a href="#" class="btn btn-xs btn-info">使用场景</a>
                         <a href="#" class="btn btn-xs btn-info">探索源库</a> -->
           </template>
@@ -42,36 +30,49 @@
     </v-card>
   </div>
   <!-- form -->
-  <v-dialog width="auto" v-model="isShow">
-    <v-card :style="{ width: '80vw', height: 'auto' }">
-      <v-card-title>
-        {{ title}}
-        <!-- <v-btn icon @click="closeDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn> -->
-        <v-list-item class="px-2">
-          <slot name="header" />
-          <template #append>
-            <v-btn class="btn btn-primary bg-primary" text="关闭" @click="isShow = false"></v-btn>
-          </template>
-        </v-list-item>
-      </v-card-title>
 
-      <v-divider />
+  <v-dialog v-model="isShow">
+    <v-card :style="{ justify: 'center', width: '80vw', height: 'auto' }" :title="title">
       <v-card-text>
-        <AddDataSource v-bind="params" />
+        <AddDataSource v-bind="params" @save="handleSave" @close-dialog="isShow = false" />
       </v-card-text>
-      </v-card>
+    </v-card>
   </v-dialog>
+
+  <!-- 确认删除对话框 -->
+  <v-dialog
+      v-model="deleteDialog"
+      max-width="600"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          确认删除
+        </v-card-title>
+        <v-card-text>
+          您确定要删除{{ itemNameToDelete }}这个数据源吗？
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="default" text @click="deleteDialog=false">
+            取消
+          </v-btn>
+          <v-btn color="error" text @click="confirmDelete">
+            确认
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import DSService from "@/service/maintable/datasourceService";
-import AddDataSource  from "@/components/datasource/AddDataSource.vue";
+import AddDataSource from "@/components/datasource/AddDataSource.vue";
 
 const impdbs = ref([]);
 const isShow = ref(false)
+const deleteDialog = ref(false);
+const itemIdToDelete = ref(null);
+const itemNameToDelete = ref(null);
 // 模式： show 显示，edit 编辑， add 新增
 const mode = ref("show");
 const title = computed(() => {
@@ -96,7 +97,7 @@ const params = ref({})
 const retrieveImpDB = () => {
   DSService.list()
     .then(resp => {
-      impdbs.value = resp.data;
+      impdbs.value = resp;
       return resp;
     })
     .catch(error => {
@@ -106,32 +107,56 @@ const retrieveImpDB = () => {
 
 const doAction = (id, ctype) => {
   params.value = {
-    sid: id,
-    mode: ctype
+    mode: ctype,
+    sid: id
   }
   isShow.value = true;
+  mode.value = ctype;
 };
 
-const addDataSource = () => {
-  console.log("addDataSource");
-  params.value = {
-    sid: "-1",
-    mode: "add"
+const closeDialog = () => {
+  isShow.value = false;
+}
+
+// 处理保存事件
+const handleSave = () => {
+  console.log('父组件收到了保存事件，可以在此处理后续逻辑');
+  retrieveImpDB();
+};
+
+// 删除相关操作
+// 打开删除确认对话框
+const openDeleteDialog = (id, name) => {
+  itemIdToDelete.value = id; // 保存要删除的记录 ID
+  itemNameToDelete.value = name;
+  deleteDialog.value = true; // 打开对话框
+};
+
+
+// 确认删除
+const confirmDelete = () => {
+  if (itemIdToDelete.value !== null) {
+    deleteSource(itemIdToDelete.value);
   }
-  isShow.value = true;
+  deleteDialog.value = false;
 };
 
-// load data
-
-onMounted(() => {
-  DSService.list()
+// 删除数据逻辑
+const deleteSource = (id) => {
+  console.log(`删除记录 ID: ${id}`);
+  // 这里实现删除逻辑，例如调用 API 接口或移除本地数据
+  DSService.deleteItem(id)
     .then(resp => {
-      impdbs.value = resp;
-      return resp;
+      alert("删除成功");
+      impdbs.value = impdbs.value.filter((item) => item.id !== id);
+      itemIdToDelete.value = null;
     })
     .catch(error => {
-      return error;
+      alert("删除失败:" + error);
     });
+};
+onMounted(() => {
+  retrieveImpDB();
 });
 </script>
 <style></style>
