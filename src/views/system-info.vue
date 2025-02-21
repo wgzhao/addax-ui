@@ -1,7 +1,7 @@
 <template>
   <!-- 数据中心采集及数据服务系统清单-->
   <!-- search input -->
-  <div class="v-row">
+  <div class="v-row ml-2 mt-2">
     <div class="v-col col-12">
       <v-responsive max-width="360">
         <v-text-field
@@ -21,12 +21,13 @@
   </div>
   <div class="row">
     <div class="v-col col-12">
-      <v-card flat title="数据中心采集及数据服务系统清单">
+      <v-card density="compact" title="数据中心采集及数据服务系统清单">
         <v-card-text>
           <v-data-table
             :items="etlAndDs"
             :headers="etlAndDsHeaders"
             items-per-page="10"
+            density="compact"
           >
             <template v-slot:item.dbConstr="{ item }">
               <code>{{ item.dbConstr }}</code>

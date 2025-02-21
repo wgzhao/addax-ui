@@ -1,7 +1,7 @@
 <template>
   <!-- 主表配置 -- 数据源管理 -->
   <div class="row">
-    <v-card flat title="数据源管理">
+    <v-card title="数据源管理">
       <template v-slot:text>
         <v-row justify="center" align-center="center">
           <v-col cols="col-4">
@@ -84,6 +84,7 @@ const headers = [
   { title: "名称", key: "dbName" },
   { title: "采集编号", key: "dbIdEtl" },
   { title: "服务编号", key: "dbIdDs" },
+  { title: "连接串", key: "dbConstr"},
   { title: "操作", value: "actions", align: "center" }
 ];
 const actions = [

@@ -26,8 +26,8 @@ const createOrUpdateDictItem = (dictItem: Map<string, string>) => {
   return Requests.post(apiPrefix.value + "/dictionaries", dictItem);
 };
 
-const deleteDictItem = (dictItemId: number) => {
-  return Requests.delete(apiPrefix.value + "/dictionaries/" + dictItemId);
+const deleteDictItem = (entryCode: string, entryValue: string) => {
+  return Requests.delete(`${apiPrefix.value}/dictionaries/${entryCode}/${entryValue}`);
 };
 
 export default {

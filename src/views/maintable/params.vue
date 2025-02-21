@@ -20,9 +20,17 @@
     </v-col>
 
     <v-col cols="col-6">
-      <v-card title="参数详情">
-        <v-btn class="btn btn-primary" @click="addItem">新增</v-btn>
+      <v-card>
         <v-card-text>
+          <v-row>
+            <v-col cols="auto">
+              <span class="text-h6">{{currEntryCode}} 参数详情</span>
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col>
+                <v-btn color="info" class="btn btn-primary" @click="addItem">新增</v-btn>
+              </v-col>
+          </v-row>
           <v-data-table
             v-if="dictionaries"
             :headers="dictionaryHeaders"
@@ -48,26 +56,24 @@
                       v-model="editedItem.entryValue"
                       label="参数项"
                     ></v-text-field>
-                    <v-text-field
+                    <v-textarea
                       v-model="editedItem.entryContent"
                       label="参数名称"
-                    ></v-text-field>
+                    ></v-textarea>
                     <v-text-field
                       v-model="editedItem.remark"
                       label="备注"
                     ></v-text-field>
                   </v-card-text>
                   <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue-darken-1" variant="text" @click="close">
-                      Cancel
+                    <v-btn color="info"  @click="close">
+                      取消
                     </v-btn>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                      color="primary"
                       @click="saveDictionary"
                     >
-                      Save
+                      保存
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -81,18 +87,15 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                      color="warning"
                       @click="closeDelete"
                       >Cancel</v-btn
                     >
                     <v-btn
-                      color="blue-darken-1"
-                      variant="text"
+                      color="primary"
                       @click="deleteItemConfirm"
                       >OK</v-btn
                     >
-                    <v-spacer></v-spacer>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -131,8 +134,8 @@ const dictionaryHeaders = [
   { title: "参数值", value: "entryCode" },
   { title: "参数项", value: "entryValue" },
   { title: "参数名称", value: "entryContent" },
-  { title: "备注", value: "remark" },
-  { title: "Action", value: "actions", width: "5%" }
+  { title: "备注", value: "remark", width: "30%" },
+  { title: "Action", value: "actions", width: "10%" }
 ];
 const dialog = ref(false);
 const dialogDelete = ref(false);
@@ -192,14 +195,18 @@ const editItem = item => {
 };
 
 const deleteItem = item => {
-  editedIndex.value = dictionaries.value.indexOf(item);
-  editedItem.value = Object.assign({}, item);
+  // editedIndex.value = dictionaries.value.indexOf(item);
+  // editedItem.value = Object.assign({}, item);
+  editedItem.value = item;
   dialogDelete.value = true;
 };
 
 const deleteItemConfirm = () => {
-  dictionaries.value.splice(editedIndex.value, 1);
-  closeDelete();
+  DictService.deleteDictItem(editedItem.value.entryCode, editedItem.value.entryValue).then(res => {
+    editedItem.value = Object.assign({}, defaultItem.value);
+    dictionaries.value.splice(editedIndex.value, 1);
+    closeDelete();
+  });
 };
 const saveDictionary = () => {
   if (editedIndex.value > -1) {
@@ -221,3 +228,15 @@ onMounted(() => {
   });
 });
 </script>
+
+<style lang="css" scoped>
+/* 覆盖 .v-data-table 的斑马纹背景 */
+.v-data-table .v-data-table__divider:nth-child(odd) {
+  background-color: #fafafa !important; /* 奇数行的背景颜色 */
+}
+
+.v-data-table .v-data-table__divider:nth-child(even) {
+  background-color: #ffffff !important; /* 偶数行的背景颜色 */
+}
+
+</style>

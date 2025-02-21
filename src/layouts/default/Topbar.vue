@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="bg-primary">
+  <v-app-bar app color="primary" dark>
     <template v-slot:default>
       <v-app-bar-title>统一采集管理系统</v-app-bar-title>
       <template v-for="item in urls">
@@ -23,16 +23,27 @@
         <v-btn v-if="!username" :to="{path: '/login'}">
               Login
         </v-btn>
+           <!-- 深色/浅色模式切换按钮 -->
+          <v-btn
+        icon
+        @click="toggleTheme"
+        :title="isDarkTheme? '切换为浅色模式' : '切换为深色模式'"
+      >
+        <v-icon>
+          mdi-theme-light-dark
+        </v-icon>
+      </v-btn>
     </template>
   </v-app-bar>
   <!-- End of Topbar -->
 </template>
 <script setup lang="ts">
-import { ref,computed } from "vue";
+import { ref,computed,watch } from "vue";
 import { useAuthStore } from '@/stores/auth';
-// import {useTheme} from "vuetify";
+import {useTheme} from "vuetify";
 
 // const {global} = useTheme();
+
 const authStore = useAuthStore();
     // 计算属性绑定用户名
 const username = computed(() => authStore.username);
@@ -108,4 +119,24 @@ const urls = ref([
     title: "Demo"
   }
 ]);
+
+const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.name.value === "dark");
+
+// 切换主题函数
+const toggleTheme = () => {
+  theme.global.name.value = isDarkTheme.value ? "light" : "dark";
+  console.log("当前主题切换为：", theme.global.name.value);
+};
+
+// 如果需要记住用户选择（localStorage，可选）
+watch(isDarkTheme, (newValue) => {
+  localStorage.setItem("theme", newValue ? "dark" : "light");
+});
+
+// 在页面加载时初始化主题（从 localStorage 获取用户的选择）
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  theme.global.name.value = savedTheme;
+}
 </script>
