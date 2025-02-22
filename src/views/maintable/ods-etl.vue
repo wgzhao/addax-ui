@@ -25,7 +25,7 @@
         </v-col>
         <v-spacer />
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-plus" @click="showModal['BatchAdd'] = true">批量新增表</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-plus" @click="openDialog('BatchAdd', 'BatchAdd')">批量新增表</v-btn>
         </v-col>
         <v-col cols="auto">
           <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('source')">启动表更新</v-btn>
@@ -192,21 +192,13 @@ const showModal = ref({
   AddaxResult: false,
   BatchAdd: false,
   LogFiles1: false,
-  LogFiles2: false
+  LogFiles2: false,
 });
 
 type ShowModalKey = keyof typeof showModal.value;
 
 // 打开对话框并加载相应的组件
 function openDialog(componentName, com: ShowModalKey) {
-  // console.log("currentComponent", componentName);
-  // console.log("currentParams", params);
-  // if (componentName == "LogFiles1" || componentName == "LogFiles2") {
-  //   currentComponent.value = componentMap["LogFiles"];
-  // } else {
-  //   currentComponent.value = componentMap[componentName]; // 动态切换组件
-  // }
-  // currentParams.value = {tid: com.tid}; // 传递参数
   currentComponent.value = componentMap[componentName]
   setParams(componentName, com);
   dialogVisible.value = true; // 打开对话框
@@ -236,7 +228,10 @@ function setParams(compName: string, comp: ShowModalKey) {
     currentParams.value = { tid: comp.destOwner + "." + comp.destTablename + "|" + comp.sysid};
   } else if (compName == "AddaxResult") {
     currentParams.value = { tid: comp.spname};
-  } else {
+  } else if (compName === "BatchAdd") {
+    currentParams.value = { tid: "-1"};
+  }
+  else {
     currentParams.value = { tid: comp.tid};
   }
 }

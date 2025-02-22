@@ -1,74 +1,64 @@
 <template>
   <!-- ODS 采集 - 批量新增表 -->
-  <dialog-comp v-model="dialog" title="批量新增表">
-    <template #header>
-      <v-btn color="primary" class="flex px-2 mr-5" @click="addItem"
-        >新增一行</v-btn
-      >
-      <v-btn color="primary" class="flex px-2" @click="saveItems">保存</v-btn>
-    </template>
-    <v-data-table-virtual :items="data" :headers="headers" density="compact">
-      <template v-slot:item="{ item, index }">
-        <tr>
-          <td>
-            <v-select
-              required
-              label="Select"
-              density="compact"
-              :items="sourceSystemList"
-              item-title="NAME"
-              item-value="SYSID"
-              single-line
-              v-model="item.souSysid"
+  <v-card title="ODS 采集 - 批量新增表" :style="{ width: '80vw', height: 'auto' }">
+    <v-card-text>
+      <v-row>
+        <v-col cols="4">
+          <v-select :items="sourceSystemList" item-title="NAME" v-model="selectedSourceId" item-value="SYSID"
+            density="compact"
+            return-object
+            single-line
             >
-            </v-select>
-          </td>
-          <td>
-            <v-text-field
-              density="compact"
-              v-model="item.souFilter"
-              required
-            ></v-text-field>
-          </td>
-          <td>
-            <v-text-field
-              density="compact"
-              v-model="item.souOwner"
-              required
-            ></v-text-field>
-          </td>
-          <td>
-            <v-text-field
-              density="compact"
-              v-model="item.souTablename"
-              required
-            ></v-text-field>
-          </td>
-          <td>
-            <v-text-field
-              density="compact"
-              v-model="item.destTablename"
-              :value="item.souTablename.toUpperCase()"
-            ></v-text-field>
-          </td>
-          <td class="d-flex justify-center">
-            <v-icon size="x-large" @click="deleteItem(index)"
-              >mdi-delete</v-icon
-            >
-          </td>
-        </tr>
+            <template #prepend>
+              <span class="me-2">选择采集源</span>
+            </template>
+          </v-select>
+        </v-col>
+        <v-col cols="4">
+          <v-select :items="sourceDbs" :disabled="!selectedSourceId.URL" v-model="selectedDb" 
+          density="compact"
+          single-line
+          >
+            <template #prepend>
+              <span class="me-2">选择库</span>
+            </template>
+            <template #append>
+              <v-btn color="primary" @click="getTables">获取表</v-btn>
+            </template>
+          </v-select>
+          </v-col>
+          <v-spacer />
+          <v-col cols="2">
+          <v-btn color="primary" @click="saveItems">保存</v-btn>
+          </v-col>
+      </v-row>
+
+      <!-- tables -->
+    <v-data-table 
+      :items="tables" 
+      :headers="headers" 
+      :items-per-page="15"
+      density="compact" 
+      v-if="tables.length > 0">
+    <template v-slot:[`item.action`]="{ item, index }">
+      <v-btn color="error" class="btn btn-xs btn-danger" @click="deleteItem(index)">删除</v-btn>
       </template>
-    </v-data-table-virtual>
-  </dialog-comp>
+    </v-data-table>
+    </v-card-text>
+  </v-card>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import DialogComp from "./DialogComp.vue";
+import { ref, onMounted, computed, watch } from "vue";
 import request from "@/utils/requests";
 
-defineProps(["d"]);
-
-const dialog = defineModel({ required: true, type: Boolean, default: true });
+const props = defineProps({
+  tid: {
+    type: String,
+    required: false,
+  }
+}
+);
+// const dialog = defineModel({ required: true, type: Boolean, default: true });
 
 const headers = ref([
   { title: "源系统", key: "souSysid" },
@@ -79,16 +69,25 @@ const headers = ref([
   { title: "Action", value: "action" }
 ]);
 
-const data = ref([
-  {
-    souSysid: "",
-    souFilter: "1=1",
-    souOwner: "",
-    souTablename: "",
-    destTablename: "",
-    destPardKind: ""
-  }
-]);
+interface Table {
+  souSysid: string;
+  souFilter: string;
+  souOwner: string;
+  souTablename: string;
+  destTablename: string;
+  destPardKind: string;
+}
+// 选择的采集源ID
+const selectedSourceId = ref({
+  SYSID: "",
+  URL: "",
+  USERNAME: "",
+  PASSWORD: "",
+  NAME: ""
+});
+const selectedDb = ref()
+
+const tables = ref<Table[]>([]);
 
 const defaultItem = ref({
   souSysid: "",
@@ -100,6 +99,30 @@ const defaultItem = ref({
 });
 
 const sourceSystemList = ref([]);
+
+const sourceDbs = ref([]);
+
+// const sourceDbs = computed(() => {
+//   if (selectedSourceId.value.URL) {
+//   return getDbsBySourceId();
+//   }
+// });
+
+watch (selectedSourceId, (val) => {
+  if (val.URL) {
+    getDbsBySourceId();
+  }
+});
+const getDbsBySourceId = async () => {
+  const res = await request.post(`/maintable/ods/dbSources`,
+     {
+      url: selectedSourceId.value.URL,
+      username: selectedSourceId.value.USERNAME,
+      password: selectedSourceId.value.PASSWORD
+    }
+  );
+  sourceDbs.value = res;
+};
 const fetchSourceData = () => {
   request.get("/maintable/ods/sourceSystem").then(res => {
     sourceSystemList.value = res;
@@ -107,18 +130,16 @@ const fetchSourceData = () => {
 };
 
 const deleteItem = (index: number) => {
-  if (data.value.length > 1) {
+  if (tables.value.length > 1) {
     // only more thanone item
-    data.value.splice(index, 1);
+    tables.value.splice(index, 1);
   }
 };
-const addItem = () => {
-  data.value.push(defaultItem.value);
-};
+
 const saveItems = () => {
   // set destPardKind for each item
   // rule: if(or(A2 = "JY", A2 = "J2", A2 = "WD"), 'N', 'D')
-  data.value.forEach(item => {
+  tables.value.forEach(item => {
     if (
       item.souSysid == "JY" ||
       item.souSysid == "J2" ||
@@ -135,7 +156,7 @@ const saveItems = () => {
   });
   // save data
   request
-    .post("/maintable/ods/batchSave", data.value, {
+    .post("/maintable/ods/batchSave", tables.value, {
       headers: {
         "Content-Type": "application/json"
       }
@@ -146,7 +167,31 @@ const saveItems = () => {
     .catch(err => {
       console.log(err);
     });
-  // console.log(data.value)
+  // console.log(tables.value)
+};
+
+const getTables = async () => {
+  // clear tables
+  tables.value = [];
+  const res = await request.post(`/maintable/ods/tables`,
+    {
+      sysId: selectedSourceId.value.SYSID,
+      url: selectedSourceId.value.URL,
+      username: selectedSourceId.value.USERNAME,
+      password: selectedSourceId.value.PASSWORD,
+      db: selectedDb.value
+    }
+  );
+  res.forEach(element => {
+    tables.value.push({
+      souSysid: selectedSourceId.value.SYSID,
+      souFilter: "1=1",
+      souOwner: selectedDb.value,
+      souTablename: element,
+      destTablename: element.toUpperCase(),
+      destPardKind: ""
+    });
+  });
 };
 onMounted(() => {
   fetchSourceData();
