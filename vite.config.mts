@@ -24,7 +24,11 @@ export default defineConfig(({ mode }) => {
           }
         ]
       }),
-      Layouts(),
+      Layouts({
+        layoutsDirs: "src/layouts",
+        pagesDirs: "src/views",
+        defaultLayout: 'Default'
+      }),
       Vue({
         template: { transformAssetUrls }
       }),
