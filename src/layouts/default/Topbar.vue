@@ -5,11 +5,11 @@
       <template v-for="item in urls">
         <v-menu v-if="item.children">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" flat> {{ item.title }}</v-btn>
+            <v-btn v-bind="props" flat > {{ item.title }}</v-btn>
           </template>
-          <v-list density="compact" v-for="(child, index) in item.children">
-            <v-list-item :key="index" :to="{ path: child.path }">
-              {{ child.title }}
+          <v-list density="compact" nav v-for="(child, index) in item.children">
+            <v-list-item :key="index" :to="{ path: child.path }" class="py-1" style="min-height: 20px;">
+              <v-list-item-title>{{ child.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>

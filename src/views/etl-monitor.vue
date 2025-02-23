@@ -1,22 +1,65 @@
 <template>
-  <!-- 采集监控 -->
-  <template v-for="d in headers">
-    <div class="v-row">
-      <div class="v-col col-12">
-        <v-card flat :title="d.title">
+  <v-container fluid class="pa-6">
+    <v-row dense>
+      <!-- 数据源完成情况（占用全宽） -->
+      <v-col cols="12">
+        <v-card flat :title="headers[0].title" class="mb-4">
           <v-card-text>
             <v-data-table
-              :items="data[d.name]"
-              :headers="d.headers"
+              :items="data.accomplishList"
+              :headers="headers[0].headers"
               density="compact"
-              :sort-by="d.sortBy"
-            >
-            </v-data-table>
+              :sort-by="headers[0].sortBy"
+              class="elevation-1"
+            />
           </v-card-text>
         </v-card>
-      </div>
-    </div>
-  </template>
+      </v-col>
+
+      <!-- 特殊任务提醒和采集拒绝行信息（左右分栏） -->
+      <v-col cols="12" md="6">
+        <v-card flat :title="headers[1].title" class="mb-4">
+          <v-card-text>
+            <v-data-table
+              :items="data.specialTask"
+              :headers="headers[1].headers"
+              density="compact"
+              :sort-by="headers[1].sortBy"
+              class="elevation-1"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-card flat :title="headers[2].title" class="mb-4">
+          <v-card-text>
+            <v-data-table
+              :items="data.rejectTask"
+              :headers="headers[2].headers"
+              density="compact"
+              :sort-by="headers[2].sortBy"
+              class="elevation-1"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- 日间实时采集任务（占用全宽） -->
+      <v-col cols="12">
+        <v-card flat :title="headers[3].title">
+          <v-card-text>
+            <v-data-table
+              :items="data.realtimeTask"
+              :headers="headers[3].headers"
+              density="compact"
+              :sort-by="headers[3].sortBy"
+              class="elevation-1"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -27,8 +70,9 @@ const data = ref({
   accomplishList: [],
   specialTask: [],
   rejectTask: [],
-  realtimeTask: []
+  realtimeTask: [],
 });
+
 const headers = [
   {
     name: "accomplishList",
@@ -48,16 +92,16 @@ const headers = [
           {
             title: "完成率",
             key: "overPrec",
-            value: item => `${Math.round(item.overPrec * 100)}%`,
+            value: (item) => `${Math.round(item.overPrec * 100)}%`,
             cellProps: ({ value }) => ({
-              class: value == "100%" ? "text-success" : "text-warning"
-            })
+              class: value === "100%" ? "text-success" : "text-warning",
+            }),
           },
           { title: "运行", key: "runCnt" },
           { title: "错误", key: "errCnt" },
           { title: "未执行", key: "noCnt" },
-          { title: "未建表", key: "waitCnt" }
-        ]
+          { title: "未建表", key: "waitCnt" },
+        ],
       },
       {
         title: "T-1 日",
@@ -66,8 +110,8 @@ const headers = [
         children: [
           { title: "开始时间", key: "startTimeLtd" },
           { title: "结束时间", key: "endTimeLtd" },
-          { title: "耗时(秒)", key: "runtimeLtd" }
-        ]
+          { title: "耗时(秒)", key: "runtimeLtd" },
+        ],
       },
       {
         title: "T 日",
@@ -76,10 +120,10 @@ const headers = [
         children: [
           { title: "开始时间", key: "startTimeTd" },
           { title: "结束时间", key: "endTimeTd" },
-          { title: "耗时", key: "runtimeTd" }
-        ]
-      }
-    ]
+          { title: "耗时", key: "runtimeTd" },
+        ],
+      },
+    ],
   },
   {
     name: "specialTask",
@@ -94,12 +138,12 @@ const headers = [
         title: "耗时",
         key: "RUNTIME",
         cellProps: ({ value }) => ({
-          class: value > 1000 ? "text-warning" : ""
-        })
+          class: value > 1000 ? "text-warning" : "",
+        }),
       },
       { title: "开始时间", key: "START_TIME" },
-      { title: "结束时间", key: "END_TIME" }
-    ]
+      { title: "结束时间", key: "END_TIME" },
+    ],
   },
   {
     name: "rejectTask",
@@ -109,9 +153,9 @@ const headers = [
     headers: [
       { title: "任务名称", key: "jobname" },
       { title: "拒绝行", key: "totalErr" },
-      { title: "拒绝行", key: "startTs" },
-      { title: "拒绝行", key: "endTs" }
-    ]
+      { title: "开始时间", key: "startTs" },
+      { title: "结束时间", key: "endTs" },
+    ],
   },
   {
     name: "realtimeTask",
@@ -123,33 +167,29 @@ const headers = [
       { title: "下一次", key: "NEXT_TIMES" },
       { title: "任务名称", key: "SPNAME" },
       { title: "开始时间", key: "START_TIME" },
-      { title: "结束时间", key: "END_TIME" }
-    ]
-  }
+      { title: "结束时间", key: "END_TIME" },
+    ],
+  },
 ];
 
 const getData = async () => {
-  etlService.fetchAccomplishList().then(res => {
-    data.value["accomplishList"] = res;
-  });
-  etlService.fetchSpecialTask().then(res => {
-    data.value["specialTask"] = res;
-  });
-  etlService.fetchRejectTask().then(res => {
-    data.value["rejectTask"] = res;
-  });
-  etlService.fetchRealtimeTask().then(res => {
-    data.value["realtimeTask"] = res;
-  });
+  try {
+    const [accomplishList, specialTask, rejectTask, realtimeTask] = await Promise.all([
+      etlService.fetchAccomplishList(),
+      etlService.fetchSpecialTask(),
+      etlService.fetchRejectTask(),
+      etlService.fetchRealtimeTask(),
+    ]);
+    data.value.accomplishList = accomplishList;
+    data.value.specialTask = specialTask;
+    data.value.rejectTask = rejectTask;
+    data.value.realtimeTask = realtimeTask;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 };
 
 onMounted(() => {
   getData();
 });
 </script>
-
-<style scoped>
-.v-data-table__th {
-  text-align: center !important; /* 强制设置居中 */
-}
-</style>

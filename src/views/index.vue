@@ -1,108 +1,110 @@
 <template>
-  <!-- Page Heading -->
-  <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-  </div>
+  <div class="dashboard-container" :class="{ 'dark-mode': isDark }">
+    <!-- Dynamic Background -->
+    <div class="background-overlay"></div>
 
-  <!-- Content Row -->
-  <div class="row">
-    <div class="col-xl-3 col-md-6 mb-4">
-      <v-card class="max-auto h-100 py-2" prepend-icon="mdi-database" title="采集数据源">
-        <v-card-text class="text-center">
-          <h1 class="h1 mb-0 font-weight-bold text-gray-800">
-            {{ ratios.length }}
-          </h1>
-        </v-card-text>
-      </v-card>
-    </div>
+    <v-container fluid class="pa-8">
+      <!-- Page Heading -->
+      <!-- <div class="header-section mb-6">
+        <h1 class="dashboard-title">Dashboard</h1>
+      </div> -->
 
-    <div class="col-xl-3 col-md-6 mb-4">
-      <v-card class="max-auto h-100 py-2" prepend-icon="mdi-database" title="昨日数据采集 (GiB)">
-        <v-card-text class="text-center">
-          <h1 class="h1 mb-0 font-weight-bold text-gray-800">
-            {{ lastEtlData }}
-          </h1>
-        </v-card-text>
-      </v-card>
-    </div>
-  </div>
+      <!-- Stats Cards Row -->
+      <v-row class="stats-row">
+        <v-col cols="12" xl="3" lg="6" class="mb-4">
+          <v-card class="stat-card pa-4" elevation="12" rounded="lg">
+            <v-icon class="stat-icon" size="36">mdi-database</v-icon>
+            <v-card-title class="stat-title">采集数据源</v-card-title>
+            <v-card-text class="text-center">
+              <span class="stat-value">{{ ratios.length }}</span>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-  <!-- Content Row -->
+        <v-col cols="12" xl="3" lg="6" class="mb-4">
+          <v-card class="stat-card pa-4" elevation="12" rounded="lg">
+            <v-icon class="stat-icon" size="36">mdi-database-sync</v-icon>
+            <v-card-title class="stat-title">昨日数据采集 (GiB)</v-card-title>
+            <v-card-text class="text-center">
+              <span class="stat-value">{{ lastEtlData }}</span>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
 
-  <div class="row">
-    <!-- Area Chart -->
-    <div class="col-xl-12 col-lg-7">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">
-            最近12个月累计数据采集量(GiB)
-          </h6>
-        </div>
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="chart-area">
-            <!-- <canvas id="myAreaChart"></canvas> -->
-            <LineChart />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <!-- Chart Row -->
+      <v-row>
+        <v-col cols="12">
+          <v-card class="chart-card pa-6" elevation="12" rounded="lg">
+            <v-card-title class="chart-title">
+              最近12个月累计数据采集量 (GiB)
+            </v-card-title>
+            <v-card-text>
+              <div class="chart-container">
+                <LineChart />
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
 
-  <!-- Content Row -->
-  <div class="row">
-    <!-- Content Column -->
-    <div class="col-lg-6 mb-4">
-      <!-- Project Card Example -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-        </div>
-        <div class="card-body">
-          <template v-for="ratio in ratios" :key="ratio.OVER_PREC">
-            <v-progress-linear model-value="ratio.OVER_PREC" :class="ratio.BG_COLOR" height="20" rounded>
-              <!-- <template v-slot:default="{ value }">
-                            {{value.SYSNAME}} - {{ value.OVER_PREC }}%
-                        </template> -->
-              {{ ratio.SYSNAME }} ({{ ratio.OVER_PREC }}%)
-            </v-progress-linear>
-            <br />
-            <!-- <h4 class="small font-weight-bold">{{ ratio.SYSNAME }} <span class="float-right">{{ ratio.OVER_PREC }}%</span></h4>
-                        <div class="progress mb-4">
-                        <div class="progress-bar" :class="ratio.BG_COLOR" role="progressbar" :style="{width: ratio.OVER_PREC + '%'}" aria-valuenow="{{ ratio.OVER_PREC }}"
-                            aria-valuemin="0" aria-valuemax="100"></div> -->
-            <!-- </div> -->
-          </template>
-        </div>
-      </div>
-    </div>
+      <!-- Details Row -->
+      <v-row class="mt-6">
+        <v-col cols="6">
+          <v-card class="detail-card pa-6" elevation="12" rounded="lg">
+            <v-card-title class="detail-title">项目完成率</v-card-title>
+            <v-card-text>
+              <v-list class="progress-list" dense>
+                <v-list-item v-for="ratio in ratios" :key="ratio.OVER_PREC" >
+                  <v-progress-linear
+                    :model-value="ratio.OVER_PREC"
+                    :class="ratio.BG_COLOR"
+                    height="20"
+                    rounded
+                    :color="isDark ? 'cyan' : 'blue'"
+                    :bg-color="isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'"
+                  >
+                    <template v-slot:default="{ value }">
+                      <span class="progress-text">
+                        {{ ratio.SYSNAME }} - {{ Math.round(value) }}%
+                      </span>
+                    </template>
+                  </v-progress-linear>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-    <div class="col-lg-6 mb-4">
-      <!-- Illustrations -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-        </div>
-        <div class="card-body">
-          <L5TEtlBar />
-        </div>
-      </div>
-    </div>
+        <v-col cols="6">
+          <v-card class="detail-card pa-6" elevation="12" rounded="lg">
+            <v-card-title class="detail-title">数据采集分析</v-card-title>
+            <v-card-text>
+              <div class="bar-chart-container">
+                <L5TEtlBar />
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
+
 <script setup lang="ts">
 import request from '@/utils/requests';
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import LineChart from "@/components/dashboard/LineChart.vue";
 import L5TEtlBar from "@/components/dashboard/L5TEtlBar.vue";
+import { useTheme } from "vuetify"; // Vuetify 主题钩子
+
+const vuetifyTheme = useTheme();
+const isDark = computed(() => vuetifyTheme.current.value.dark);
 
 const ratios = ref([]);
 const lastEtlData = ref(0.0);
 
-const fetchRatio = async ()  => {
+const fetchRatio = async () => {
   try {
     const ar = await request.get("/etl/accomplishRatio");
     const ed = await request.get("/dashboard/lastEtlData");
@@ -111,7 +113,7 @@ const fetchRatio = async ()  => {
   } catch (error) {
     console.error("Error fetching ratios:", error);
   }
-}
+};
 
 onMounted(() => {
   fetchRatio();
@@ -119,4 +121,194 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.dashboard-container {
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow-x: hidden;
+  transition: background 0.3s ease;
+}
+
+.dark-mode {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.dashboard-container:not(.dark-mode) {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.dark-mode .background-overlay {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.8) 80%);
+}
+
+.dashboard-container:not(.dark-mode) .background-overlay {
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, rgba(255, 255, 255, 0.8) 80%);
+}
+
+.header-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .dashboard-title {
+  color: #ffffff;
+}
+
+.dashboard-container:not(.dark-mode) .dashboard-title {
+  color: #1a237e;
+}
+
+.stat-card {
+  transition: transform 0.3s ease;
+}
+
+.dark-mode .stat-card {
+  background: linear-gradient(145deg, #1e40af 0%, #1e1e5f 100%);
+}
+
+.dashboard-container:not(.dark-mode) .stat-card {
+  background: linear-gradient(145deg, #42a5f5 0%, #1976d2 100%);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  opacity: 0.8;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+.dark-mode .stat-icon {
+  color: #ffffff;
+}
+
+.dashboard-container:not(.dark-mode) .stat-icon {
+  color: #ffffff;
+}
+
+.stat-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.dark-mode .stat-title {
+  color: #e0f2fe;
+}
+
+.dashboard-container:not(.dark-mode) .stat-title {
+  color: #ffffff;
+}
+
+.stat-value {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.dark-mode .stat-value {
+  color: #ffffff;
+}
+
+.dashboard-container:not(.dark-mode) .stat-value {
+  color: #ffffff;
+}
+
+.chart-card {
+  backdrop-filter: blur(10px);
+}
+
+.dark-mode .chart-card {
+  background: rgba(30, 64, 175, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-container:not(.dark-mode) .chart-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.dark-mode .chart-title {
+  color: #bae6fd;
+}
+
+.dashboard-container:not(.dark-mode) .chart-title {
+  color: #1976d2;
+}
+
+.chart-container {
+  height: 400px;
+}
+
+.detail-card {
+  backdrop-filter: blur(10px);
+}
+
+.dark-mode .detail-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-container:not(.dark-mode) .detail-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detail-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.dark-mode .detail-title {
+  color: #bae6fd;
+}
+
+.dashboard-container:not(.dark-mode) .detail-title {
+  color: #1976d2;
+}
+
+.progress-list {
+  background: transparent;
+}
+
+.progress-text {
+  font-weight: 500;
+  padding-left: 8px;
+}
+
+.dark-mode .progress-text {
+  color: #ffffff;
+}
+
+.dashboard-container:not(.dark-mode) .progress-text {
+  color: #333333;
+}
+
+.bar-chart-container {
+  height: 300px;
+}
 </style>
