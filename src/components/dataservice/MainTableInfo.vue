@@ -116,13 +116,16 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
+import requests from "@/utils/requests";
+import {TbImpDs2} from "@/types/database";
+
 const props = defineProps(["d"]);
-const data = ref();
+const data = ref<TbImpDs2>();
+
 const fetchData = () => {
-  axios
-    .get("/maintable/dataService/detail/" + props.d)
+  requests
+    .get(`/maintable/dataService/detail/${props.d}`)
     .then(function (response) {
       data.value = response.data;
       return response.data;
@@ -135,7 +138,8 @@ onMounted(() => {
   fetchData();
 });
 onUnmounted(() => {
-  data.value = {};
+  //clear
+  data.value =  <TbImpDs2>{};
 });
 </script>
 <style>

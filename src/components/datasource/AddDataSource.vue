@@ -94,33 +94,16 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import DSService from "@/service/maintable/datasourceService";
+import { TbImpDb } from "@/types/database";
 
 const props = defineProps({
   sid: String,
   mode: String
 });
 
-interface DataSource {
-  dbName: string;
-  dbConstr: string;
-  bvalid: string;
-  dbIdEtl: string;
-  dbParalEtl: number;
-  dbUserEtl: string;
-  dbPassEtl: string;
-  dbIdDs: string;
-  dbParalDs: number;
-  dbUserDs: string;
-  dbPassDs: string;
-  dbStartType: string;
-  dbStart: string;
-  dbJudgeSql: string;
-  dbJudgePre: string;
-  conf: string;
-  dbRemark: string;
-}
 
-const sourceItem = ref<DataSource>({"dbName":"2号客服系统","dbConstr":"jdbc:mysql://188.175.2.28:3307/cs_system","bvalid":"Y","dbIdEtl":"K2","dbParalEtl":1,"dbUserEtl":"readonly_cs","dbPassEtl":"Ss%d6*a8Y59ft","dbIdDs":"","dbParalDs":1,"dbUserDs":"","dbPassDs":"","dbStartType":"0","dbStart":"1730","dbJudgeSql":"","dbJudgePre":"","conf":"","dbRemark":""})
+
+const sourceItem = ref<TbImpDb>({})
 
 const emit = defineEmits(["closeDialog", "handleSave"]);
 
