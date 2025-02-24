@@ -18,4 +18,7 @@ const deleteItem = (id: string) => {
   return Requests.delete(apiPrefix + "/" + id);
 };
 
-export default { list, get, save, deleteItem };
+const testConnect = (url: string, username: string, password: string) => {
+  return Requests.post(apiPrefix + "/testConnect", { url: url, username: username, password:password });
+}
+export default { list, get, save, deleteItem, testConnect };

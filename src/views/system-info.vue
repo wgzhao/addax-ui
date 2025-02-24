@@ -74,10 +74,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import SystemInfoService from "@/service/systemInfoService";
+import ETLAndDS from "@/types";
 
-const etlAndDs = ref([]);
-const etlInfo = ref([]);
-const dsInfo = ref([]);
+const etlAndDs = ref<ETLAndDS[]>([]);
+const etlInfo = ref<any[]>([]);
+const dsInfo = ref<any[]>([]);
 const filter = ref("");
 
 const etlAndDsHeaders = [

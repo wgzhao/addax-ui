@@ -198,7 +198,7 @@ const showModal = ref({
 type ShowModalKey = keyof typeof showModal.value;
 
 // 打开对话框并加载相应的组件
-function openDialog(componentName, com: ShowModalKey) {
+function openDialog(componentName, com: any) {
   currentComponent.value = componentMap[componentName]
   setParams(componentName, com);
   dialogVisible.value = true; // 打开对话框
@@ -210,7 +210,7 @@ function closeDialog() {
   currentComponent.value = null; // 清空内容
 }
 
-function setParams(compName: string, comp: ShowModalKey) {
+function setParams(compName: string, comp: any) {
   if (compName == "LogFiles1") {
     // 命令日志
     currentParams.value = { tid: comp.tid};
@@ -243,7 +243,7 @@ const doEtl = (ctype: string) => {
       alertMsg.value.color = "success";
       alertMsg.value.icon = "mdi-check-circle";
       alertMsg.value.title = "启动成功";
-      alertMsg.value.text = res;
+      alertMsg.value.text = JSON.stringify(res);
     })
     .catch(res => {
       alertMsg.value.show = true;

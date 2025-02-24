@@ -23,6 +23,7 @@ declare module 'vue' {
     LogModal: typeof import('./src/components/ods/LogModal.vue')['default']
     MainTable: typeof import('./src/components/ods/MainTable.vue')['default']
     MainTableInfo: typeof import('./src/components/dataservice/MainTableInfo.vue')['default']
+    MySnackbar: typeof import('./src/components/MySnackbar.vue')['default']
     NavbarThemeSwitcher: typeof import('./src/components/NavbarThemeSwitcher.vue')['default']
     PieChart: typeof import('./src/components/dashboard/PieChart.vue')['default']
     Register: typeof import('./src/components/Register.vue')['default']

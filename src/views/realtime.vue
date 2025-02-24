@@ -23,19 +23,19 @@ import RealtimeService from "@/service/realtimeService";
 
 const planAll = ref([]);
 const headers = [
-  { title: "计划类型", key: "pnTypeName" },
-  { title: "计划名称", key: "spname" },
+  { title: "计划类型", value: "pnTypeName" },
+  { title: "计划名称", value: "spname" },
   {
     title: "命令列表",
     value: "",
-    align: "center",
+    align: 'center' as const,
     children: [
-      { title: "CMD1", key: "c1" },
-      { title: "CMD2", key: "c2" },
-      { title: "CMD3", key: "c3" },
-      { title: "CMD4", key: "c4" },
-      { title: "CMD5", key: "c5" },
-      { title: "CMD6", key: "c6" }
+      { title: "CMD1", value: "c1" },
+      { title: "CMD2", value: "c2" },
+      { title: "CMD3", value: "c3" },
+      { title: "CMD4", value: "c4" },
+      { title: "CMD5", value: "c5" },
+      { title: "CMD6", value: "c6" }
     ]
   }
 ];

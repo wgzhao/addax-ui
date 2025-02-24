@@ -75,7 +75,17 @@ interface Table {
   souOwner: string;
   souTablename: string;
   destTablename: string;
-  destPardKind: string;
+  destPartKind: string;
+  flag: string;
+  paramSou: string;
+  bupdate: string;
+  bcreate: string;
+  retryCnt: number;
+  etlKind: string;
+  bpreview: string;
+  realtimeInterval: number;
+  btdh: string;
+  runtimeAdd: number;
 }
 // 选择的采集源ID
 const selectedSourceId = ref({
@@ -89,13 +99,23 @@ const selectedDb = ref()
 
 const tables = ref<Table[]>([]);
 
-const defaultItem = ref({
+const defaultItem = ref<Table>({
   souSysid: "",
   souFilter: "1=1",
   souOwner: "",
   souTablename: "",
   destTablename: "",
-  destPardKind: ""
+  destPartKind: "D",
+  flag: "W",
+  paramSou: "C",
+  bupdate: "Y",
+  bcreate: "Y",
+  retryCnt: 3,
+  etlKind: "A",
+  bpreview: "N",
+  realtimeInterval: 0,
+  btdh: "N",
+  runtimeAdd: 0
 });
 
 const sourceSystemList = ref([]);
@@ -140,15 +160,6 @@ const saveItems = () => {
   // set destPardKind for each item
   // rule: if(or(A2 = "JY", A2 = "J2", A2 = "WD"), 'N', 'D')
   tables.value.forEach(item => {
-    if (
-      item.souSysid == "JY" ||
-      item.souSysid == "J2" ||
-      item.souSysid == "WD"
-    ) {
-      item.destPardKind = "N";
-    } else {
-      item.destPardKind = "D";
-    }
     // set destTablename
     if (item.destTablename == "") {
       item.destTablename = item.souTablename.toUpperCase();
@@ -183,14 +194,13 @@ const getTables = async () => {
     }
   );
   res.forEach(element => {
-    tables.value.push({
-      souSysid: selectedSourceId.value.SYSID,
-      souFilter: "1=1",
-      souOwner: selectedDb.value,
-      souTablename: element,
-      destTablename: element.toUpperCase(),
-      destPardKind: ""
-    });
+    // new defaultItem and populate it
+    const newItem = { ...defaultItem.value };
+    newItem.souSysid = selectedSourceId.value.SYSID;
+    newItem.souOwner = selectedDb.value;
+    newItem.souTablename = element;
+    newItem.destTablename = element.toUpperCase();
+    tables.value.push(newItem);
   });
 };
 onMounted(() => {

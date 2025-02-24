@@ -1,7 +1,7 @@
 // import axios from "axios";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useAuthStore } from '@/stores/auth';
-import router from "@/router";
+import { inject } from "vue";
 
 // axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 // axios.defaults.timeout = 5000;
@@ -13,26 +13,6 @@ interface ResponseData<T> {
   data: T;
 }
 
-// const userinfo = JSON.parse(localStorage.getItem("userinfo"));
-
-// if (userinfo != null) {
-//   const token = userinfo.token;
-//   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-// }
-
-// axios.interceptors.response.use(
-//   function (response) {
-//     return response;
-//   },
-//   function (error) {
-//     if (error.response.status === 401) {
-//       router.push("/login");
-//       // router.push('/login')
-//     }
-//     return Promise.reject(error);
-//   }
-// );
-
 class Requests {
   private instance: AxiosInstance;
 
@@ -42,6 +22,9 @@ class Requests {
       baseURL,
       timeout
     });
+
+    const snackbar = inject("snackbar"); // 注入全局 Snackbar 实例
+
     // 配置请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
@@ -70,27 +53,15 @@ class Requests {
           authStore.logout(); // Token 失效时，自动登出
           window.location.href = '/login'; // 跳转至登录页
         }
-
-        return Promise.reject(error); // 将错误内容抛出给业务逻辑去处理
+        const msg = error.response?.message || "服务器发生未知错误";
+        if ( msg && snackbar) {
+          snackbar.showMessage(message);
+        }
+        // return Promise.reject(error); // 将错误内容抛出给业务逻辑去处理
       }
     );
 
   }
-  // get(url: string, params?: Map<any, any>) {
-  //   return axios.get(url, { params: params });
-  // }
-
-  // post(url: string, data: Map<any, any>) {
-  //   return axios.post(url, data);
-  // }
-
-  // delete(url: string, params?: Map<any, any>) {
-  //   return axios.delete(url, { params });
-  // }
-
-  // put(url: string, data: Map<any, any>) {
-  //   return axios.put(url, data);
-  // }
 
   // GET 方法
   get<T = any>(url: string, params?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {

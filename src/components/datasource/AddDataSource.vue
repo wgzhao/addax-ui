@@ -82,6 +82,7 @@
       </v-container>
 
       <v-card-actions>
+        <v-btn color="info" class="btn" v-if="mode === 'add' || mode === 'edit'" @click="testConnect">测试连接</v-btn>
         <v-spacer></v-spacer>
         <v-btn type="submit" color="primary" class="btn" v-if="mode === 'add' || mode === 'edit'">保存</v-btn>
         <v-btn type="reset" color="warning" v-if="mode === 'add' || mode === 'edit'">重置</v-btn>
@@ -119,33 +120,16 @@ interface DataSource {
   dbRemark: string;
 }
 
-const sourceItem = ref<DataSource>({
-  dbName: "",
-  dbConstr: "",
-  bvalid: "Y",
-  dbIdEtl: "",
-  dbParalEtl: 1,
-  dbUserEtl: "",
-  dbPassEtl: "",
-  dbIdDs: "",
-  dbParalDs: 1,
-  dbUserDs: "",
-  dbPassDs: "",
-  dbStartType: "",
-  dbStart: "",
-  dbJudgeSql: "",
-  dbJudgePre: "",
-  conf: "",
-  dbRemark: ""
-})
+const sourceItem = ref<DataSource>({"dbName":"2号客服系统","dbConstr":"jdbc:mysql://188.175.2.28:3307/cs_system","bvalid":"Y","dbIdEtl":"K2","dbParalEtl":1,"dbUserEtl":"readonly_cs","dbPassEtl":"Ss%d6*a8Y59ft","dbIdDs":"","dbParalDs":1,"dbUserDs":"","dbPassDs":"","dbStartType":"0","dbStart":"1730","dbJudgeSql":"","dbJudgePre":"","conf":"","dbRemark":""})
 
-const emit = defineEmits(["closeDialog"]);
+const emit = defineEmits(["closeDialog", "handleSave"]);
 
 const save = () => {
   if (props.mode === "add" || props.mode === "edit") {
     DSService.save(sourceItem.value)
       .then(resp => {
         alert("保存成功");
+        emit('handleSave');
         emit('closeDialog');
       })
       .catch(error => {
@@ -160,6 +144,19 @@ const close = () => {
   emit('closeDialog'); // 通知父组件关闭对话框
 };
 
+const testConnect = () => {
+  DSService.testConnect(sourceItem.value.dbConstr, sourceItem.value.dbUserEtl, sourceItem.value.dbPassEtl)
+    .then(resp => {
+      if (resp === true) {
+        alert("连接成功");
+      } else {
+        alert("连接失败");
+      }
+    })
+    .catch(error => {
+      alert("连接失败:" + error);
+    });
+}
 onMounted(() => {
   console.log("mode = ", props.mode);
   if (props.sid != "-1") {
@@ -172,5 +169,8 @@ onMounted(() => {
         console.log(error);
       });
   }
+
 })
+
+
 </script>
