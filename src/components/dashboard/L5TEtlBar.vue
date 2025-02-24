@@ -124,7 +124,7 @@ const chartOptions = computed(() => ({
 const fetchData = async () => {
   try {
     const res = await requests.get("/dashboard/last5DaysEtlTime");
-    rawData.value = res;
+    rawData.value = res.data;
     chartReady.value = true;
     console.log("Fetched data:", rawData.value);
   } catch (err) {

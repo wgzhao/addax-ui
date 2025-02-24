@@ -11,7 +11,7 @@
 
       <!-- Stats Cards Row -->
       <v-row class="stats-row">
-        <v-col cols="12" xl="3" lg="6" class="mb-4">
+        <v-col cols="12" xl="4" lg="4" class="mb-4">
           <v-card class="stat-card pa-4" elevation="12" rounded="lg">
             <v-icon class="stat-icon" size="36">mdi-database</v-icon>
             <v-card-title class="stat-title">采集数据源</v-card-title>
@@ -21,7 +21,17 @@
           </v-card>
         </v-col>
 
-        <v-col cols="12" xl="3" lg="6" class="mb-4">
+        <v-col cols="12" xl="4" lg="4" class="mb-4">
+          <v-card class="stat-card pa-4" elevation="12" rounded="lg">
+            <v-icon class="stat-icon" size="36">mdi-table</v-icon>
+            <v-card-title class="stat-title">采集数据表</v-card-title>
+            <v-card-text class="text-center">
+              <span class="stat-value">{{ tableCount }}</span>
+            </v-card-text>
+          </v-card>
+        </v-col>
+
+        <v-col cols="12" xl="4" lg="4" class="mb-4">
           <v-card class="stat-card pa-4" elevation="12" rounded="lg">
             <v-icon class="stat-icon" size="36">mdi-database-sync</v-icon>
             <v-card-title class="stat-title">昨日数据采集 (GiB)</v-card-title>
@@ -103,13 +113,16 @@ const isDark = computed(() => vuetifyTheme.current.value.dark);
 
 const ratios = ref([]);
 const lastEtlData = ref(0.0);
+const tableCount = ref(0);
 
 const fetchRatio = async () => {
   try {
-    const ar = await request.get("/etl/accomplishRatio");
+    const ar = await request.get("/dashboard/accomplishRatio");
     const ed = await request.get("/dashboard/lastEtlData");
-    ratios.value = ar;
-    lastEtlData.value = ed;
+    const tbs = await request.get("/dashboard/tableCount")
+    ratios.value = ar.data;
+    lastEtlData.value = ed.data;
+    tableCount.value = tbs.data;
   } catch (error) {
     console.error("Error fetching ratios:", error);
   }

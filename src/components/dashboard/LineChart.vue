@@ -131,7 +131,7 @@ const areaOptions = computed(() => ({
 const fetchAccumData = async () => {
   try {
     const res = await request.get("/dashboard/last12MonthsEtlData");
-    last12MonthsEtlData.value = res;
+    last12MonthsEtlData.value = res.data;
     chartReady.value = true;
   } catch (err) {
     console.error("Error fetching data:", err);
