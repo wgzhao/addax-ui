@@ -173,7 +173,7 @@ watch(dialogDelete, async newVal => {
 const getDictionary = code => {
   currEntryCode.value = code;
   DictService.listDictItems(code).then(res => {
-    dictionaries.value = res;
+    dictionaries.value = res.data;
   });
 };
 
@@ -217,14 +217,12 @@ const saveDictionary = () => {
   // save
   DictService.createOrUpdateDictItem(editedItem.value).then(res => {
     console.log(res.data);
-    return res;
   });
   close();
 };
 onMounted(() => {
   DictService.listDicts().then(res => {
-    dicts.value = res;
-    return res;
+    dicts.value = res.data;
   });
 });
 </script>

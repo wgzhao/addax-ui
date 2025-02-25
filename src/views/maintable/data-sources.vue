@@ -98,8 +98,7 @@ const params = ref({})
 const retrieveImpDB = () => {
   DSService.list()
     .then(resp => {
-      impdbs.value = resp;
-      return resp;
+      impdbs.value = resp.data;
     })
     .catch(error => {
       console.log(error);

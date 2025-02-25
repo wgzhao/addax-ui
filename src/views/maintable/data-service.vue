@@ -70,7 +70,7 @@ const doAction = (val, comp) => {
 
 onMounted(() => {
   DataService.list().then(res => {
-    data.value = res;
+    data.value = res.data;
   });
 });
 </script>

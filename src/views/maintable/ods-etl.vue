@@ -145,6 +145,9 @@ const selectOptions = [
 
 const statusOptions = [
   {
+    text: "", value: "",
+  },
+  {
     text: "R_正在运行", value: "R"
   },
   {
@@ -263,8 +266,8 @@ const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
   loading.value = true;
   // const sort = createSort(sortBy)
   OdsService.fetchOdsList(page - 1, itemsPerPage, search.value, runStatus.value).then(res => {
-    ods.value = res["content"];
-    totalItems.value = res["totalPages"];
+    ods.value = res.data["content"];
+    totalItems.value = res.data["totalPages"];
     loading.value = false;
   });
 };

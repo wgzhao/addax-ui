@@ -44,6 +44,10 @@ class Requests {
     // 配置响应拦截器
     this.instance.interceptors.response.use(
       (response) => {
+        if (response.data.code !== 0) {
+          alert(response.data.message);
+          return Promise.reject(response.data.message);
+        }
         return response.data; // 根据实际需要，可以直接返回 data，简化业务层操作
       },
       (error) => {
@@ -55,7 +59,9 @@ class Requests {
         }
         const msg = error.response?.message || "服务器发生未知错误";
         if ( msg && snackbar) {
-          snackbar.showMessage(message);
+          alert(msg);
+          return Promise.reject(error);
+          // snackbar.showMessage(message);
         }
         // return Promise.reject(error); // 将错误内容抛出给业务逻辑去处理
       }

@@ -180,10 +180,10 @@ const getData = async () => {
       etlService.fetchRejectTask(),
       etlService.fetchRealtimeTask(),
     ]);
-    data.value.accomplishList = accomplishList;
-    data.value.specialTask = specialTask;
-    data.value.rejectTask = rejectTask;
-    data.value.realtimeTask = realtimeTask;
+    data.value.accomplishList = accomplishList.data;
+    data.value.specialTask = specialTask.data;
+    data.value.rejectTask = rejectTask.data;
+    data.value.realtimeTask = realtimeTask.data;
   } catch (error) {
     console.error("Error fetching data:", error);
   }

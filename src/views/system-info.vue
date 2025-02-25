@@ -107,13 +107,13 @@ const dsInfoHeaders = [
 
 const fetchData = () => {
   SystemInfoService.getEtlAndDs(filter.value).then(res => {
-    etlAndDs.value = res;
+    etlAndDs.value = res.data;
   });
   SystemInfoService.getEtlInfo(filter.value).then(res => {
-    etlInfo.value = res;
+    etlInfo.value = res.data;
   });
   SystemInfoService.getDsInfo(filter.value).then(res => {
-    dsInfo.value = res;
+    dsInfo.value = res.data;
   });
 };
 
