@@ -147,7 +147,7 @@ const actions = ref([
 
 const fetchData = () => {
   axios.get(apiPrefix.value + "dsTable/" + props.d).then(res => {
-    data.value = res;
+    data.value = res.data;
     return res;
   });
 };
@@ -189,7 +189,7 @@ const doAction = (item: any, idx: number) => {
     axios
       .get(apiPrefix.value + actions.value[idx].api + item.tblId)
       .then(res => {
-        childData.value = res;
+        childData.value = res.data;
         return res;
       });
   } else if (idx == 1) {
@@ -201,7 +201,7 @@ const doAction = (item: any, idx: number) => {
     axios
       .get("/log/" + actions.value[idx].api + "tuna_addax_" + item.tblId)
       .then(res => {
-        childData.value = res;
+        childData.value = res.data;
         return res;
       });
   }
@@ -217,7 +217,7 @@ const getContent = (f: string) => {
       }
     })
     .then(res => {
-      fContent.value = res;
+      fContent.value = res.data;
       return res;
     });
 };

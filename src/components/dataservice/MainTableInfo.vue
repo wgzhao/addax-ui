@@ -128,7 +128,6 @@ const fetchData = () => {
     .get(`/maintable/dataService/detail/${props.d}`)
     .then(function (response) {
       data.value = response.data;
-      return response.data;
     })
     .catch(function (error) {
       console.log(error);

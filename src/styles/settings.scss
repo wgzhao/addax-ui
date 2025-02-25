@@ -8,3 +8,22 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+
+@use 'sass:math'; // 用于数学操作
+@use 'vuetify' with (
+  // 自定义全局字体
+  $body-font-family: ('PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif),
+  $heading-font-family: ('PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif),
+
+  // 自定义字体大小与行高
+  // 设置全局根字体大小
+  $font-size-root: 16px, 
+
+  // 适当调整圆角，符合紧凑布局需求
+  $border-radius-root: 4px,
+
+  // 调整默认的 box-shadow：卡片、弹窗等元素的阴影样式
+  $shadow-key-umbra-opacity: 0.1,
+  $shadow-key-penumbra-opacity: 0.06,
+  $shadow-key-ambient-opacity: 0.03,
+);

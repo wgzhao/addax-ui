@@ -34,7 +34,7 @@ const headers = ref([
 ]);
 const fetchData = () => {
   axios.get("/maintable/dataService/dsTableFields/" + props.param).then(res => {
-    data.value = res;
+    data.value = res.data;
     return res;
   });
 };
