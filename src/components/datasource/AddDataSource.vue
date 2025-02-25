@@ -130,7 +130,7 @@ const close = () => {
 const testConnect = () => {
   DSService.testConnect(sourceItem.value.dbConstr, sourceItem.value.dbUserEtl, sourceItem.value.dbPassEtl)
     .then(resp => {
-      if (resp === true) {
+      if (resp.data === true) {
         alert("连接成功");
       } else {
         alert("连接失败");
@@ -145,7 +145,7 @@ onMounted(() => {
   if (props.sid != "-1") {
     DSService.get(props.sid)
       .then(resp => {
-        sourceItem.value = resp;
+        sourceItem.value = resp.data;
         return resp;
       })
       .catch(error => {
