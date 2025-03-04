@@ -45,5 +45,10 @@ class SpService {
   fetchSpPrequires(spId: string) {
     return Requests.get(mainSpApi.value + "/prequires/" + spId);
   }
+  
+  // 6. sp 配置保存
+  saveSpConfig(spId: string, data: any) {
+    return Requests.put(mainSpApi.value +  "/spDetail/" + spId ,   data);
+  }
 }
 export const spService = new SpService();

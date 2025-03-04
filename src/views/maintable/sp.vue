@@ -1,7 +1,5 @@
 <template>
   <!-- 主表配置 -- SP 计算 -->
-  <div class="row">
-    <div class="col-6">
       <v-card title="主表配置 -- SP 计算">
         <template v-slot:text>
           <v-row>
@@ -39,7 +37,7 @@
                     density="compact"
                     v-for="(op, i) in selectOptions"
                     :key="i"
-                    @click="doAction(op.value, item)"
+                    @click="openDialog(op.value, item)"
                   >
                     <v-list-item-title class="text-button"
                       >{{ op.title }}
@@ -51,22 +49,55 @@
           </v-data-table>
         </v-card-text>
       </v-card>
-    </div>
+    
+
+      <!-- 对话框 -->
+  <v-dialog v-model="dialogVisible" >
+      <v-card :style="{ width: '80vw', height: 'auto' }">
+        <v-card-title>
+          <!-- <v-btn icon @click="closeDialog">
+            <v-icon>mdi-close</v-icon>
+          </v-btn> -->
+          <v-list-item class="px-2">
+          <slot name="header" />
+          <template #append>
+            <v-btn
+              class="btn btn-primary bg-primary"
+              text="关闭"
+              @click="closeDialog"
+            ></v-btn>
+          </template>
+        </v-list-item>
+        </v-card-title>
+
+        <v-divider />
+
+        <v-card-text>
+          <!-- 动态加载的内容 -->
+          <component 
+            :is="currentComponent" 
+            :spId="spId" 
+            :key="uniqueKey" 
+            @save-success="handleSaveSuccess"
+          />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <div class="col-6">
-      <component :is="currentComp" :spId="spId" :key="uniqueKey" />
+
     </div>
-  </div>
+  
 </template>
 
 <script setup lang="ts">
-// import SpDetail from "@/components/sp/SpDetail.vue";
-// import SpCmdList from "@/components/sp/SpCmdList.vue";
-// import SceneList from "@/components/sp/SceneList.vue";
+import { onMounted, ref, shallowRef } from "vue";
+import SpDetail from "@/components/sp/SpDetail.vue";
+import SpCmdList from "@/components/sp/SpCmdList.vue";
+import SceneList from "@/components/sp/SceneList.vue";
 // import SpLineage from "@/components/sp/SpLineage.vue";
-// import SpRequiresList from "@/components/sp/SpRequiresList.vue";
-// import ShowLogs from "@/components/sp/ShowLogs.vue";
+import SpRequiresList from "@/components/sp/SpRequiresList.vue";
+import ShowLogs from "@/components/sp/ShowLogs.vue";
 import Requests from "@/utils/requests";
-import { onMounted, ref } from "vue";
 
 const impSps = ref([]);
 const spId = ref<string>();
@@ -92,27 +123,65 @@ const selectOptions = [
   { title: "前置情况", value: "SpRequiresList" }
 ];
 
-function doAction(comp: string, val: any) {
+const dialogVisible = ref(false);
+const currentComponent = shallowRef(null);
+const componentMap = {
+  SpDetail,
+  SpCmdList,
+  SceneList,
+  // SpLineage,
+  SpRequiresList,
+  ShowLogs
+};
+// 关闭对话框
+function closeDialog() {
+  dialogVisible.value = false;
+  currentComponent.value = null;
+}
+
+// 处理保存成功事件
+function handleSaveSuccess() {
+  // 关闭对话框
+  closeDialog();
+  // 刷新数据列表
+  initData();
+}
+
+function openDialog(comp: string, val: any) {
   console.log("invoke " + comp);
   if (comp === "ShowLogs1") {
     spId.value = val.spName;
     uniqueKey.value = val.spId + "1";
-    currentComp.value = "ShowLogs";
+    currentComponent.value = componentMap["ShowLogs"];
   } else if (comp === "ShowLogs2") {
     spId.value = "tuna_sp_etl_" + val.spId;
     uniqueKey.value = val.spId + "2";
-    currentComp.value = "ShowLogs";
+    currentComponent.value = componentMap["ShowLogs"];
   } else {
     spId.value = val.spId;
     uniqueKey.value = val.spId;
-    currentComp.value = comp;
+    currentComponent.value = componentMap[comp]
+
   }
+  dialogVisible.value = true; // 打开对话框
 }
 
 function initData() {
   // Initial data
-  Requests.get("/maintable/sp/list").then(resp => (impSps.value = resp.data));
+  loading.value = true;
+  Requests.get("/maintable/sp/list")
+    .then(resp => {
+      impSps.value = resp.data;
+      loading.value = false;
+    })
+    .catch(error => {
+      console.error("加载数据失败:", error);
+      loading.value = false;
+    });
 }
+
+// Add loading state
+const loading = ref(false);
 
 onMounted(() => {
   initData();
