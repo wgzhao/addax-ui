@@ -60,6 +60,10 @@ class OdsService {
   execETL(ctype: string) {
     return Requests.post(this.prefix + "/startEtl", { ctype: ctype });
   }
+  // 7. 批量更新采集表的状态和重试测试
+  updateStatus(data: any) {
+    return Requests.post(this.prefix + "/batchUpdateStatusAndFlag", data);
+  }
 }
 
 export default new OdsService();

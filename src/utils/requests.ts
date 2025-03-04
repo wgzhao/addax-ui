@@ -1,7 +1,6 @@
 // import axios from "axios";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useAuthStore } from '@/stores/auth';
-import { inject } from "vue";
 
 // axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 // axios.defaults.timeout = 5000;
@@ -22,8 +21,6 @@ class Requests {
       baseURL,
       timeout
     });
-
-    const snackbar = inject("snackbar"); // 注入全局 Snackbar 实例
 
     // 配置请求拦截器
     this.instance.interceptors.request.use(
@@ -58,11 +55,11 @@ class Requests {
           window.location.href = '/login'; // 跳转至登录页
         }
         const msg = error.response?.message || "服务器发生未知错误";
-        if ( msg && snackbar) {
-          alert(msg);
+     
+          // alert(msg);
           return Promise.reject(error);
           // snackbar.showMessage(message);
-        }
+        
         // return Promise.reject(error); // 将错误内容抛出给业务逻辑去处理
       }
     );

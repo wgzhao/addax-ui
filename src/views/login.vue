@@ -102,8 +102,8 @@ function login() {
   // reset the error message
   // clearMessages();
   authService.login(auth.value).then(res => {
-    console.log("res", res.accessToken);
-    if (res.accessToken == null) {
+    console.log("res", res.data);
+    if (res.data == null) {
       alert("登录失败");
     } else {
       // let data = {
@@ -111,7 +111,7 @@ function login() {
       //   username: auth.value.username,
       //   role: ""
       // };
-      authStore.setToken(res.accessToken);
+      authStore.setToken(res.data);
       authStore.setUserName(auth.value.username);
       // localStorage.setItem("userinfo", JSON.stringify(data));
       router.push({ path: "/" });

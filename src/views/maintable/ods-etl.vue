@@ -25,6 +25,9 @@
         </v-col>
         <v-spacer />
         <v-col cols="auto">
+          <v-btn variant="tonal" prepend-icon="mdi-pencil" @click="openDialog('BatchUpdate','BatchUpdate')" >批量修改</v-btn>
+        </v-col>
+        <v-col cols="auto">
           <v-btn variant="tonal" prepend-icon="mdi-plus" @click="openDialog('BatchAdd', 'BatchAdd')">批量新增表</v-btn>
         </v-col>
         <v-col cols="auto">
@@ -37,7 +40,7 @@
     </template>
     <v-card-text>
       <v-data-table-server density="compact" :items="ods" :headers="headers" :item-per-page="itemsPerPage"
-        :items-length="totalItems" item-value="name" :loading="loading" @update:options="loadItems">
+        :items-length="totalItems" item-value="tid" :loading="loading" @update:options="loadItems" show-select v-model="selected">
         <template v-slot:item.action="{ item }">
           <!-- add link for selectOption -->
           <v-menu>
@@ -109,9 +112,12 @@ import AddaxResult from "@/components/ods/AddaxResult.vue";
 import BatchAdd from "@/components/ods/BatchAdd.vue";
 import LogFiles1 from "@/components/ods/LogFiles.vue";
 import LogFiles2 from "@/components/ods/LogFiles.vue";
+import BatchUpdate from "@/components/ods/BatchUpdate.vue";
+import { open } from "fs";
 
 const ods = ref([]);
 const search = ref("");
+const selected = ref([]);
 const item = ref<any>("");
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
@@ -130,7 +136,8 @@ const componentMap = {
   AddaxResult,
   BatchAdd,
   LogFiles1,
-  LogFiles2
+  LogFiles2,
+  BatchUpdate
 };
 
 const selectOptions = [
@@ -169,22 +176,22 @@ const statusOptions = [
 
 const runStatus = ref("");
 
-const headers = [
+const headers = ref([
   {
     title: "目标用户",
     align: "center",
     sortable: false,
-    value: "destOwner",
+    key: "destOwner",
     sort: "asc"
   },
-  { title: "系统名称", value: "sysName", align: "center" },
-  { title: "源用户", value: "souOwner", align: "center", sort: "asc" },
-  { title: "目标表名", value: "destTablename", align: "center", sort: "asc" },
-  { title: "状态", value: "flag", align: "center" },
-  { title: "剩余", value: "retryCnt", align: "center" },
-  { title: "耗时", value: "runtime", align: "center" },
-  { title: "操作", value: "action", sortable: false, align: "center" }
-];
+  { title: "系统名称", key: "sysName", align: "center" },
+  { title: "源用户", key: "souOwner", align: "center", sort: "asc" },
+  { title: "目标表名", key: "destTablename", align: "center", sort: "asc" },
+  { title: "状态", key: "flag", align: "center" },
+  { title: "剩余", key: "retryCnt", align: "center" },
+  { title: "耗时", key: "runtime", align: "center" },
+  { title: "操作", key: "action", sortable: false, align: "center" }
+]);
 const alertMsg = ref({ show: false, color: "", icon: "", text: "", title: "" });
 
 const showModal = ref({
@@ -214,6 +221,11 @@ function closeDialog() {
 }
 
 function setParams(compName: string, comp: any) {
+  if (compName == "BatchUpdate") {
+    // 批量修改
+    currentParams.value = { tid: selected.value} ;
+    return;
+  }
   if (compName == "LogFiles1") {
     // 命令日志
     currentParams.value = { tid: comp.tid};

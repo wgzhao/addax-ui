@@ -10,6 +10,7 @@ declare module 'vue' {
     AddaxResult: typeof import('./src/components/ods/AddaxResult.vue')['default']
     AddDataSource: typeof import('./src/components/datasource/AddDataSource.vue')['default']
     BatchAdd: typeof import('./src/components/ods/BatchAdd.vue')['default']
+    BatchUpdate: typeof import('./src/components/ods/BatchUpdate.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     CmdList: typeof import('./src/components/ods/CmdList.vue')['default']
     DialogComp: typeof import('./src/components/ods/DialogComp.vue')['default']
