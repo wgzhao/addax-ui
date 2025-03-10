@@ -53,7 +53,7 @@ const logList = ref([]);
 
 const getContent = (f: string) => {
   LogService.getContent(f).then((res: any) => {
-    fContent.value = res;
+    fContent.value = res.data;
     filename.value = f;
     fDialog.value = true;
   });
@@ -62,7 +62,7 @@ const getContent = (f: string) => {
 onMounted(() => {
   console.log("command log===>", props.tid);
   LogService.getLogFiles(props.tid).then(res => {
-    logList.value = res;
+    logList.value = res.data;
   });
 });
 </script>

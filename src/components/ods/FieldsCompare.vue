@@ -112,7 +112,7 @@ const headers1 = ref([
 onMounted(() => {
   OdsService.fetchFieldsCompare(props.tid)
     .then(res => {
-      fields.value = res;
+      fields.value = res.data;
     })
     .catch(err => {
       console.log(err);

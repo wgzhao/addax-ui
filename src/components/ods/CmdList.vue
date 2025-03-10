@@ -70,7 +70,7 @@ function getColor(flag: string) {
 onMounted(() => {
   OdsService.fetchCmdList(props.tid)
     .then(res => {
-      cmds.value = res;
+      cmds.value = res.data;
     })
     .catch(err => {
       console.log(err);
