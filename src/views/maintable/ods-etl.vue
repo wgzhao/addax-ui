@@ -21,7 +21,7 @@
         </v-col>
         <!-- add search button -->
         <v-col cols="auto">
-          <v-btn ariant="tonal" @click="searchOds">查询</v-btn>
+          <v-btn variant="tonal" @click="searchOds">查询</v-btn>
         </v-col>
         <v-spacer />
         <v-col cols="auto">
@@ -39,7 +39,7 @@
       </v-row>
     </template>
     <v-card-text>
-      <v-data-table-server density="compact" :items="ods" :headers="headers" :item-per-page="itemsPerPage"
+      <v-data-table-server density="compact" :items="ods" :headers="headers" :items-per-page="itemsPerPage"
         :items-length="totalItems" item-value="tid" :loading="loading" @update:options="loadItems" show-select v-model="selected">
         <template v-slot:item.action="{ item }">
           <!-- add link for selectOption -->
@@ -85,7 +85,7 @@
 
         <v-card-text>
           <!-- 动态加载的内容 -->
-          <component :is="currentComponent"  v-bind="currentParams"/>
+          <component :is="currentComponent"  v-bind="currentParams"   @closeDialog="closeDialog" @update:record="handleRecordUpdate" />
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -113,7 +113,6 @@ import BatchAdd from "@/components/ods/BatchAdd.vue";
 import LogFiles1 from "@/components/ods/LogFiles.vue";
 import LogFiles2 from "@/components/ods/LogFiles.vue";
 import BatchUpdate from "@/components/ods/BatchUpdate.vue";
-import { open } from "fs";
 
 const ods = ref([]);
 const search = ref("");
@@ -184,13 +183,13 @@ const headers = ref([
     key: "destOwner",
     sort: "asc"
   },
-  { title: "系统名称", key: "sysName", align: "center" },
-  { title: "源用户", key: "souOwner", align: "center", sort: "asc" },
-  { title: "目标表名", key: "destTablename", align: "center", sort: "asc" },
-  { title: "状态", key: "flag", align: "center" },
-  { title: "剩余", key: "retryCnt", align: "center" },
-  { title: "耗时", key: "runtime", align: "center" },
-  { title: "操作", key: "action", sortable: false, align: "center" }
+  { title: "系统名称", key: "sysName", align: "center", sort: "asc", sortable: true },
+  { title: "源用户", key: "souOwner", align: "center", sort: "asc", sortable: true },
+  { title: "目标表名", key: "destTablename", align: "center", sort: "asc", sortable: true },
+  { title: "状态", key: "flag", align: "center", sort: "asc", sortable: true },
+  { title: "剩余", key: "retryCnt", align: "center", sort: "asc", sortable: true },
+  { title: "耗时", key: "runtime", align: "center", sort: "asc", sortable: true },
+  { title: "操作", key: "action", sort: "asc", sortable: false, align: "center" }
 ]);
 const alertMsg = ref({ show: false, color: "", icon: "", text: "", title: "" });
 
@@ -268,6 +267,14 @@ const doEtl = (ctype: string) => {
       alertMsg.value.text = res;
     });
 };
+
+const handleRecordUpdate = (newRecord) => {
+  const index = ods.value.findIndex(item => item.tid === newRecord.tid);
+  if (index > -1) {
+    ods.value.splice(index, 1, newRecord);  // 响应式替换单个记录
+  }
+};
+
 interface LoadItemsOptions {
   page: number;
   itemsPerPage: number;

@@ -9,7 +9,7 @@
     >
       <template v-slot:item.actions="{ item }">
         <div class="btn-group-sm" role="group" arial-label="Actions">
-          <template v-for="(act, idx) in actions">
+          <template v-for="(act, idx) in actions" key="idx">
             <button
               type="button"
               class="btn btn-outline-primary"
@@ -101,9 +101,9 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import Request from "@/utils/requests";
 import { HighCode } from "vue-highlight-code";
 import "vue-highlight-code/dist/style.css";
-import axios from "axios";
 const props = defineProps(["d"]);
 const dialog = ref([false, false, false, false]);
 const formTitle = ref("");
@@ -186,7 +186,7 @@ const fieldsHeaders = [
 const doAction = (item: any, idx: number) => {
   if (idx == 0) {
     formTitle.value = item.destTablename + " 字段对比";
-    axios
+    Request
       .get(apiPrefix.value + actions.value[idx].api + item.tblId)
       .then(res => {
         childData.value = res.data;
@@ -198,7 +198,7 @@ const doAction = (item: any, idx: number) => {
   } else if (idx == 2) {
     let spName = "tuna_addax_" + item.destTablename;
     formTitle.value = spName + " 的运行日志";
-    axios
+    Request
       .get("/log/" + actions.value[idx].api + "tuna_addax_" + item.tblId)
       .then(res => {
         childData.value = res.data;
@@ -210,7 +210,7 @@ const doAction = (item: any, idx: number) => {
 };
 
 const getContent = (f: string) => {
-  axios
+  Request
     .get("/log/logFileContent", {
       params: {
         f: f

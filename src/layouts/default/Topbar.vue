@@ -113,10 +113,6 @@ const urls = ref([
         title: "数据源管理"
       }
     ]
-  },
-  {
-    path: "/demo",
-    title: "Demo"
   }
 ]);
 

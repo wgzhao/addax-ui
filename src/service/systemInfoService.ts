@@ -1,4 +1,5 @@
 import Requests from "@/utils/requests";
+import type {LoadItemsOptions} from "@/types"
 
 class SystemInfoService {
   baseUrl = "systemInfo";
@@ -7,8 +8,7 @@ class SystemInfoService {
     return Requests.get(this.baseUrl + "/etlAndDs", params);
   }
 
-  getEtlInfo(q?: string) {
-    const params  = q? new URLSearchParams({q: q}): undefined;
+  getEtlInfo(params: LoadItemsOptions) {
     return Requests.get(this.baseUrl + "/etlInfo", params);
   }
 

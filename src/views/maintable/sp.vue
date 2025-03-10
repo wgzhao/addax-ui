@@ -102,7 +102,6 @@ import Requests from "@/utils/requests";
 const impSps = ref([]);
 const spId = ref<string>();
 const uniqueKey = ref();
-const currentComp = ref<string>();
 const search = ref();
 const impHeaders = [
   { title: "运行频率", value: "runFreq" },

@@ -14,8 +14,8 @@ export const hexToRgb = hex => {
 };
 
 export const createSort = sortBy => {
-  let sortKey: Array<string> = [];
-  let sortOrder: Array<string> = [];
+  const sortKey: Array<string> = [];
+  const sortOrder: Array<string> = [];
   if (sortBy.length) {
     for (let i = 0; i < sortBy.length; i++) {
       sortKey.push(sortBy[i].key);

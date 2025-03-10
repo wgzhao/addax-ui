@@ -191,7 +191,7 @@
       <v-card-actions>
         <v-btn type="reset" class="bg-primary">取消</v-btn>
         <v-btn type="submit" class="btn btn-primary bg-primary">
-          {{ mode == "add" ? "新增" : "保存" }}</v-btn
+           保存</v-btn
         >
       </v-card-actions>
     </v-form>
@@ -242,13 +242,16 @@ const mainTable = ref({
   remark: "",
 });
 
-const mode = ref("add");
+// define emit
+const emit = defineEmits(["closeDialog", "update:record"]);
 
 const saveOds = () => {
   mainTable.value["souSysid"] = mainTable.value["destOwner"].substring(3);
   OdsService.save(mainTable.value)
     .then(res => {
       alert("保存成功!");
+      emit("closeDialog");
+      emit("update:record", mainTable.value);
     })
     .catch(err => {
       alert("保存失败! " + err);

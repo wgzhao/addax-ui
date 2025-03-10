@@ -43,12 +43,14 @@
       <v-col cols="12" md="6">
         <v-card flat title="数据中心采集表清单(显示100条)" class="mb-4">
           <v-card-text>
-            <v-data-table
+            <v-data-table-server
               :items="etlInfo"
               :headers="etlInfoHeaders"
               items-per-page="10"
+              :items-length="etlTotalItems"
               density="compact"
               class="elevation-1"
+              @update:options="loadItems"
             />
           </v-card-text>
         </v-card>
@@ -74,10 +76,17 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import SystemInfoService from "@/service/systemInfoService";
-import ETLAndDS from "@/types";
+import type {ETLAndDS} from "@/types/database";
+import type {LoadItemsOptions} from "@/types"
 
 const etlAndDs = ref<ETLAndDS[]>([]);
 const etlInfo = ref<any[]>([]);
+const etlInfoParams =ref<LoadItemsOptions>({
+  page: 1,
+  itemsPerPage: 10,
+  sortBy: null
+})
+const etlTotalItems = ref(0)
 const dsInfo = ref<any[]>([]);
 const filter = ref("");
 
@@ -105,15 +114,33 @@ const dsInfoHeaders = [
   { title: "推送结束时间", key: "END_TIME" },
 ];
 
+
+
 const fetchData = () => {
   SystemInfoService.getEtlAndDs(filter.value).then(res => {
     etlAndDs.value = res.data;
   });
-  SystemInfoService.getEtlInfo(filter.value).then(res => {
-    etlInfo.value = res.data;
-  });
+  loadItems(etlInfoParams.value);
   SystemInfoService.getDsInfo(filter.value).then(res => {
     dsInfo.value = res.data;
+  });
+};
+
+const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
+  // const sort = createSort(sortBy)
+  etlInfoParams.value = {
+    page: page,
+    itemsPerPage: itemsPerPage,
+    sortBy: sortBy
+  }
+  SystemInfoService.getEtlInfo(etlInfoParams.value).then(res => {
+    etlInfo.value = res.data.content;
+    etlInfoParams.value = {
+      page: res.data.pageable.pageNumber,
+      itemsPerPage: res.data.pageable.pageSize,
+      sortBy: null
+    }
+    etlTotalItems.value = res.data.totalElements;
   });
 };
 
