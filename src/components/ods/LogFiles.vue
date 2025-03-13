@@ -1,34 +1,37 @@
 <template>
   <!-- 调度和命令日志 -->
   <!-- <dialog-comp v-mode="dialog" title="调度/命令日志"> -->
-    <v-list lines="one" density="compact">
-      <v-list-item v-for="(f, index) in logList" :key="index">
-        <v-list-item-title>
-          <a
-            href="#"
-            class="text-sm leading-3 text-decoration-none"
-            :key="index"
-            @click.prevent="getContent(f)"
-            >{{ f }}</a
-          >
-        </v-list-item-title>
-      </v-list-item>
-    </v-list>
+  <v-list lines="one" density="compact">
+    <v-list-item v-for="(f, index) in logList" :key="index">
+      <v-list-item-title>
+        <a href="#" class="text-sm leading-3 text-decoration-none" :key="index" @click.prevent="getContent(f)">{{ f
+          }}</a>
+      </v-list-item-title>
+    </v-list-item>
+  </v-list>
   <!-- </dialog-comp> -->
 
   <!-- log content dialog -->
-  <v-dialog class="overflow-visible" v-model="fDialog">
-    <v-card :title="filename">
-      <template v-slot:text>
-        <pre class="text-break">{{ fContent }}</pre>
+  <v-dialog v-model="fDialog" max-width="1920px" scrollable>
+    <v-card>
+      <template v-slot:title>
+        <v-row align="center" class="px-4">
+          <v-col>{{ filename }}</v-col>
+          <v-col cols="auto">
+            <v-btn class="ms-2" color="primary" variant="text" @click="closeDialog">Close</v-btn>
+          </v-col>
+        </v-row>
       </template>
-      <template v-slot:actions>
-        <v-btn
-          class="ms-auto bg-primary"
-          text="Close"
-          @click="closeDialog"
-        ></v-btn>
-      </template>
+
+      <v-divider />
+
+      <v-card-text class="pa-0">
+        <v-virtual-scroll :items="[fContent]" height="70vh" item-height="24">
+          <template v-slot:default="{ item }">
+            <pre class="font-monospace text-body-1 pa-4">{{ item }}</pre>
+          </template>
+        </v-virtual-scroll>
+      </v-card-text>
     </v-card>
   </v-dialog>
 </template>
@@ -41,6 +44,11 @@ import LogService from "@/service/maintable/logService";
 const props = defineProps({ tid: String });
 
 const fContent = ref();
+const snackbar = ref(false);
+const copyContent = () => {
+  navigator.clipboard.writeText(fContent.value);
+  snackbar.value = true;
+};
 const filename = ref();
 const fDialog = ref(false);
 
@@ -51,6 +59,8 @@ const closeDialog = () => {
 
 const logList = ref([]);
 
+const emit = defineEmits(["closeDialog"]);
+
 const getContent = (f: string) => {
   LogService.getContent(f).then((res: any) => {
     fContent.value = res.data;
@@ -60,10 +70,20 @@ const getContent = (f: string) => {
 };
 
 onMounted(() => {
-  console.log("command log===>", props.tid);
-  LogService.getLogFiles(props.tid).then(res => {
+  const [tableName, spName] = props.tid.split("|");
+  LogService.getLogFiles(tableName, spName).then(res => {
     logList.value = res.data;
   });
 });
 </script>
-<style></style>
+<style scoped>
+.v-virtual-scroll {
+  background: rgb(var(--v-theme-background));
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+</style>

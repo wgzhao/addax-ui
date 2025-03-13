@@ -4,12 +4,14 @@ import Requests from "@/utils/requests";
 class OdsService {
   prefix: string = "/maintable/ods";
   // 0. 主表列表
-  fetchOdsList(page: number, pageSize: number, q: string, runStatus?: string) {
+  fetchOdsList(page: number, pageSize: number, q: string, runStatus?: string, sortBy?: any) {
     return Requests.get(this.prefix, {
       page: page,
       pageSize: pageSize,
       q: q,
-      flag: runStatus
+      flag: runStatus,
+      sortField: sortBy.sortField,
+      sortOrder: sortBy.sortOrder
     });
   }
 
@@ -63,6 +65,11 @@ class OdsService {
   // 7. 批量更新采集表的状态和重试测试
   updateStatus(data: any) {
     return Requests.post(this.prefix + "/batchUpdateStatusAndFlag", data);
+  }
+  // 8. 表更新
+
+  updateSchema() {
+    return Requests.post(this.prefix + "/updateSchema")
   }
 }
 

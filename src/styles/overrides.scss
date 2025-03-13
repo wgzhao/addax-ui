@@ -5,3 +5,20 @@ html {
   body {
     font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
   }
+
+// 表格选中行样式
+.v-data-table {
+  tbody {
+    tr {
+      &:has(input[type="checkbox"]:checked) {
+        background-color: rgba(105, 108, 255, 0.08) !important;
+        border-left: 3px solid #696CFF !important;
+        
+        // 深色模式下的样式
+        .v-theme--dark & {
+          background-color: rgba(105, 108, 255, 0.15) !important;
+        }
+      }
+    }
+  }
+}

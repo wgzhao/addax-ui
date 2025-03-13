@@ -1,5 +1,5 @@
-import { ref } from "vue";
-import { defineStore } from "pinia";
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
 // const themes = ref({
 //   light: {
 //     name: "light",
@@ -11,19 +11,19 @@ import { defineStore } from "pinia";
 //   }
 // });
 export const themeStore = defineStore({
-  id: "curTheme",
+  id: 'curTheme',
   state: () => {
-    return { theme: "light" };
+    return { theme: 'light' }
   },
   actions: {
     toggleTheme() {
-      this.theme = this.theme == "light" ? "dark" : "light";
+      this.theme = this.theme == 'light' ? 'dark' : 'light'
     },
     getTheme() {
-      return this.theme;
+      return this.theme
     },
     getIcon() {
-      return this.theme == "light" ? "fas fa-sun" : "fas fa-moon";
+      return this.theme == 'light' ? 'fas fa-sun' : 'fas fa-moon'
     }
   }
-});
+})

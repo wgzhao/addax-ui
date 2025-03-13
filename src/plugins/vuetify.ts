@@ -1,18 +1,18 @@
-import { createVuetify } from "vuetify";
+import { createVuetify } from 'vuetify'
 //import "vuetify/styles";
-import "@/styles/settings.scss";
-import "@/styles/overrides.scss";
-import customTheme from "./theme";
-import "@mdi/font/css/materialdesignicons.css";
-import { aliases, mdi } from "vuetify/iconsets/mdi";
+import '@/styles/settings.scss'
+import '@/styles/overrides.scss'
+import customTheme from './theme'
+import '@mdi/font/css/materialdesignicons.css'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 export default createVuetify({
   theme: {
-    defaultTheme: "dark",
-    themes: customTheme,
+    defaultTheme: 'dark',
+    themes: customTheme
   },
   icons: {
-    defaultSet: "mdi",
+    defaultSet: 'mdi',
     aliases,
     sets: {
       mdi
@@ -20,7 +20,7 @@ export default createVuetify({
   },
   defaults: {
     VTextField: {
-      variant: "outlined"
+      variant: 'outlined'
     }
   }
-});
+})

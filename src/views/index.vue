@@ -46,9 +46,7 @@
       <v-row>
         <v-col cols="12">
           <v-card class="chart-card pa-6" elevation="12" rounded="lg">
-            <v-card-title class="chart-title">
-              最近12个月累计数据采集量 (GiB)
-            </v-card-title>
+            <v-card-title class="chart-title">最近12个月累计数据采集量 (GiB)</v-card-title>
             <v-card-text>
               <div class="chart-container">
                 <LineChart />
@@ -65,15 +63,10 @@
             <v-card-title class="detail-title">项目完成率</v-card-title>
             <v-card-text>
               <v-list class="progress-list" dense>
-                <v-list-item v-for="ratio in ratios" :key="ratio.OVER_PREC" >
-                  <v-progress-linear
-                    :model-value="ratio.OVER_PREC"
-                    :class="ratio.BG_COLOR"
-                    height="20"
-                    rounded
+                <v-list-item v-for="ratio in ratios" :key="ratio.OVER_PREC">
+                  <v-progress-linear :model-value="ratio.OVER_PREC" :class="ratio.BG_COLOR" height="20" rounded
                     :color="isDark ? 'cyan' : 'blue'"
-                    :bg-color="isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'"
-                  >
+                    :bg-color="isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'">
                     <template v-slot:default="{ value }">
                       <span class="progress-text">
                         {{ ratio.SYSNAME }} - {{ Math.round(value) }}%
@@ -102,35 +95,32 @@
 </template>
 
 <script setup lang="ts">
-import request from '@/utils/requests';
-import { ref, onMounted, computed } from "vue";
-import LineChart from "@/components/dashboard/LineChart.vue";
-import L5TEtlBar from "@/components/dashboard/L5TEtlBar.vue";
-import { useTheme } from "vuetify"; // Vuetify 主题钩子
+import request from '@/utils/requests'
+import { ref, onMounted, computed } from 'vue'
+import LineChart from '@/components/dashboard/LineChart.vue'
+import L5TEtlBar from '@/components/dashboard/L5TEtlBar.vue'
+import { useTheme } from 'vuetify' // Vuetify 主题钩子
 
-const vuetifyTheme = useTheme();
-const isDark = computed(() => vuetifyTheme.current.value.dark);
+const vuetifyTheme = useTheme()
+const isDark = computed(() => vuetifyTheme.current.value.dark)
 
-const ratios = ref([]);
-const lastEtlData = ref(0.0);
-const tableCount = ref(0);
+const ratios = ref([])
+const lastEtlData = ref(0.0)
+const tableCount = ref(0)
 
-const fetchRatio = async () => {
+function fetchRatio() {
   try {
-    const ar = await request.get("/dashboard/accomplishRatio");
-    const ed = await request.get("/dashboard/lastEtlData");
-    const tbs = await request.get("/dashboard/tableCount")
-    ratios.value = ar.data;
-    lastEtlData.value = ed.data;
-    tableCount.value = tbs.data;
+    request.get('/dashboard/accomplishRatio').then(res => ratios.value = res.data);
+    request.get('/dashboard/lastEtlData').then(res => lastEtlData.value = res.data);
+    request.get('/dashboard/tableCount').then(res => tableCount.value = res.data);
   } catch (error) {
-    console.error("Error fetching ratios:", error);
+    console.error('Error fetching ratios:', error)
   }
-};
+}
 
 onMounted(() => {
-  fetchRatio();
-});
+  fetchRatio()
+})
 </script>
 
 <style scoped>

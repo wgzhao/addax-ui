@@ -74,83 +74,81 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import SystemInfoService from "@/service/systemInfoService";
-import type {ETLAndDS} from "@/types/database";
-import type {LoadItemsOptions} from "@/types"
+  import { ref, onMounted } from 'vue'
+  import SystemInfoService from '@/service/systemInfoService'
+  import type { ETLAndDS } from '@/types/database'
+  import type { LoadItemsOptions } from '@/types'
 
-const etlAndDs = ref<ETLAndDS[]>([]);
-const etlInfo = ref<any[]>([]);
-const etlInfoParams =ref<LoadItemsOptions>({
-  page: 1,
-  itemsPerPage: 10,
-  sortBy: null
-})
-const etlTotalItems = ref(0)
-const dsInfo = ref<any[]>([]);
-const filter = ref("");
+  const etlAndDs = ref<ETLAndDS[]>([])
+  const etlInfo = ref<any[]>([])
+  const etlInfoParams = ref<LoadItemsOptions>({
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: null
+  })
+  const etlTotalItems = ref(0)
+  const dsInfo = ref<any[]>([])
+  const filter = ref('')
 
-const etlAndDsHeaders = [
-  { title: "类别", key: "sysKind" },
-  { title: "系统编号", key: "sysid" },
-  { title: "系统名称", key: "sysName" },
-  { title: "连接串", key: "dbConstr" },
-  { title: "登录用户", key: "dbUser" },
-];
+  const etlAndDsHeaders = [
+    { title: '类别', key: 'sysKind' },
+    { title: '系统编号', key: 'sysid' },
+    { title: '系统名称', key: 'sysName' },
+    { title: '连接串', key: 'dbConstr' },
+    { title: '登录用户', key: 'dbUser' }
+  ]
 
-const etlInfoHeaders = [
-  { title: "系统名称", key: "sysName" },
-  { title: "源用户", key: "souOwner" },
-  { title: "源表名", key: "souTablename" },
-  { title: "源表筛选", key: "souFilter" },
-  { title: "目标用户", key: "destOwner" },
-  { title: "目标表名", key: "destTablename" },
-];
+  const etlInfoHeaders = [
+    { title: '系统名称', key: 'sysName' },
+    { title: '源用户', key: 'souOwner' },
+    { title: '源表名', key: 'souTablename' },
+    { title: '源表筛选', key: 'souFilter' },
+    { title: '目标用户', key: 'destOwner' },
+    { title: '目标表名', key: 'destTablename' }
+  ]
 
-const dsInfoHeaders = [
-  { title: "任务组", key: "DS_NAME" },
-  { title: "目标表", key: "TBLNAME" },
-  { title: "推送开始时间", key: "START_TIME" },
-  { title: "推送结束时间", key: "END_TIME" },
-];
+  const dsInfoHeaders = [
+    { title: '任务组', key: 'DS_NAME' },
+    { title: '目标表', key: 'TBLNAME' },
+    { title: '推送开始时间', key: 'START_TIME' },
+    { title: '推送结束时间', key: 'END_TIME' }
+  ]
 
-
-
-const fetchData = () => {
-  SystemInfoService.getEtlAndDs(filter.value).then(res => {
-    etlAndDs.value = res.data;
-  });
-  loadItems(etlInfoParams.value);
-  SystemInfoService.getDsInfo(filter.value).then(res => {
-    dsInfo.value = res.data;
-  });
-};
-
-const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
-  // const sort = createSort(sortBy)
-  etlInfoParams.value = {
-    page: page,
-    itemsPerPage: itemsPerPage,
-    sortBy: sortBy
+  const fetchData = () => {
+    SystemInfoService.getEtlAndDs(filter.value).then((res) => {
+      etlAndDs.value = res.data
+    })
+    loadItems(etlInfoParams.value)
+    SystemInfoService.getDsInfo(filter.value).then((res) => {
+      dsInfo.value = res.data
+    })
   }
-  SystemInfoService.getEtlInfo(etlInfoParams.value).then(res => {
-    etlInfo.value = res.data.content;
-    etlInfoParams.value = {
-      page: res.data.pageable.pageNumber,
-      itemsPerPage: res.data.pageable.pageSize,
-      sortBy: null
-    }
-    etlTotalItems.value = res.data.totalElements;
-  });
-};
 
-onMounted(() => {
-  fetchData();
-});
+  const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
+    // const sort = createSort(sortBy)
+    etlInfoParams.value = {
+      page: page,
+      itemsPerPage: itemsPerPage,
+      sortBy: sortBy
+    }
+    SystemInfoService.getEtlInfo(etlInfoParams.value).then((res) => {
+      etlInfo.value = res.data.content
+      etlInfoParams.value = {
+        page: res.data.pageable.pageNumber,
+        itemsPerPage: res.data.pageable.pageSize,
+        sortBy: null
+      }
+      etlTotalItems.value = res.data.totalElements
+    })
+  }
+
+  onMounted(() => {
+    fetchData()
+  })
 </script>
 
 <style scoped>
-.v-data-table {
-  background: transparent; /* 表格背景透明，继承卡片背景 */
-}
+  .v-data-table {
+    background: transparent; /* 表格背景透明，继承卡片背景 */
+  }
 </style>

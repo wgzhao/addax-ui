@@ -4,45 +4,24 @@
       批量修改 <span class="text-caption ms-2">(选中 {{ selectedCount }} 条记录)</span>
     </v-card-title>
     <v-divider></v-divider>
-    
+
     <v-form fast-fail @submit.prevent="updateItem">
       <v-container>
         <v-row>
           <v-col cols="12" md="6">
-            <v-select
-              v-model="flag"
-              :items="statusOptions"
-              item-title="text"
-              item-value="value"
-              density="compact"
-              label="状态"
-              hint="选择要更新的状态值"
-              persistent-hint
-            ></v-select>
+            <v-select v-model="flag" :items="statusOptions" item-title="text" item-value="value" density="compact"
+              label="状态" hint="选择要更新的状态值" persistent-hint></v-select>
           </v-col>
           <v-col cols="12" md="6">
-            <v-text-field
-              v-model="retryCnt"
-              label="剩余运行次数"
-              type="number"
-              min="0"
-              max="99"
-              density="compact"
-              hint="设置剩余可运行次数"
-              persistent-hint
-            ></v-text-field>
+            <v-text-field v-model="retryCnt" label="剩余运行次数" type="number" min="0" max="99" density="compact"
+              hint="设置剩余可运行次数" persistent-hint></v-text-field>
           </v-col>
         </v-row>
       </v-container>
-      
+
       <v-card-actions class="justify-end">
         <v-btn type="reset" variant="outlined" class="me-2">取消</v-btn>
-        <v-btn 
-          type="submit" 
-          color="primary" 
-          :disabled="!isValid"
-          :loading="loading"
-        >
+        <v-btn type="submit" color="primary" :disabled="!isValid" :loading="loading">
           应用修改
         </v-btn>
       </v-card-actions>
@@ -83,31 +62,31 @@ const statusOptions = [
   { text: "X_禁用", value: "X" }
 ];
 
+const emit = defineEmits(["closeDialog", "update:batch"]);
 function updateItem() {
   if (!isValid.value) return;
-  
+
   loading.value = true;
-  // Update logic would go here, using props.tid, flag.value, and retryCnt.value
-  console.log("Updating items:", props.tid);
-  console.log("New status:", flag.value);
-  console.log("New retry count:", retryCnt.value);
+
   const payload = {
     tids: props.tid,
     flag: flag.value,
     retryCnt: retryCnt.value
   };
-    loading.value = false;
-    // Here you would call your actual update service
-    OdsService.updateStatus(payload)
-      .then(() => {
-        console.log("Items updated successfully");
-        alert("批量更新成功")
-        // Close the dialog
-        // dialogVisible.value = false;
-      })
-      .catch((error) => {
-        alert("Error updating items:" +  error);
-      });
+  loading.value = false;
+  // Here you would call your actual update service
+  OdsService.updateStatus(payload)
+    .then((res) => {
+      console.log("Items updated successfully");
+      alert("批量更新成功")
+      emit("closeDialog")
+      emit("update:batch", payload)
+      // Close the dialog
+      // dialogVisible.value = false;
+    })
+    .catch((error) => {
+      alert("Error updating items:" + error);
+    });
 }
 </script>
 

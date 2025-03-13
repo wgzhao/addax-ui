@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint ./src --fix --ignore-path .gitignore"
+    "lint": "eslint --fix --ignore-path .gitignore --ext .vue,.ts src",
+    "format":"prettier --write src/**/*.{vue,ts}"
   },
   "dependencies": {
     "@babel/types": "^7.24.0",
@@ -35,7 +36,7 @@
     "@types/node": "^20.11.25",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.2",

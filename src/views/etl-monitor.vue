@@ -63,133 +63,133 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { etlService } from "@/service/etlService";
+  import { ref, onMounted } from 'vue'
+  import { etlService } from '@/service/etlService'
 
-const data = ref({
-  accomplishList: [],
-  specialTask: [],
-  rejectTask: [],
-  realtimeTask: [],
-});
+  const data = ref({
+    accomplishList: [],
+    specialTask: [],
+    rejectTask: [],
+    realtimeTask: []
+  })
 
-const headers = [
-  {
-    name: "accomplishList",
-    api: "accomplishList",
-    title: "数据源完成情况",
-    sortBy: [{ key: "overPrec", order: "asc" }],
-    headers: [
-      { title: "启动", key: "dbStart" },
-      { title: "数据源", key: "sysname" },
-      {
-        title: "整体情况",
-        align: "center",
-        value: "",
-        children: [
-          { title: "总数", key: "totalCnt" },
-          { title: "完成数", key: "overCnt" },
-          {
-            title: "完成率",
-            key: "overPrec",
-            value: (item) => `${Math.round(item.overPrec * 100)}%`,
-            cellProps: ({ value }) => ({
-              class: value === "100%" ? "text-success" : "text-warning",
-            }),
-          },
-          { title: "运行", key: "runCnt" },
-          { title: "错误", key: "errCnt" },
-          { title: "未执行", key: "noCnt" },
-          { title: "未建表", key: "waitCnt" },
-        ],
-      },
-      {
-        title: "T-1 日",
-        align: "center",
-        value: "",
-        children: [
-          { title: "开始时间", key: "startTimeLtd" },
-          { title: "结束时间", key: "endTimeLtd" },
-          { title: "耗时(秒)", key: "runtimeLtd" },
-        ],
-      },
-      {
-        title: "T 日",
-        align: "center",
-        value: "",
-        children: [
-          { title: "开始时间", key: "startTimeTd" },
-          { title: "结束时间", key: "endTimeTd" },
-          { title: "耗时", key: "runtimeTd" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "specialTask",
-    api: "specialTask",
-    title: "特殊任务提醒：错误、耗时过长、有重试、有拒绝行",
-    sortBy: [{ key: "RUNTIME", order: "desc" }],
-    headers: [
-      { title: "任务名", key: "SPNAME" },
-      { title: "状态", key: "FLAG" },
-      { title: "剩余", key: "RETRY_CNT" },
-      {
-        title: "耗时",
-        key: "RUNTIME",
-        cellProps: ({ value }) => ({
-          class: value > 1000 ? "text-warning" : "",
-        }),
-      },
-      { title: "开始时间", key: "START_TIME" },
-      { title: "结束时间", key: "END_TIME" },
-    ],
-  },
-  {
-    name: "rejectTask",
-    api: "rejectTask",
-    title: "采集拒绝行信息",
-    sortBy: [{ key: "totalErr", order: "desc" }],
-    headers: [
-      { title: "任务名称", key: "jobname" },
-      { title: "拒绝行", key: "totalErr" },
-      { title: "开始时间", key: "startTs" },
-      { title: "结束时间", key: "endTs" },
-    ],
-  },
-  {
-    name: "realtimeTask",
-    api: "realtimeTask",
-    title: "日间实时采集任务执行情况(最近1小时)",
-    sortBy: [],
-    headers: [
-      { title: "最近一次", key: "LAST_TIMES" },
-      { title: "下一次", key: "NEXT_TIMES" },
-      { title: "任务名称", key: "SPNAME" },
-      { title: "开始时间", key: "START_TIME" },
-      { title: "结束时间", key: "END_TIME" },
-    ],
-  },
-];
+  const headers = [
+    {
+      name: 'accomplishList',
+      api: 'accomplishList',
+      title: '数据源完成情况',
+      sortBy: [{ key: 'overPrec', order: 'asc' }],
+      headers: [
+        { title: '启动', key: 'dbStart' },
+        { title: '数据源', key: 'sysname' },
+        {
+          title: '整体情况',
+          align: 'center',
+          value: '',
+          children: [
+            { title: '总数', key: 'totalCnt' },
+            { title: '完成数', key: 'overCnt' },
+            {
+              title: '完成率',
+              key: 'overPrec',
+              value: (item) => `${Math.round(item.overPrec * 100)}%`,
+              cellProps: ({ value }) => ({
+                class: value === '100%' ? 'text-success' : 'text-warning'
+              })
+            },
+            { title: '运行', key: 'runCnt' },
+            { title: '错误', key: 'errCnt' },
+            { title: '未执行', key: 'noCnt' },
+            { title: '未建表', key: 'waitCnt' }
+          ]
+        },
+        {
+          title: 'T-1 日',
+          align: 'center',
+          value: '',
+          children: [
+            { title: '开始时间', key: 'startTimeLtd' },
+            { title: '结束时间', key: 'endTimeLtd' },
+            { title: '耗时(秒)', key: 'runtimeLtd' }
+          ]
+        },
+        {
+          title: 'T 日',
+          align: 'center',
+          value: '',
+          children: [
+            { title: '开始时间', key: 'startTimeTd' },
+            { title: '结束时间', key: 'endTimeTd' },
+            { title: '耗时', key: 'runtimeTd' }
+          ]
+        }
+      ]
+    },
+    {
+      name: 'specialTask',
+      api: 'specialTask',
+      title: '特殊任务提醒：错误、耗时过长、有重试、有拒绝行',
+      sortBy: [{ key: 'RUNTIME', order: 'desc' }],
+      headers: [
+        { title: '任务名', key: 'SPNAME' },
+        { title: '状态', key: 'FLAG' },
+        { title: '剩余', key: 'RETRY_CNT' },
+        {
+          title: '耗时',
+          key: 'RUNTIME',
+          cellProps: ({ value }) => ({
+            class: value > 1000 ? 'text-warning' : ''
+          })
+        },
+        { title: '开始时间', key: 'START_TIME' },
+        { title: '结束时间', key: 'END_TIME' }
+      ]
+    },
+    {
+      name: 'rejectTask',
+      api: 'rejectTask',
+      title: '采集拒绝行信息',
+      sortBy: [{ key: 'totalErr', order: 'desc' }],
+      headers: [
+        { title: '任务名称', key: 'jobname' },
+        { title: '拒绝行', key: 'totalErr' },
+        { title: '开始时间', key: 'startTs' },
+        { title: '结束时间', key: 'endTs' }
+      ]
+    },
+    {
+      name: 'realtimeTask',
+      api: 'realtimeTask',
+      title: '日间实时采集任务执行情况(最近1小时)',
+      sortBy: [],
+      headers: [
+        { title: '最近一次', key: 'LAST_TIMES' },
+        { title: '下一次', key: 'NEXT_TIMES' },
+        { title: '任务名称', key: 'SPNAME' },
+        { title: '开始时间', key: 'START_TIME' },
+        { title: '结束时间', key: 'END_TIME' }
+      ]
+    }
+  ]
 
-const getData = async () => {
-  try {
-    const [accomplishList, specialTask, rejectTask, realtimeTask] = await Promise.all([
-      etlService.fetchAccomplishList(),
-      etlService.fetchSpecialTask(),
-      etlService.fetchRejectTask(),
-      etlService.fetchRealtimeTask(),
-    ]);
-    data.value.accomplishList = accomplishList.data;
-    data.value.specialTask = specialTask.data;
-    data.value.rejectTask = rejectTask.data;
-    data.value.realtimeTask = realtimeTask.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
+  const getData = async () => {
+    try {
+      const [accomplishList, specialTask, rejectTask, realtimeTask] = await Promise.all([
+        etlService.fetchAccomplishList(),
+        etlService.fetchSpecialTask(),
+        etlService.fetchRejectTask(),
+        etlService.fetchRealtimeTask()
+      ])
+      data.value.accomplishList = accomplishList.data
+      data.value.specialTask = specialTask.data
+      data.value.rejectTask = rejectTask.data
+      data.value.realtimeTask = realtimeTask.data
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
   }
-};
 
-onMounted(() => {
-  getData();
-});
+  onMounted(() => {
+    getData()
+  })
 </script>
