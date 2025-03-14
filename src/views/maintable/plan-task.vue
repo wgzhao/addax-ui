@@ -1,10 +1,5 @@
 <template>
-  <v-data-table
-    :items="data"
-    :headers="headers"
-    density="compact"
-    :sort-by="[{ key: 'pnType', order: 'asc' }]"
-  >
+  <v-data-table :items="data" :headers="headers" density="compact" :sort-by="[{ key: 'pnType', order: 'asc' }]">
     <template v-slot:item.pnType="{ value }">
       {{ getType(value) }}
     </template>
@@ -14,7 +9,7 @@
   </v-data-table>
 </template>
 <script setup lang="ts">
-import axios from "axios";
+import Requests from "@/utils/requests";
 import { onMounted, ref } from "vue";
 const headers = [
   { title: "计划任务", key: "pnType" },
@@ -54,7 +49,7 @@ function getColor(flag: string) {
 }
 
 onMounted(() => {
-  axios.get("/maintable/plantask/list").then(res => {
+  Requests.get("/maintable/plantask/list").then(res => {
     data.value = res.data;
   });
 });
