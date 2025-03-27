@@ -29,7 +29,7 @@
       <v-divider />
 
       <v-card-text class="pa-0">
-        <v-virtual-scroll :items="[fContent]" ref="scrollRef" height="70vh" item-height="24" @scroll="handleScroll">
+        <v-virtual-scroll :items="[fContent]" ref="scrollRef" height="70vh" item-height="24">
           <template v-slot:default="{ item }">
             <pre class="font-monospace text-body-1 pa-4">{{ item }}</pre>
           </template>
@@ -51,32 +51,15 @@ const filename = ref();
 const fDialog = ref(false);
 
 const scrollRef = ref();
-const isRefreshing = ref(false);
-const currentFile = ref('');
 
 const refreshContent = () => {
-  if (isRefreshing.value || !currentFile.value) return;
 
-  isRefreshing.value = true;
-  LogService.getContent(currentFile.value).then((res: any) => {
+  LogService.getContent(filename.value).then((res: any) => {
     fContent.value = res.data;
-    isRefreshing.value = false;
   }).catch(() => {
-    isRefreshing.value = false;
   });
 };
 
-const handleScroll = (e: Event) => {
-  const target = e.target as HTMLElement;
-  if (!target) return;
-
-  // Calculate if we've scrolled to the bottom (with a small threshold)
-  const isAtBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 30;
-
-  if (isAtBottom && !isRefreshing.value) {
-    refreshContent();
-  }
-};
 
 const closeDialog = () => {
   fDialog.value = false;
