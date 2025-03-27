@@ -26,7 +26,6 @@ declare module 'vue' {
     MainTable: typeof import('./src/components/ods/MainTable.vue')['default']
     MainTableInfo: typeof import('./src/components/dataservice/MainTableInfo.vue')['default']
     NavbarThemeSwitcher: typeof import('./src/components/NavbarThemeSwitcher.vue')['default']
-    PieChart: typeof import('./src/components/dashboard/PieChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SceneList: typeof import('./src/components/sp/SceneList.vue')['default']

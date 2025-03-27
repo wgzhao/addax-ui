@@ -83,7 +83,7 @@
       <v-card-text>
         <!-- 动态加载的内容 -->
         <component :is="currentComponent" v-bind="currentParams" @closeDialog="closeDialog"
-          @update:record="handleRecordUpdate" @update:batch="handleBatchUpdate" />
+          @update:record="handleRecordUpdate" @update:batch="handleBatchUpdate" @refresh-data="searchOds" />
       </v-card-text>
     </v-card>
   </v-dialog>

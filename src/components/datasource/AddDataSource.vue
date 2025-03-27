@@ -10,8 +10,15 @@
             <v-text-field v-model="sourceItem.dbConstr" label="数据源链接串"></v-text-field>
           </v-col>
           <v-col cols="12" md="2">
-            <v-switch v-model="sourceItem.bvalid" true-value="Y" false-value="N" color="primary" hide-details
-              :label="`${sourceItem.bvalid == 'Y' ? '启用' : '禁用'}`"></v-switch>
+            <div>
+              <label class="text-body-2 mb-1 d-block">状态控制</label>
+              <v-switch v-model="sourceItem.bvalid" true-value="Y" false-value="N" color="primary" hide-details>
+                <template v-slot:append>
+                  <v-chip size="small" :color="sourceItem.bvalid === 'Y' ? 'success' : 'error'"
+                    :text="sourceItem.bvalid === 'Y' ? '已启用' : '已禁用'" class="ml-2"></v-chip>
+                </template>
+              </v-switch>
+            </div>
           </v-col>
         </v-row>
         <v-row>
