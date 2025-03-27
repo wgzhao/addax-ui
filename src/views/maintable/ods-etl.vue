@@ -64,8 +64,8 @@
   </v-card>
 
   <!-- 对话框 -->
-  <v-dialog v-model="dialogVisible">
-    <v-card :style="{ width: '80vw', height: 'auto' }">
+  <v-dialog v-model="dialogVisible" fullwidth :retain-focus="false">
+    <v-card>
       <v-card-title>
         <!-- <v-btn icon @click="closeDialog">
             <v-icon>mdi-close</v-icon>

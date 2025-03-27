@@ -1,6 +1,6 @@
 <template>
   <!-- ODS 采集 - 批量新增表 -->
-  <v-card title="ODS 采集 - 批量新增表" :style="{ width: '80vw', height: 'auto' }">
+  <v-card title="ODS 采集 - 批量新增表">
     <v-card-text>
       <v-row>
         <v-col cols="4">
@@ -24,33 +24,50 @@
         </v-col>
         <v-spacer />
         <v-col cols="2">
-          <v-btn color="primary" @click="saveItems" :loading="loadingSave" :disabled="tables.length === 0">保存</v-btn>
+          <v-btn color="primary" @click="saveItems" :loading="loadingSave" :disabled="selectedCnt === 0">保存</v-btn>
         </v-col>
       </v-row>
 
-      <!-- tables -->
-      <v-data-table :items="tables" :headers="headers" :items-per-page="15" density="compact" v-if="tables.length > 0">
-        <template v-slot:[`item.action`]="{ item, index }">
-          <v-btn color="error" class="btn btn-xs btn-danger" @click="deleteItem(index)">删除</v-btn>
-        </template>
-      </v-data-table>
+      <!-- Search field for tables - fixed width to prevent icon overlap -->
+      <v-row v-if="tables.length > 0" class="mb-2">
+        <v-col cols="4">
+          <v-text-field v-model="search" label="搜索表" append-icon="mdi-magnify" single-line hide-details
+            density="compact" clearable />
+        </v-col>
+        <v-col cols="4" class="d-flex align-center">
+          <v-chip variant="text" color="primary" class="text-body-1">
+            已选择 {{ selectedCnt }} 个表
+          </v-chip>
+        </v-col>
+      </v-row>
 
-      <v-alert v-else-if="loadingTables" type="info" variant="tonal" class="mt-4">
-        正在加载表列表，请稍候...
-      </v-alert>
+      <!-- Tables container with fixed height to prevent layout jumps -->
+      <div class="table-container">
+        <!-- tables -->
+        <v-data-table :items="tables" :headers="headers" :items-per-page="15" density="compact" show-select
+          v-model="selectedTables" :search="search" item-value="souTablename" v-if="tables.length > 0" return-object>
+          <template v-slot:[`item.action`]="{ item, index }">
+            <v-btn color="error" class="btn btn-xs btn-danger" @click="deleteItem(index)">删除</v-btn>
+          </template>
+        </v-data-table>
 
-      <v-alert v-else-if="tableLoadError" type="error" variant="tonal" class="mt-4">
-        {{ tableLoadError }}
-      </v-alert>
+        <v-alert v-else-if="loadingTables" type="info" variant="tonal" class="mt-4">
+          正在加载表列表，请稍候...
+        </v-alert>
 
-      <v-alert v-else type="info" variant="tonal" class="mt-4">
-        请选择源系统和数据库，然后点击"获取表"按钮加载表列表
-      </v-alert>
+        <v-alert v-else-if="tableLoadError" type="error" variant="tonal" class="mt-4">
+          {{ tableLoadError }}
+        </v-alert>
+
+        <v-alert v-else type="info" variant="tonal" class="mt-4">
+          请选择源系统和数据库，然后点击"获取表"按钮加载表列表
+        </v-alert>
+      </div>
     </v-card-text>
   </v-card>
 
   <!-- Success Message Dialog -->
-  <v-dialog v-model="showSuccessDialog" max-width="500px">
+  <v-dialog v-model="showSuccessDialog" max-width="500px" :retain-focus="false" persistent>
     <v-card>
       <v-card-title class="text-h5 bg-success text-white">
         操作成功
@@ -94,6 +111,8 @@ const loadingSave = ref(false);
 const tableLoadError = ref('');
 const showSuccessDialog = ref(false);
 const successMessage = ref('');
+const search = ref(''); // 新增：搜索关键字
+const selectedTables = ref<Table[]>([]); // 新增：已选择的表格
 
 interface Table {
   souSysid: string;
@@ -121,6 +140,7 @@ const selectedSourceId = ref({
   PASSWORD: "",
   NAME: ""
 });
+
 const selectedDb = ref()
 
 const tables = ref<Table[]>([]);
@@ -147,6 +167,8 @@ const defaultItem = ref<Table>({
 const sourceSystemList = ref([]);
 
 const sourceDbs = ref([]);
+
+const selectedCnt = computed(() => selectedTables.value.length);
 
 watch(selectedSourceId, (val) => {
   if (val.URL) {
@@ -186,28 +208,33 @@ const deleteItem = (index: number) => {
 };
 
 const saveItems = async () => {
-  if (tables.value.length === 0) return;
+  if (selectedCnt.value === 0) {
+    alert("请选择至少一个表");
+    return;
+  }
 
   loadingSave.value = true;
 
   // set destPardKind for each item and fix destTablename
-  tables.value.forEach(item => {
+  const itemsToSave = selectedTables.value.map(item => {
+    const saveItem = { ...item };
     // set destTablename
-    if (item.destTablename == "") {
-      item.destTablename = item.souTablename.toUpperCase();
+    if (saveItem.destTablename == "") {
+      saveItem.destTablename = saveItem.souTablename.toUpperCase();
     }
+    return saveItem;
   });
 
   try {
     // save data
-    const response = await request.post("/maintable/ods/batchSave", tables.value, {
+    const response = await request.post("/maintable/ods/batchSave", itemsToSave, {
       headers: {
         "Content-Type": "application/json"
       }
     });
 
     // Show success message
-    successMessage.value = `成功添加 ${tables.value.length} 个表`;
+    successMessage.value = `成功添加 ${itemsToSave.length} 个表`;
     showSuccessDialog.value = true;
 
   } catch (error) {
@@ -257,9 +284,11 @@ const getTables = async () => {
         newItem.destTablename = element.toUpperCase();
         tables.value.push(newItem);
       });
-
+      console.log(tables.value);
       // Show feedback
       tableLoadError.value = '';
+
+
     } else {
       tableLoadError.value = '未找到任何表';
     }
@@ -275,8 +304,19 @@ onMounted(() => {
   fetchSourceData();
 });
 </script>
-<style>
+<style scoped>
 .v-data-table {
   margin-top: 16px;
+}
+
+.table-container {
+  min-height: 400px;
+  position: relative;
+}
+
+/* Ensure dialog has stable positioning */
+.v-dialog {
+  position: fixed;
+  z-index: 2000;
 }
 </style>
