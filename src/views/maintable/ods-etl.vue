@@ -390,7 +390,7 @@ const loadItems = ({
     sortParam
   ).then(res => {
     ods.value = res.data["content"];
-    totalItems.value = res.data["totalPages"];
+    totalItems.value = res.data["totalElements"];
     loading.value = false;
   });
 };
