@@ -14,14 +14,16 @@
               新增
             </v-btn>
           </v-col>
+          <v-spacer />
         </v-row>
       </template>
       <v-card-text>
         <v-data-table :items="impdbs" :headers="headers" :search="searchValue" density="compact" items-per-page="20">
           <template v-slot:item.actions="{ item }">
-            <v-btn color="secondary" class="btn btn-xs btn-info mx-2" @click="doAction(item.id, 'show')">详情</v-btn>
-            <v-btn color="primary" class="btn btn-xs btn-warning mx-2" @click="doAction(item.id, 'edit')">编辑</v-btn>
-            <v-btn color="error" class="btn btn-xs btn-danger" @click="openDeleteDialog(item.id, item.dbName)">删除</v-btn>
+            <v-btn color="secondary" class="btn btn-xs btn-info me-2" @click="doAction(item.id, 'show')">详情</v-btn>
+            <v-btn color="primary" class="btn btn-xs btn-warning me-2" @click="doAction(item.id, 'edit')">编辑</v-btn>
+            <v-btn color="error" class="btn btn-xs btn-danger"
+              @click="openDeleteDialog(item.id, item.dbName)">删除</v-btn>
             <!-- <a href="#" class="btn btn-xs btn-info">使用场景</a>
                         <a href="#" class="btn btn-xs btn-info">探索源库</a> -->
           </template>
@@ -40,27 +42,24 @@
   </v-dialog>
 
   <!-- 确认删除对话框 -->
-  <v-dialog
-      v-model="deleteDialog"
-      max-width="600"
-    >
-      <v-card>
-        <v-card-title class="headline">
-          确认删除
-        </v-card-title>
-        <v-card-text>
-          您确定要删除{{ itemNameToDelete }}这个数据源吗？
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="default" text @click="deleteDialog=false">
-            取消
-          </v-btn>
-          <v-btn color="error" text @click="confirmDelete">
-            确认
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+  <v-dialog v-model="deleteDialog" max-width="600">
+    <v-card>
+      <v-card-title class="headline">
+        确认删除
+      </v-card-title>
+      <v-card-text>
+        您确定要删除{{ itemNameToDelete }}这个数据源吗？
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="default" text @click="deleteDialog = false">
+          取消
+        </v-btn>
+        <v-btn color="error" text @click="confirmDelete">
+          确认
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -84,7 +83,32 @@ const headers = [
   { title: "名称", key: "dbName" },
   { title: "采集编号", key: "dbIdEtl" },
   { title: "服务编号", key: "dbIdDs" },
-  { title: "连接串", key: "dbConstr"},
+  { title: "连接串", key: "dbConstr" },
+  {
+    title: "采集时间", key: "dbStart", value: item => {
+      if (!item.dbStart) return '-';
+      const strValue = String(item.dbStart);
+
+      // Single digit (e.g., 7 → 07:00)
+      if (strValue.length === 1) {
+        return `0${strValue}:00`;
+      }
+      // Two digits (e.g., 12 → 12:00)
+      else if (strValue.length === 2) {
+        return `${strValue}:00`;
+      }
+      // Three digits (e.g., 120 → 01:20)
+      else if (strValue.length === 3) {
+        return `0${strValue.charAt(0)}:${strValue.substring(1)}`;
+      }
+      // Four digits (e.g., 2203 → 22:03)
+      else if (strValue.length === 4) {
+        return `${strValue.substring(0, 2)}:${strValue.substring(2)}`;
+      }
+
+      return item.dbStart;
+    }
+  },
   { title: "操作", value: "actions", align: "center" }
 ];
 const actions = [

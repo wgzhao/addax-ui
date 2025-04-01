@@ -5,7 +5,7 @@
       <template v-for="item in urls">
         <v-menu v-if="item.children">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" flat > {{ item.title }}</v-btn>
+            <v-btn v-bind="props" flat> {{ item.title }}</v-btn>
           </template>
           <v-list density="compact" nav v-for="(child, index) in item.children">
             <v-list-item :key="index" :to="{ path: child.path }" class="py-1" style="min-height: 20px;">
@@ -19,16 +19,27 @@
           </v-btn>
         </div>
       </template>
-      <v-btn v-if="username" >{{ username }}</v-btn>
-        <v-btn v-if="!username" :to="{path: '/login'}">
-              Login
-        </v-btn>
-           <!-- 深色/浅色模式切换按钮 -->
-          <v-btn
-        icon
-        @click="toggleTheme"
-        :title="isDarkTheme? '切换为浅色模式' : '切换为深色模式'"
-      >
+      <v-menu v-if="username" offset-y>
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" flat>{{ username }}</v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="logout">
+            <v-list-item-title>注销</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="$router.push('/personal-settings')">
+            <v-list-item-title>个人设置</v-list-item-title>
+          </v-list-item>
+          <v-list-item v-if="username === 'admin'">
+            <v-list-item-title>系统设置</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-btn v-if="!username" :to="{ path: '/login' }">
+        Login
+      </v-btn>
+      <!-- 深色/浅色模式切换按钮 -->
+      <v-btn icon @click="toggleTheme" :title="isDarkTheme ? '切换为浅色模式' : '切换为深色模式'">
         <v-icon>
           mdi-theme-light-dark
         </v-icon>
@@ -38,14 +49,14 @@
   <!-- End of Topbar -->
 </template>
 <script setup lang="ts">
-import { ref,computed,watch } from "vue";
+import { ref, computed, watch } from "vue";
 import { useAuthStore } from '@/stores/auth';
-import {useTheme} from "vuetify";
+import { useTheme } from "vuetify";
 
 // const {global} = useTheme();
 
 const authStore = useAuthStore();
-    // 计算属性绑定用户名
+// 计算属性绑定用户名
 const username = computed(() => authStore.username);
 
 const urls = ref([
@@ -135,4 +146,10 @@ const savedTheme = localStorage.getItem("theme");
 if (savedTheme) {
   theme.global.name.value = savedTheme;
 }
+
+// Logout function
+const logout = () => {
+  authStore.logout(); // Assuming authStore has a logout method
+  console.log("用户已注销");
+};
 </script>

@@ -46,18 +46,15 @@
         :items-length="totalItems" item-value="tid" :loading="loading" @update:options="loadItems" show-select
         v-model="selected">
         <template v-slot:item.action="{ item }">
-          <!-- add link for selectOption -->
-          <v-menu>
-            <template v-slot:activator="{ props }">
-              <v-btn icon="mdi-dots-vertical" v-bind="props"> </v-btn>
-            </template>
-            <v-list>
-              <v-list-item slim density="compact" v-for="(op, i) in selectOptions" :key="i"
-                @click="openDialog(op.value, item)">
-                <v-list-item-title class="text-button">{{ op.text }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <v-row justify="center" align="center" no-gutters>
+            <v-btn small color="primary" class="me-2" @click="openDialog('MainTableInfo', item)">主表信息</v-btn>
+            <v-btn small color="secondary" class="me-2" @click="openDialog('FieldsCompare', item)">字段对比</v-btn>
+            <v-btn small color="info" class="me-2" @click="openDialog('CmdList', item)">命令列表</v-btn>
+            <!-- <v-btn small color="warning" class="me-2" @click="openDialog('TableUsed', item)">使用场景</v-btn> -->
+            <v-btn small color="success" class="me-2" @click="openDialog('AddaxResult', item)">采集结果</v-btn>
+            <v-btn small color="info" class="me-2" @click="openDialog('LogFiles', item)">采集日志</v-btn>
+            <v-btn small color="error" @click="confirmDelete(item)">删除</v-btn>
+          </v-row>
         </template>
       </v-data-table-server>
     </v-card-text>
@@ -94,6 +91,19 @@
       <v-card-text>
         {{ alertMsg.text }}
       </v-card-text>
+    </v-card>
+  </v-dialog>
+
+  <!-- 删除确认对话框 -->
+  <v-dialog v-model="deleteDialogVisible" width="400">
+    <v-card>
+      <v-card-title class="text-h6">确认删除</v-card-title>
+      <v-card-text>您确定要删除此项吗？</v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn @click="deleteDialogVisible = false">取消</v-btn>
+        <v-btn color="error" @click="deleteItem">确定</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 
@@ -202,56 +212,56 @@ const headers = ref([{
   align: "center",
   sortable: false,
   key: "destOwner",
-  sort: "asc"
+  width: "5%"
 },
 {
   title: "系统名称",
   key: "sysName",
   align: "center",
-  sort: "asc",
-  sortable: true
+  sortable: true,
+  width: "10%"
 },
 {
   title: "源用户",
   key: "souOwner",
   align: "center",
-  sort: "asc",
-  sortable: true
+  sortable: true,
+  width: "5%"
 },
 {
   title: "目标表名",
   key: "destTablename",
   align: "center",
-  sort: "asc",
-  sortable: true
+  sortable: true,
+  width: "20%"
 },
 {
   title: "状态",
   key: "flag",
   align: "center",
-  sort: "asc",
-  sortable: true
+  sortable: true,
+  width: "10%"
 },
 {
   title: "剩余",
   key: "retryCnt",
   align: "center",
-  sort: "asc",
-  sortable: true
+  sortable: true,
+  width: "5%"
 },
 {
   title: "耗时",
   key: "runtime",
   align: "center",
-  sort: "asc",
-  sortable: true
+  sortable: true,
+  width: "5%"
 },
 {
   title: "操作",
   key: "action",
-  sort: "asc",
+  align: "center",
   sortable: false,
-  align: "center"
+  width: "35%"
 }
 ]);
 const alertMsg = ref({
@@ -409,5 +419,27 @@ function updateSchema() {
   }).catch(res => {
     alert(res.data);
   });
+}
+
+const deleteDialogVisible = ref(false);
+const itemToDelete = ref(null);
+
+function confirmDelete(item) {
+  itemToDelete.value = item;
+  deleteDialogVisible.value = true;
+}
+
+function deleteItem() {
+  if (itemToDelete.value) {
+    const tid = itemToDelete.value.tid;
+    OdsService.delete(tid).then(res => {
+      const index = ods.value.findIndex(i => i.tid === tid);
+      if (index > -1) {
+        ods.value.splice(index, 1); // 删除项
+      }
+      deleteDialogVisible.value = false;
+      itemToDelete.value = null;
+    });
+  }
 }
 </script>

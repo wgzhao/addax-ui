@@ -29,6 +29,7 @@ declare module 'vue-router/auto-routes' {
     '/maintable/params': RouteRecordInfo<'/maintable/params', '/maintable/params', Record<never, never>, Record<never, never>>,
     '/maintable/plan-task': RouteRecordInfo<'/maintable/plan-task', '/maintable/plan-task', Record<never, never>, Record<never, never>>,
     '/maintable/sp': RouteRecordInfo<'/maintable/sp', '/maintable/sp', Record<never, never>, Record<never, never>>,
+    '/personal-settings': RouteRecordInfo<'/personal-settings', '/personal-settings', Record<never, never>, Record<never, never>>,
     '/plan-task': RouteRecordInfo<'/plan-task', '/plan-task', Record<never, never>, Record<never, never>>,
     '/realtime': RouteRecordInfo<'/realtime', '/realtime', Record<never, never>, Record<never, never>>,
     '/risk-monitor': RouteRecordInfo<'/risk-monitor', '/risk-monitor', Record<never, never>, Record<never, never>>,

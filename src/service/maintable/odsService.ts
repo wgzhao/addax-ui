@@ -71,6 +71,10 @@ class OdsService {
   updateSchema() {
     return Requests.post(this.prefix + "/updateSchema")
   }
+
+  delete(tid: string) {
+    return Requests.delete(this.prefix + "/" + tid);
+  }
 }
 
 export default new OdsService();

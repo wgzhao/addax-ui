@@ -45,11 +45,7 @@
       <div class="table-container">
         <!-- tables -->
         <v-data-table :items="tables" :headers="headers" :items-per-page="15" density="compact" show-select
-          v-model="selectedTables" :search="search" item-value="souTablename" v-if="tables.length > 0" return-object>
-          <template v-slot:[`item.action`]="{ item, index }">
-            <v-btn color="error" class="btn btn-xs btn-danger" @click="deleteItem(index)">删除</v-btn>
-          </template>
-        </v-data-table>
+          v-model="selectedTables" :search="search" item-value="souTablename" v-if="tables.length > 0" return-object />
 
         <v-alert v-else-if="loadingTables" type="info" variant="tonal" class="mt-4">
           正在加载表列表，请稍候...
@@ -198,13 +194,6 @@ const fetchSourceData = () => {
   }).catch(error => {
     console.error("获取源系统列表失败", error);
   });
-};
-
-const deleteItem = (index: number) => {
-  if (tables.value.length > 1) {
-    // only more than one item
-    tables.value.splice(index, 1);
-  }
 };
 
 const saveItems = async () => {
