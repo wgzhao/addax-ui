@@ -45,12 +45,7 @@
       <div class="table-container">
         <!-- tables -->
         <v-data-table :items="tables" :headers="headers" :items-per-page="15" density="compact" show-select
-          v-model="selectedTables" :search="search" item-value="souTablename" v-if="tables.length > 0" return-object>
-          <template #item.destTablename="{ item }">
-            <v-text-field v-model="item.destTablename" density="compact" single-line hide-details
-              style="min-width: 200px;" />
-          </template>
-        </v-data-table>
+          v-model="selectedTables" :search="search" item-value="souTablename" v-if="tables.length > 0" return-object />
 
         <v-alert v-else-if="loadingTables" type="info" variant="tonal" class="mt-4">
           正在加载表列表，请稍候...

@@ -26,6 +26,10 @@
         </v-col>
         <v-spacer />
         <v-col cols="auto">
+          <v-btn variant="tonal" prepend-icon="mdi-delete" :disabled="selected.length === 0"
+            @click="confirmBatchDelete">批量删除</v-btn>
+        </v-col>
+        <v-col cols="auto">
           <v-btn variant="tonal" prepend-icon="mdi-pencil"
             @click="openDialog('BatchUpdate', 'BatchUpdate')">批量修改</v-btn>
         </v-col>
@@ -98,11 +102,11 @@
   <v-dialog v-model="deleteDialogVisible" width="400">
     <v-card>
       <v-card-title class="text-h6">确认删除</v-card-title>
-      <v-card-text>您确定要删除此项吗？</v-card-text>
+      <v-card-text>{{ deleteConfirmMessage }}</v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn @click="deleteDialogVisible = false">取消</v-btn>
-        <v-btn color="error" @click="deleteItem">确定</v-btn>
+        <v-btn color="error" @click="isBatchDelete ? batchDeleteItems() : deleteItem()">确定</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -415,17 +419,34 @@ const searchOds = () => {
 
 function updateSchema() {
   OdsService.updateSchema().then(res => {
-    alert(res.data);
+    alertMsg.value.show = true;
+    alertMsg.value.color = "success";
+    alertMsg.value.title = "更新成功";
+    alertMsg.value.text = res.data;
   }).catch(res => {
-    alert(res.data);
+    alertMsg.value.show = true;
+    alertMsg.value.color = "error";
+    alertMsg.value.title = "更新失败";
+    alertMsg.value.text = res.data || "更新失败";
   });
 }
 
 const deleteDialogVisible = ref(false);
 const itemToDelete = ref(null);
+const isBatchDelete = ref(false);
+const deleteConfirmMessage = ref('');
 
 function confirmDelete(item) {
   itemToDelete.value = item;
+  deleteConfirmMessage.value = '您确定要删除此项吗？';
+  isBatchDelete.value = false;
+  deleteDialogVisible.value = true;
+}
+
+function confirmBatchDelete() {
+  if (selected.value.length === 0) return;
+  deleteConfirmMessage.value = `您确定要删除选中的 ${selected.value.length} 项吗？`;
+  isBatchDelete.value = true;
   deleteDialogVisible.value = true;
 }
 
@@ -441,5 +462,20 @@ function deleteItem() {
       itemToDelete.value = null;
     });
   }
+}
+
+function batchDeleteItems() {
+  if (selected.value.length === 0) return;
+
+  selected.value.forEach(tid => {
+    OdsService.delete(tid).then(res => {
+      const index = ods.value.findIndex(i => i.tid === tid);
+      if (index > -1) {
+        ods.value.splice(index, 1); // 删除项
+      }
+    });
+  });
+  deleteDialogVisible.value = false;
+  selected.value = []; // 清空选中项
 }
 </script>
