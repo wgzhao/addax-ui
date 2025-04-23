@@ -137,7 +137,7 @@ const close = () => {
 const testConnect = () => {
   DSService.testConnect(sourceItem.value.dbConstr, sourceItem.value.dbUserEtl, sourceItem.value.dbPassEtl)
     .then(resp => {
-      if (resp.data === true) {
+      if (resp.code === 0) {
         alert("连接成功");
       } else {
         alert("连接失败");
