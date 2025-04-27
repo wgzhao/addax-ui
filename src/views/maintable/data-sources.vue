@@ -19,6 +19,10 @@
       </template>
       <v-card-text>
         <v-data-table :items="impdbs" :headers="headers" :search="searchValue" density="compact" items-per-page="20">
+          <template v-slot:item.bvalid="{ item }">
+            <v-chip size="small" :color="item.bvalid === 'Y' ? 'success' : 'error'"
+              :text="item.bvalid === 'Y' ? '已启用' : '已禁用'" class="ml-2"></v-chip>
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-btn color="secondary" class="btn btn-xs btn-info me-2" @click="doAction(item.id, 'show')">详情</v-btn>
             <v-btn color="primary" class="btn btn-xs btn-warning me-2" @click="doAction(item.id, 'edit')">编辑</v-btn>
@@ -84,6 +88,7 @@ const headers = [
   { title: "采集编号", key: "dbIdEtl" },
   { title: "服务编号", key: "dbIdDs" },
   { title: "连接串", key: "dbConstr" },
+  { title: "是否启用", key: "bvalid" },
   {
     title: "采集时间", key: "dbStart", value: item => {
       if (!item.dbStart) return '-';

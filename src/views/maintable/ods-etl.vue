@@ -51,13 +51,15 @@
         v-model="selected">
         <template v-slot:item.action="{ item }">
           <v-row justify="center" align="center" no-gutters>
-            <v-btn small color="primary" class="me-2" @click="openDialog('MainTableInfo', item)">主表信息</v-btn>
-            <v-btn small color="secondary" class="me-2" @click="openDialog('FieldsCompare', item)">字段对比</v-btn>
-            <v-btn small color="info" class="me-2" @click="openDialog('CmdList', item)">命令列表</v-btn>
-            <!-- <v-btn small color="warning" class="me-2" @click="openDialog('TableUsed', item)">使用场景</v-btn> -->
-            <v-btn small color="success" class="me-2" @click="openDialog('AddaxResult', item)">采集结果</v-btn>
-            <v-btn small color="info" class="me-2" @click="openDialog('LogFiles', item)">采集日志</v-btn>
-            <v-btn small color="error" @click="confirmDelete(item)">删除</v-btn>
+            <v-btn small density="compact" color="primary" class="mr-1"
+              @click="openDialog('MainTableInfo', item)">主表信息</v-btn>
+            <v-btn small density="compact" color="secondary" class="mr-1"
+              @click="openDialog('FieldsCompare', item)">字段对比</v-btn>
+            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('CmdList', item)">命令列表</v-btn>
+            <v-btn small density="compact" color="success" class="mr-1"
+              @click="openDialog('AddaxResult', item)">采集结果</v-btn>
+            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('LogFiles', item)">采集日志</v-btn>
+            <v-btn small density="compact" color="error" @click="confirmDelete(item)">删除</v-btn>
           </v-row>
         </template>
       </v-data-table-server>
@@ -216,14 +218,14 @@ const headers = ref([{
   align: "center",
   sortable: false,
   key: "destOwner",
-  width: "5%"
+  width: "3%"
 },
 {
   title: "系统名称",
   key: "sysName",
   align: "center",
   sortable: true,
-  width: "10%"
+  width: "13%"
 },
 {
   title: "源用户",
@@ -244,28 +246,28 @@ const headers = ref([{
   key: "flag",
   align: "center",
   sortable: true,
-  width: "10%"
+  width: "3%"
 },
 {
   title: "剩余",
   key: "retryCnt",
   align: "center",
   sortable: true,
-  width: "5%"
+  width: "2%"
 },
 {
   title: "耗时",
   key: "runtime",
   align: "center",
   sortable: true,
-  width: "5%"
+  width: "3%"
 },
 {
   title: "操作",
   key: "action",
   align: "center",
   sortable: false,
-  width: "35%"
+  width: "40%"
 }
 ]);
 const alertMsg = ref({
@@ -290,7 +292,7 @@ const showModal = ref({
 type ShowModalKey = keyof typeof showModal.value;
 
 // 打开对话框并加载相应的组件
-function openDialog(componentName, com: any) {
+function openDialog(componentName: string, com: any) {
   currentComponent.value = componentMap[componentName]
   setParams(componentName, com);
   dialogVisible.value = true; // 打开对话框
