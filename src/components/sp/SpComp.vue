@@ -8,8 +8,8 @@
       <tbody>
         <template v-for="d in form">
           <tr>
-            <td>{{ d.KIND }}</td>
-            <td>{{ d.USED }}</td>
+            <td>{{ d.kind }}</td>
+            <td>{{ d.used }}</td>
           </tr>
         </template>
       </tbody>

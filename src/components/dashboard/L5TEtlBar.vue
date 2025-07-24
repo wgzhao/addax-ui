@@ -31,11 +31,11 @@ const chartReady = ref(false);
 
 // 动态生成图表数据
 const chartData = computed(() => {
-  const uniqueFIDs = [...new Set(rawData.value.map((item) => item.FID))].sort();
+  const uniqueFIDs = [...new Set(rawData.value.map((item) => item.fid))].sort();
   const groupedByDate = rawData.value.reduce((acc, item) => {
-    const date = item.TRADEDATE.toString();
+    const date = item.tradedate.toString();
     if (!acc[date]) acc[date] = {};
-    acc[date][item.FID] = item.RUNTIME;
+    acc[date][item.fid] = item.runtime;
     return acc;
   }, {});
 

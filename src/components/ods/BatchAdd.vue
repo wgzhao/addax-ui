@@ -129,11 +129,11 @@ interface Table {
 }
 // 选择的采集源ID
 const selectedSourceId = ref({
-  SYSID: "",
-  URL: "",
-  USERNAME: "",
-  PASSWORD: "",
-  NAME: ""
+  sysid: "",
+  url: "",
+  username: "",
+  password: "",
+  name: ""
 });
 
 const selectedDb = ref()

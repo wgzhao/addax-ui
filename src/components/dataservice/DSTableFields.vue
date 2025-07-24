@@ -15,11 +15,11 @@ const headers = ref([
     value: "",
     align: "center",
     children: [
-      { title: "字段名", key: "COLUMN_NAME" },
-      { title: "字段类型", key: "DATA_TYPE" },
-      { title: "字段长度", key: "DATA_LENGTH" },
-      { title: "数值型长度", key: "DATA_PRECISION" },
-      { title: "数值型精度", key: "DATA_SCALE" }
+      { title: "字段名", key: "column_name" },
+      { title: "字段类型", key: "data_type" },
+      { title: "字段长度", key: "data_length" },
+      { title: "数值型长度", key: "data_precision" },
+      { title: "数值型精度", key: "data_scale" }
     ]
   },
   {
@@ -43,5 +43,4 @@ onMounted(() => {
   fetchData();
 });
 </script>
-<style>
-</style>
+<style></style>
