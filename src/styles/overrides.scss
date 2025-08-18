@@ -7,18 +7,12 @@ html {
   }
 
 // 表格选中行样式
-.v-data-table {
-  tbody {
-    tr {
-      &:has(input[type="checkbox"]:checked) {
-        background-color: rgba(105, 108, 255, 0.08) !important;
-        border-left: 3px solid #696CFF !important;
-        
-        // 深色模式下的样式
-        .v-theme--dark & {
-          background-color: rgba(105, 108, 255, 0.15) !important;
-        }
-      }
-    }
-  }
+/* 取消 :has 以减少复杂选择器带来的回流成本，改为在行上添加 selected-row 类 */
+.selected-row {
+  background-color: rgba(105, 108, 255, 0.08) !important;
+  border-left: 3px solid #696CFF !important;
+}
+
+.v-theme--dark .selected-row {
+  background-color: rgba(105, 108, 255, 0.15) !important;
 }

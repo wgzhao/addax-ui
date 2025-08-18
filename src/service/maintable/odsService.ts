@@ -49,7 +49,7 @@ class OdsService {
   }
 
   // 5. 保存
-  save(data: Map<string, string>) {
+  save(data: any) {
     return Requests.post(this.prefix + "/save", data);
   }
 

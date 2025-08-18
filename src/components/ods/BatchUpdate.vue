@@ -31,6 +31,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { notify } from '@/stores/notifier';
 import OdsService from "@/service/maintable/odsService";
 
 const props = defineProps({
@@ -76,16 +77,14 @@ function updateItem() {
   loading.value = false;
   // Here you would call your actual update service
   OdsService.updateStatus(payload)
-    .then((res) => {
-      console.log("Items updated successfully");
-      alert("批量更新成功")
-      emit("closeDialog")
-      emit("update:batch", payload)
-      // Close the dialog
-      // dialogVisible.value = false;
+    .then(() => {
+      console.log('Items updated successfully');
+      notify('批量更新成功', 'success');
+      emit('closeDialog');
+      emit('update:batch', payload);
     })
     .catch((error) => {
-      alert("Error updating items:" + error);
+      notify('批量更新失败: ' + error, 'error');
     });
 }
 </script>

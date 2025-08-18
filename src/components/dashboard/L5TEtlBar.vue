@@ -6,21 +6,30 @@
 </template>
 
 <script setup lang="ts">
-import { Bar } from "vue-chartjs";
-import requests from "@/utils/requests";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-} from "chart.js";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted } from 'vue';
+import requests from '@/utils/requests';
+import { defineAsyncComponent } from 'vue';
+// 动态加载 chart.js 相关（首屏不再打包进主 bundle）
+let ChartJS: any;
+const Bar = defineAsyncComponent(async () => {
+  const [{ Bar }, chart] = await Promise.all([
+    import('vue-chartjs'),
+    import('chart.js')
+  ]);
+  ChartJS = chart.Chart;
+  chart.Chart.register(
+    chart.Title,
+    chart.Tooltip,
+    chart.Legend,
+    chart.BarElement,
+    chart.CategoryScale,
+    chart.LinearScale
+  );
+  return Bar;
+});
 import { useTheme } from "vuetify"; // Vuetify 主题钩子
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+// ChartJS 注册延迟到异步组件加载时完成
 
 // Vuetify 主题钩子
 const vuetifyTheme = useTheme();
@@ -97,18 +106,15 @@ const chartOptions = computed(() => ({
   plugins: {
     legend: {
       display: true,
-      position: "bottom",
+      position: 'bottom' as const,
       labels: {
-        color: isDark.value ? "#ffffff" : "#333333",
+        color: isDark.value ? '#ffffff' : '#333333',
       },
     },
     tooltip: {
-      enabled: true,
-      mode: "index",
-      intersect: false,
-      backgroundColor: isDark.value ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.8)",
-      titleColor: isDark.value ? "#ffffff" : "#333333",
-      bodyColor: isDark.value ? "#ffffff" : "#333333",
+      backgroundColor: isDark.value ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)',
+      titleColor: isDark.value ? '#ffffff' : '#333333',
+      bodyColor: isDark.value ? '#ffffff' : '#333333'
     },
     title: {
       display: false,

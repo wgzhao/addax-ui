@@ -4,7 +4,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="4">
-          <v-select :items="sourceSystemList" item-title="NAME" v-model="selectedSourceId" item-value="SYSID"
+          <v-select :items="sourceSystemList" item-title="name" v-model="selectedSourceId" item-value="sysid"
             density="compact" return-object single-line>
             <template #prepend>
               <span class="me-2">选择采集源</span>
@@ -12,7 +12,7 @@
           </v-select>
         </v-col>
         <v-col cols="4">
-          <v-select :items="sourceDbs" :disabled="!selectedSourceId.URL" v-model="selectedDb" density="compact"
+          <v-select :items="sourceDbs" :disabled="!selectedSourceId.url" v-model="selectedDb" density="compact"
             single-line>
             <template #prepend>
               <span class="me-2">选择库</span>
@@ -80,6 +80,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
+import { notify } from '@/stores/notifier';
 import request from "@/utils/requests";
 
 const props = defineProps({
@@ -166,7 +167,7 @@ const sourceDbs = ref([]);
 const selectedCnt = computed(() => selectedTables.value.length);
 
 watch(selectedSourceId, (val) => {
-  if (val.URL) {
+  if (val.url) {
     getDbsBySourceId();
   }
 });
@@ -175,9 +176,9 @@ const getDbsBySourceId = async () => {
   try {
     const res = await request.post(`/maintable/ods/dbSources`,
       {
-        url: selectedSourceId.value.URL,
-        username: selectedSourceId.value.USERNAME,
-        password: selectedSourceId.value.PASSWORD
+        url: selectedSourceId.value.url,
+        username: selectedSourceId.value.username,
+        password: selectedSourceId.value.password
       }
     );
     sourceDbs.value = res.data;
@@ -197,7 +198,7 @@ const fetchSourceData = () => {
 
 const saveItems = async () => {
   if (selectedCnt.value === 0) {
-    alert("请选择至少一个表");
+    notify('请选择至少一个表', 'warning');
     return;
   }
 
@@ -208,7 +209,7 @@ const saveItems = async () => {
     const saveItem = { ...item };
     // set destTablename
     if (saveItem.destTablename == "") {
-      saveItem.destTablename = saveItem.souTablename.toUpperCase();
+      saveItem.destTablename = saveItem.souTablename;
     }
     return saveItem;
   });
@@ -226,8 +227,8 @@ const saveItems = async () => {
     showSuccessDialog.value = true;
 
   } catch (error) {
-    console.error("保存失败", error);
-    alert("保存失败: " + (error.response?.data || error.message || "未知错误"));
+    console.error('保存失败', error);
+    notify('保存失败: ' + (error.response?.data || error.message || '未知错误'), 'error');
   } finally {
     loadingSave.value = false;
   }
@@ -240,7 +241,7 @@ const handleSuccessConfirm = () => {
 };
 
 const getTables = async () => {
-  if (!selectedSourceId.value.SYSID || !selectedDb.value) {
+  if (!selectedSourceId.value.sysid || !selectedDb.value) {
     tableLoadError.value = '请选择源系统和数据库';
     return;
   }
@@ -254,10 +255,10 @@ const getTables = async () => {
 
     const res = await request.post(`/maintable/ods/tables`,
       {
-        sysId: selectedSourceId.value.SYSID,
-        url: selectedSourceId.value.URL,
-        username: selectedSourceId.value.USERNAME,
-        password: selectedSourceId.value.PASSWORD,
+        sysId: selectedSourceId.value.sysid,
+        url: selectedSourceId.value.url,
+        username: selectedSourceId.value.username,
+        password: selectedSourceId.value.password,
         db: selectedDb.value
       }
     );
@@ -266,10 +267,10 @@ const getTables = async () => {
       res.data.forEach(element => {
         // new defaultItem and populate it
         const newItem = { ...defaultItem.value };
-        newItem.souSysid = selectedSourceId.value.SYSID;
+        newItem.souSysid = selectedSourceId.value.sysid;
         newItem.souOwner = selectedDb.value;
         newItem.souTablename = element;
-        newItem.destTablename = element.toUpperCase();
+        newItem.destTablename = element;
         tables.value.push(newItem);
       });
       console.log(tables.value);

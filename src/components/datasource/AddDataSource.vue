@@ -100,6 +100,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
+import { notify } from '@/stores/notifier';
 import DSService from "@/service/maintable/datasourceService";
 import { TbImpDb } from "@/types/database";
 
@@ -118,12 +119,12 @@ const save = () => {
   if (props.mode === "add" || props.mode === "edit") {
     DSService.save(sourceItem.value)
       .then(resp => {
-        alert("保存成功");
+        notify('保存成功', 'success');
         emit('handleSave');
         emit('closeDialog');
       })
       .catch(error => {
-        alert("保存失败:" + error);
+        notify('保存失败: ' + error, 'error');
       });
     //emit('save');
   }
@@ -138,13 +139,13 @@ const testConnect = () => {
   DSService.testConnect(sourceItem.value.dbConstr, sourceItem.value.dbUserEtl, sourceItem.value.dbPassEtl)
     .then(resp => {
       if (resp.code === 0) {
-        alert("连接成功");
+        notify('连接成功', 'success');
       } else {
-        alert("连接失败");
+        notify('连接失败', 'warning');
       }
     })
     .catch(error => {
-      alert("连接失败:" + error);
+      notify('连接失败: ' + error, 'error');
     });
 }
 onMounted(() => {

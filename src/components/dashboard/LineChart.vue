@@ -5,32 +5,29 @@
 </template>
 
 <script setup lang="ts">
-import request from "@/utils/requests";
-import { ref, computed, onMounted } from "vue";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from "chart.js";
-import { Line } from "vue-chartjs";
+import request from '@/utils/requests';
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+// 动态组件
+const Line = defineAsyncComponent(async () => {
+  const [{ Line }, chart] = await Promise.all([
+    import('vue-chartjs'),
+    import('chart.js')
+  ]);
+  chart.Chart.register(
+    chart.CategoryScale,
+    chart.LinearScale,
+    chart.PointElement,
+    chart.LineElement,
+    chart.Title,
+    chart.Tooltip,
+    chart.Legend,
+    chart.Filler
+  );
+  return Line;
+});
 import { useTheme } from "vuetify"; // Vuetify 主题钩子
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+// 注册行为已在异步加载时执行
 
 // Vuetify 主题检测
 const vuetifyTheme = useTheme();
@@ -105,17 +102,11 @@ const areaOptions = computed(() => ({
       },
     },
     tooltip: {
-      titleMarginBottom: 10,
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
+      // 使用官方推荐的 intersect:false + interaction 配置，而不是直接设 mode 避免 TS 类型冲突
       intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      backgroundColor: isDark.value ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.8)",
-      titleColor: isDark.value ? "#ffffff" : "#333333",
-      bodyColor: isDark.value ? "#ffffff" : "#333333",
+      backgroundColor: isDark.value ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)',
+      titleColor: isDark.value ? '#ffffff' : '#333333',
+      bodyColor: isDark.value ? '#ffffff' : '#333333'
     },
     title: {
       display: false,
@@ -152,10 +143,12 @@ onMounted(() => {
 }
 
 .dark-mode {
-  background-color: #1e293b; /* 暗模式背景 */
+  background-color: #1e293b;
+  /* 暗模式背景 */
 }
 
 .chart-wrapper:not(.dark-mode) {
-  background-color: #ffffff; /* 亮模式背景 */
+  background-color: #ffffff;
+  /* 亮模式背景 */
 }
 </style>

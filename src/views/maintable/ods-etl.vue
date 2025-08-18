@@ -48,7 +48,7 @@
     <v-card-text>
       <v-data-table-server density="compact" :items="ods" :headers="headers" :items-per-page="currPageSize"
         :items-length="totalItems" item-value="tid" :loading="loading" @update:options="loadItems" show-select
-        v-model="selected">
+        v-model="selected" :item-class="getRowClass">
         <template v-slot:item.action="{ item }">
           <v-row justify="center" align="center" no-gutters>
             <v-btn small density="compact" color="primary" class="mr-1"
@@ -116,17 +116,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef } from "vue";
+import { ref, shallowRef, defineAsyncComponent } from "vue";
+import { debounce } from '@/utils/debounce';
 import { createSort } from '@/utils/';
 import OdsService from "@/service/maintable/odsService";
-import MainTableInfo from "@/components/ods/MainTable.vue";
-import FieldsCompare from "@/components/ods/FieldsCompare.vue";
-import CmdList from "@/components/ods/CmdList.vue";
-import TableUsed from "@/components/ods/TableUsed.vue";
-import AddaxResult from "@/components/ods/AddaxResult.vue";
-import BatchAdd from "@/components/ods/BatchAdd.vue";
-import LogFiles from "@/components/ods/LogFiles.vue";
-import BatchUpdate from "@/components/ods/BatchUpdate.vue";
+// 异步按需加载组件，减轻首屏体积
+const MainTableInfo = defineAsyncComponent(() => import('@/components/ods/MainTable.vue'));
+const FieldsCompare = defineAsyncComponent(() => import('@/components/ods/FieldsCompare.vue'));
+const CmdList = defineAsyncComponent(() => import('@/components/ods/CmdList.vue'));
+const TableUsed = defineAsyncComponent(() => import('@/components/ods/TableUsed.vue'));
+const AddaxResult = defineAsyncComponent(() => import('@/components/ods/AddaxResult.vue'));
+const BatchAdd = defineAsyncComponent(() => import('@/components/ods/BatchAdd.vue'));
+const LogFiles = defineAsyncComponent(() => import('@/components/ods/LogFiles.vue'));
+const BatchUpdate = defineAsyncComponent(() => import('@/components/ods/BatchUpdate.vue'));
 
 const ods = ref([]);
 const search = ref("");
@@ -154,6 +156,10 @@ const componentMap = {
   LogFiles,
   BatchUpdate
 };
+
+function getRowClass(item: any) {
+  return selected.value.includes(item.tid) ? 'selected-row' : '';
+}
 
 const selectOptions = [{
   text: "主表信息",
@@ -213,62 +219,15 @@ const statusOptions = [{
 
 const runStatus = ref("");
 
-const headers = ref([{
-  title: "目标用户",
-  align: "center",
-  sortable: false,
-  key: "destOwner",
-  width: "3%"
-},
-{
-  title: "系统名称",
-  key: "sysName",
-  align: "center",
-  sortable: true,
-  width: "13%"
-},
-{
-  title: "源用户",
-  key: "souOwner",
-  align: "center",
-  sortable: true,
-  width: "5%"
-},
-{
-  title: "目标表名",
-  key: "destTablename",
-  align: "center",
-  sortable: true,
-  width: "20%"
-},
-{
-  title: "状态",
-  key: "flag",
-  align: "center",
-  sortable: true,
-  width: "3%"
-},
-{
-  title: "剩余",
-  key: "retryCnt",
-  align: "center",
-  sortable: true,
-  width: "2%"
-},
-{
-  title: "耗时",
-  key: "runtime",
-  align: "center",
-  sortable: true,
-  width: "3%"
-},
-{
-  title: "操作",
-  key: "action",
-  align: "center",
-  sortable: false,
-  width: "40%"
-}
+const headers = ref([
+  { title: '目标用户', align: 'center' as const, sortable: false, key: 'destOwner', width: '3%' },
+  { title: '系统名称', key: 'sysName', align: 'center' as const, sortable: true, width: '13%' },
+  { title: '源用户', key: 'souOwner', align: 'center' as const, sortable: true, width: '5%' },
+  { title: '目标表名', key: 'destTablename', align: 'center' as const, sortable: true, width: '20%' },
+  { title: '状态', key: 'flag', align: 'center' as const, sortable: true, width: '3%' },
+  { title: '剩余', key: 'retryCnt', align: 'center' as const, sortable: true, width: '2%' },
+  { title: '耗时', key: 'runtime', align: 'center' as const, sortable: true, width: '3%' },
+  { title: '操作', key: 'action', align: 'center' as const, sortable: false, width: '40%' }
 ]);
 const alertMsg = ref({
   show: false,
@@ -411,13 +370,12 @@ const loadItems = ({
   });
 };
 
-const searchOds = () => {
-  loadItems({
-    page: 0,
-    itemsPerPage: currPageSize.value,
-    sortBy: currentSortParam.value
-  });
-};
+const _searchCore = () => loadItems({
+  page: 0,
+  itemsPerPage: currPageSize.value,
+  sortBy: currentSortParam.value
+});
+const searchOds = debounce(_searchCore, 400);
 
 function updateSchema() {
   OdsService.updateSchema().then(res => {

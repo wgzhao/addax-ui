@@ -13,10 +13,15 @@ import p from './pinia'
 import type { App } from 'vue'
 
 //highlight
-import HljsVuePlugin from '@highlightjs/vue-plugin'
-import 'highlight.js/styles/github-dark.css'
-import 'highlight.js/lib/common'
+// 延迟加载 highlight.js：仅在实际需要的组件中动态导入
+// import HljsVuePlugin from '@highlightjs/vue-plugin'
+// import 'highlight.js/styles/github-dark.css'
+// import 'highlight.js/lib/common'
 
 export function registerPlugins(app: App) {
-  app.use(vuetify).use(router).use(p).use(HljsVuePlugin)
+  app.use(vuetify).use(router).use(p);
+  // 如果后续需要代码高亮，可在对应组件里：
+  // const { default: HljsVuePlugin } = await import('@highlightjs/vue-plugin')
+  // import('highlight.js/styles/github-dark.css')
+  // app.use(HljsVuePlugin)
 }

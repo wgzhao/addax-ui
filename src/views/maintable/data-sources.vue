@@ -70,6 +70,7 @@
 import { computed, onMounted, ref } from "vue";
 import DSService from "@/service/maintable/datasourceService";
 import AddDataSource from "@/components/datasource/AddDataSource.vue";
+import { notify } from '@/stores/notifier';
 
 const impdbs = ref([]);
 const isShow = ref(false)
@@ -176,12 +177,12 @@ const deleteSource = (id) => {
   // 这里实现删除逻辑，例如调用 API 接口或移除本地数据
   DSService.deleteItem(id)
     .then(resp => {
-      alert("删除成功");
+      notify('删除成功', 'success');
       impdbs.value = impdbs.value.filter((item) => item.id !== id);
       itemIdToDelete.value = null;
     })
     .catch(error => {
-      alert("删除失败:" + error);
+      notify('删除失败: ' + error, 'error');
     });
 };
 onMounted(() => {
