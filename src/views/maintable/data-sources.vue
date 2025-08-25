@@ -179,6 +179,10 @@ const deleteSource = (id) => {
     .then(resp => {
       notify('删除成功', 'success');
       impdbs.value = impdbs.value.filter((item) => item.id !== id);
+      // 如果当前列表被删到 0，可重新拉取一遍（为未来分页兼容）
+      if (impdbs.value.length === 0) {
+        retrieveImpDB();
+      }
       itemIdToDelete.value = null;
     })
     .catch(error => {

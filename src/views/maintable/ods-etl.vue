@@ -91,14 +91,6 @@
     </v-card>
   </v-dialog>
 
-  <v-dialog v-model="alertMsg.show" width="auto">
-    <v-card>
-      <v-toolbar :color="alertMsg.color" :title="alertMsg.title"></v-toolbar>
-      <v-card-text>
-        {{ alertMsg.text }}
-      </v-card-text>
-    </v-card>
-  </v-dialog>
 
   <!-- 删除确认对话框 -->
   <v-dialog v-model="deleteDialogVisible" width="400">
@@ -120,6 +112,7 @@ import { ref, shallowRef, defineAsyncComponent } from "vue";
 import { debounce } from '@/utils/debounce';
 import { createSort } from '@/utils/';
 import OdsService from "@/service/maintable/odsService";
+import { notify } from '@/stores/notifier';
 // 异步按需加载组件，减轻首屏体积
 const MainTableInfo = defineAsyncComponent(() => import('@/components/ods/MainTable.vue'));
 const FieldsCompare = defineAsyncComponent(() => import('@/components/ods/FieldsCompare.vue'));
@@ -229,13 +222,7 @@ const headers = ref([
   { title: '耗时', key: 'runtime', align: 'center' as const, sortable: true, width: '3%' },
   { title: '操作', key: 'action', align: 'center' as const, sortable: false, width: '40%' }
 ]);
-const alertMsg = ref({
-  show: false,
-  color: "",
-  icon: "",
-  text: "",
-  title: ""
-});
+// 已使用全局 Notifier 替换旧的 alertMsg
 
 const showModal = ref({
   MainTableInfo: false,
@@ -302,18 +289,10 @@ function setParams(compName: string, comp: any) {
 const doEtl = (ctype: string) => {
   OdsService.execETL(ctype)
     .then(res => {
-      alertMsg.value.show = true;
-      alertMsg.value.color = "success";
-      alertMsg.value.icon = "mdi-check-circle";
-      alertMsg.value.title = "启动成功";
-      alertMsg.value.text = JSON.stringify(res);
+      notify('启动成功: ' + (res.message || ''), 'success', 3000, 'mdi-check-circle');
     })
     .catch(res => {
-      alertMsg.value.show = true;
-      alertMsg.value.color = "error";
-      alertMsg.value.icon = "mdi-alert-circle";
-      alertMsg.value.title = "启动失败";
-      alertMsg.value.text = res;
+      notify('启动失败: ' + (res?.message || res), 'error', 4000, 'mdi-alert-circle');
     });
 };
 
@@ -379,15 +358,9 @@ const searchOds = debounce(_searchCore, 400);
 
 function updateSchema() {
   OdsService.updateSchema().then(res => {
-    alertMsg.value.show = true;
-    alertMsg.value.color = "success";
-    alertMsg.value.title = "更新成功";
-    alertMsg.value.text = res.data;
+    notify('更新成功', 'success', 3000, 'mdi-check-circle');
   }).catch(res => {
-    alertMsg.value.show = true;
-    alertMsg.value.color = "error";
-    alertMsg.value.title = "更新失败";
-    alertMsg.value.text = res.data || "更新失败";
+    notify('更新失败: ' + (res?.data || res?.message || ''), 'error', 4000, 'mdi-alert-circle');
   });
 }
 
@@ -426,16 +399,19 @@ function deleteItem() {
 
 function batchDeleteItems() {
   if (selected.value.length === 0) return;
-
-  selected.value.forEach(tid => {
-    OdsService.delete(tid).then(res => {
-      const index = ods.value.findIndex(i => i.tid === tid);
-      if (index > -1) {
-        ods.value.splice(index, 1); // 删除项
-      }
-    });
+  const tids = [...selected.value];
+  // 并发删除所有选中项
+  Promise.all(
+    tids.map(tid =>
+      OdsService.delete(tid).catch(() => null) // swallow 单个失败，后续可加入失败提示收集
+    )
+  ).then(() => {
+    // 关闭确认框 & 清空选中
+    deleteDialogVisible.value = false;
+    selected.value = [];
+    // 重新加载数据，防止当前页面空白
+    // 直接调用核心加载函数，避免 debounce 延迟
+    _searchCore();
   });
-  deleteDialogVisible.value = false;
-  selected.value = []; // 清空选中项
 }
 </script>

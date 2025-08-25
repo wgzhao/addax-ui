@@ -6,12 +6,7 @@
         <v-card-text>
           <v-data-table :headers="headers" :items="dicts" density="compact">
             <template v-slot:item.actions="{ item }">
-              <v-icon
-                icon="mdi-chevron-right"
-                size="small"
-                class="me-2"
-                @click="getDictionary(item.dictCode)"
-              >
+              <v-icon icon="mdi-chevron-right" size="small" class="me-2" @click="getDictionary(item.dictCode)">
               </v-icon>
             </template>
           </v-data-table>
@@ -24,21 +19,15 @@
         <v-card-text>
           <v-row>
             <v-col cols="auto">
-              <span class="text-h6">{{currEntryCode}} 参数详情</span>
-              </v-col>
-              <v-spacer></v-spacer>
-              <v-col>
-                <v-btn color="info" class="btn btn-primary" @click="addItem">新增</v-btn>
-              </v-col>
+              <span class="text-h6">{{ currEntryCode }} 参数详情</span>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col>
+              <v-btn color="info" class="btn btn-primary" @click="addItem">新增</v-btn>
+            </v-col>
           </v-row>
-          <v-data-table
-            v-if="dictionaries"
-            :headers="dictionaryHeaders"
-            :items="dictionaries"
-            items-per-page="20"
-            density="default"
-            class="elevation-1"
-          >
+          <v-data-table v-if="dictionaries" :headers="dictionaryHeaders" :items="dictionaries" items-per-page="20"
+            density="default" class="elevation-1">
             <template v-slot:top>
               <!-- edit/new form -->
               <v-dialog v-model="dialog" max-width="500px">
@@ -47,32 +36,16 @@
                     <span class="text-h5">{{ formTitle }}</span>
                   </v-card-title>
                   <v-card-text>
-                    <v-text-field
-                      v-model="editedItem.entryCode"
-                      label="参数值"
-                      disabled
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="editedItem.entryValue"
-                      label="参数项"
-                    ></v-text-field>
-                    <v-textarea
-                      v-model="editedItem.entryContent"
-                      label="参数名称"
-                    ></v-textarea>
-                    <v-text-field
-                      v-model="editedItem.remark"
-                      label="备注"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.entryCode" label="参数值" disabled></v-text-field>
+                    <v-text-field v-model="editedItem.entryValue" label="参数项"></v-text-field>
+                    <v-textarea v-model="editedItem.entryContent" label="参数名称"></v-textarea>
+                    <v-text-field v-model="editedItem.remark" label="备注"></v-text-field>
                   </v-card-text>
                   <v-card-actions>
-                    <v-btn color="info"  @click="close">
+                    <v-btn color="info" @click="close">
                       取消
                     </v-btn>
-                    <v-btn
-                      color="primary"
-                      @click="saveDictionary"
-                    >
+                    <v-btn color="primary" @click="saveDictionary">
                       保存
                     </v-btn>
                   </v-card-actions>
@@ -81,21 +54,11 @@
               <!-- delete alert dialog -->
               <v-dialog v-model="dialogDelete" max-width="500px">
                 <v-card>
-                  <v-card-title class="text-h5"
-                    >Are you sure you want to delete this item?</v-card-title
-                  >
+                  <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn
-                      color="warning"
-                      @click="closeDelete"
-                      >Cancel</v-btn
-                    >
-                    <v-btn
-                      color="primary"
-                      @click="deleteItemConfirm"
-                      >OK</v-btn
-                    >
+                    <v-btn color="warning" @click="closeDelete">Cancel</v-btn>
+                    <v-btn color="primary" @click="deleteItemConfirm">OK</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -120,6 +83,7 @@
 <script setup>
 import { ref, onMounted, computed, watch, nextTick } from "vue";
 import DictService from "@/service/dictService";
+import { notify } from '@/stores/notifier';
 
 const dicts = ref([]);
 const dictionaries = ref([]);
@@ -195,18 +159,25 @@ const editItem = item => {
 };
 
 const deleteItem = item => {
-  // editedIndex.value = dictionaries.value.indexOf(item);
-  // editedItem.value = Object.assign({}, item);
-  editedItem.value = item;
+  editedIndex.value = dictionaries.value.indexOf(item);
+  editedItem.value = Object.assign({}, item);
   dialogDelete.value = true;
 };
 
 const deleteItemConfirm = () => {
-  DictService.deleteDictItem(editedItem.value.entryCode, editedItem.value.entryValue).then(res => {
-    editedItem.value = Object.assign({}, defaultItem.value);
-    dictionaries.value.splice(editedIndex.value, 1);
-    closeDelete();
-  });
+  const ec = editedItem.value.entryCode;
+  const ev = editedItem.value.entryValue;
+  DictService.deleteDictItem(ec, ev)
+    .then(() => {
+      if (editedIndex.value > -1) {
+        dictionaries.value.splice(editedIndex.value, 1);
+      }
+      notify('删除成功', 'success');
+      closeDelete();
+    })
+    .catch(err => {
+      notify('删除失败: ' + err, 'error');
+    });
 };
 const saveDictionary = () => {
   if (editedIndex.value > -1) {
@@ -215,9 +186,9 @@ const saveDictionary = () => {
     dictionaries.value.push(editedItem.value);
   }
   // save
-  DictService.createOrUpdateDictItem(editedItem.value).then(res => {
-    console.log(res.data);
-  });
+  DictService.createOrUpdateDictItem(editedItem.value)
+    .then(() => notify('保存成功', 'success'))
+    .catch(err => notify('保存失败: ' + err, 'error'));
   close();
 };
 onMounted(() => {
@@ -230,11 +201,12 @@ onMounted(() => {
 <style lang="css" scoped>
 /* 覆盖 .v-data-table 的斑马纹背景 */
 .v-data-table .v-data-table__divider:nth-child(odd) {
-  background-color: #fafafa !important; /* 奇数行的背景颜色 */
+  background-color: #fafafa !important;
+  /* 奇数行的背景颜色 */
 }
 
 .v-data-table .v-data-table__divider:nth-child(even) {
-  background-color: #ffffff !important; /* 偶数行的背景颜色 */
+  background-color: #ffffff !important;
+  /* 偶数行的背景颜色 */
 }
-
 </style>
