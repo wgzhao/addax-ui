@@ -63,8 +63,8 @@
             <v-card-title class="detail-title">项目完成率</v-card-title>
             <v-card-text>
               <v-list class="progress-list" dense>
-                <v-list-item v-for="ratio in ratios" :key="ratio.over_prec">
-                  <v-progress-linear :model-value="ratio.over_prec" :class="ratio.bg_color" height="20" rounded
+                <v-list-item v-for="ratio in ratios" :key="ratio.overPrec">
+                  <v-progress-linear :model-value="ratio.overPrec" :class="ratio.bgColor" height="20" rounded
                     :color="isDark ? 'cyan' : 'blue'"
                     :bg-color="isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'">
                     <template v-slot:default="{ value }">

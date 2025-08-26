@@ -42,7 +42,7 @@ const chartReady = ref(false);
 const chartData = computed(() => {
   const uniqueFIDs = [...new Set(rawData.value.map((item) => item.fid))].sort();
   const groupedByDate = rawData.value.reduce((acc, item) => {
-    const date = item.tradedate.toString();
+    const date = item.tradeDate.toString();
     if (!acc[date]) acc[date] = {};
     acc[date][item.fid] = item.runtime;
     return acc;
