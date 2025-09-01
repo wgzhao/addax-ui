@@ -14,9 +14,9 @@ routes.forEach((route) => {
 })
 
 routes.push({
-  path: "/personal-settings",
-  name: "PersonalSettings",
-  component: () => import("@/views/personal-settings.vue"),
+  path: '/personal-settings',
+  name: 'PersonalSettings',
+  component: () => import('@/views/personal-settings.vue')
 })
 
 const router = createRouter({

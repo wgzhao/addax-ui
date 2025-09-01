@@ -1,6 +1,6 @@
 // import axios from "axios";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { notify } from '@/stores/notifier';
+import { notify } from '@/stores/notifier'
 import { useAuthStore } from '@/stores/auth'
 
 // axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -9,10 +9,10 @@ console.log('mode = ' + import.meta.env.MODE)
 
 // 后端统一返回结构
 export interface ResponseData<T = any> {
-  code: number;
-  message: string;
-  data: T;
-  [k: string]: any;
+  code: number
+  message: string
+  data: T
+  [k: string]: any
 }
 
 class Requests {
@@ -37,7 +37,7 @@ class Requests {
         return config
       },
       (error) => {
-        console.log(error);
+        console.log(error)
         return Promise.reject(error) // 请求发生错误时直接抛出
       }
     )
@@ -45,15 +45,15 @@ class Requests {
     // 配置响应拦截器
     this.instance.interceptors.response.use(
       (response) => {
-        const resp: ResponseData<any> = response.data;
+        const resp: ResponseData<any> = response.data
         if (typeof resp.code !== 'undefined' && resp.code !== 0) {
-          notify(resp.message || '请求失败', 'error');
+          notify(resp.message || '请求失败', 'error')
           // 统一包装为 rejected Promise
-          return Promise.reject(resp.message);
+          return Promise.reject(resp.message)
         }
         // 将处理结果重新赋回以保持 AxiosResponse 形状
-        (response as any).data = resp;
-        return response;
+        ;(response as any).data = resp
+        return response
       },
       (error) => {
         // 处理响应错误
@@ -63,10 +63,10 @@ class Requests {
           window.location.href = '/login' // 跳转至登录页
         }
 
-        console.log("response error: ", error.message);
+        console.log('response error: ', error.message)
 
         // alert(msg);
-  return Promise.reject(error)
+        return Promise.reject(error)
         // snackbar.showMessage(message);
 
         // return Promise.reject(error); // 将错误内容抛出给业务逻辑去处理
@@ -76,22 +76,22 @@ class Requests {
 
   // GET 方法
   get<T = any>(url: string, params?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-  return this.instance.get<ResponseData<T>>(url, { params, ...config }).then(r => r.data as any);
+    return this.instance.get<ResponseData<T>>(url, { params, ...config }).then((r) => r.data as any)
   }
 
   // POST 方法
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-  return this.instance.post<ResponseData<T>>(url, data, { ...config }).then(r => r.data as any);
+    return this.instance.post<ResponseData<T>>(url, data, { ...config }).then((r) => r.data as any)
   }
 
   // PUT 方法
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-  return this.instance.put<ResponseData<T>>(url, data, { ...config }).then(r => r.data as any);
+    return this.instance.put<ResponseData<T>>(url, data, { ...config }).then((r) => r.data as any)
   }
 
   // DELETE 方法
   delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-  return this.instance.delete<ResponseData<T>>(url, { ...config }).then(r => r.data as any);
+    return this.instance.delete<ResponseData<T>>(url, { ...config }).then((r) => r.data as any)
   }
 }
 
