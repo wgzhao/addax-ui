@@ -40,7 +40,7 @@
   <v-dialog v-model="isShow">
     <v-card :style="{ justify: 'center', width: '80vw', height: 'auto' }" :title="title">
       <v-card-text>
-        <AddDataSource v-bind="params" @save="handleSave" @close-dialog="isShow = false" />
+        <AddDataSource v-bind="params" @save="handleSave" @close-dialog="closeDialog" />
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -150,8 +150,11 @@ const closeDialog = () => {
 
 // 处理保存事件
 const handleSave = () => {
-  console.log('父组件收到了保存事件，可以在此处理后续逻辑');
+  console.log('数据源保存成功，正在刷新列表...');
+  // 重新获取数据源列表，确保显示最新数据
   retrieveImpDB();
+  // 关闭对话框
+  closeDialog();
 };
 
 // 删除相关操作

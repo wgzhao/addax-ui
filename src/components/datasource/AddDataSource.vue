@@ -113,20 +113,19 @@ const props = defineProps({
 
 const sourceItem = ref<TbImpDb>({})
 
-const emit = defineEmits(["closeDialog", "handleSave"]);
+const emit = defineEmits(["closeDialog", "save"]);
 
 const save = () => {
   if (props.mode === "add" || props.mode === "edit") {
     DSService.save(sourceItem.value)
       .then(resp => {
         notify('保存成功', 'success');
-        emit('handleSave');
-        emit('closeDialog');
+        emit('save'); // 发出save事件，通知父组件更新列表
+        emit('closeDialog'); // 关闭对话框
       })
       .catch(error => {
         notify('保存失败: ' + error, 'error');
       });
-    //emit('save');
   }
 };
 
