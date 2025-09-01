@@ -1,40 +1,27 @@
 <template>
   <!-- 命令列表 -->
   <!-- <dialog-comp title="命令列表" v-model="dialog"> -->
-    <v-data-table
-      :headers="headers"
-      :items="cmds"
-      density="compact"
-      no-data-text="无数据"
-      v-model:expanded="expanded"
-      show-expand
-      item-value="comText"
-      hide-default-footer
-    >
-      <template v-slot:item.flag="{ value }">
-        <v-chip :color="getColor(value)">{{ value }}</v-chip>
-      </template>
-      <template v-slot:expanded-row="{ columns, item }">
-        <tr>
-          <td :colspan="columns.length">
-            <highlightjs
-              :language="item.comKind === 'addax' ? 'json' : 'sql'"
-              height="400"
-              :copy="false"
-              :code="item.comText"
-            />
-          </td>
-        </tr>
-      </template>
-    </v-data-table>
+  <v-data-table :headers="headers" :items="cmds" density="compact" no-data-text="无数据" v-model:expanded="expanded"
+    show-expand item-value="comText" hide-default-footer>
+    <template v-slot:item.flag="{ value }">
+      <v-chip :color="getColor(value)">{{ value }}</v-chip>
+    </template>
+    <template v-slot:expanded-row="{ columns, item }">
+      <tr>
+        <td :colspan="columns.length">
+          <pre>
+          {{ item.comText }}
+          </pre>
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
   <!-- </dialog-comp> -->
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import OdsService from "@/service/maintable/odsService";
-// import DialogComp from "./DialogComp.vue";
 
-// const dialog = defineModel({ required: true, default: true });
 const props = defineProps({ tid: String });
 interface Item {
   comIdx: number;
