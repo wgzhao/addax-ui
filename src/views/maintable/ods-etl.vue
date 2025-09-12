@@ -213,8 +213,8 @@ const statusOptions = [{
 const runStatus = ref("");
 
 const headers = ref([
-  { title: '目标用户', align: 'center' as const, sortable: false, key: 'destOwner', width: '3%' },
-  { title: '系统名称', key: 'sysName', align: 'center' as const, sortable: true, width: '13%' },
+  { title: '目标用户', align: 'center' as const, sortable: false, key: 'souSysid', width: '3%' },
+  { title: '系统名称', key: 'tid', align: 'center' as const, sortable: true, width: '13%' },
   { title: '源用户', key: 'souOwner', align: 'center' as const, sortable: true, width: '5%' },
   { title: '目标表名', key: 'destTablename', align: 'center' as const, sortable: true, width: '20%' },
   { title: '状态', key: 'flag', align: 'center' as const, sortable: true, width: '3%' },
