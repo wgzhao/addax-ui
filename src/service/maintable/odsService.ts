@@ -59,8 +59,8 @@ class OdsService {
   }
 
   // 6. 执行ETL
-  execETL(ctype: string) {
-    return Requests.post(this.prefix + "/startEtl", { ctype: ctype });
+  execETL(tid: string, timeout = 60000) { // 默认60秒超时，对于ETL任务来说更合理
+    return Requests.post("/etl/execute/" + tid, undefined, { timeout });
   }
   // 7. 批量更新采集表的状态和重试测试
   updateStatus(data: any) {

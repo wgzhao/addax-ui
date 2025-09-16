@@ -41,7 +41,7 @@
           <v-btn variant="tonal" prepend-icon="mdi-play" @click="updateSchema()">启动表更新</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl('sp')">启动采集</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl(null)">手动采集</v-btn>
         </v-col>
       </v-row>
     </template>
@@ -50,16 +50,17 @@
         :items-length="totalItems" item-value="tid" :loading="loading" @update:options="loadItems" show-select
         v-model="selected" :item-class="getRowClass">
         <template v-slot:item.action="{ item }">
-          <v-row justify="center" align="center" no-gutters>
+          <v-row justify="center" no-gutters>
             <v-btn small density="compact" color="primary" class="mr-1"
               @click="openDialog('MainTableInfo', item)">主表信息</v-btn>
             <v-btn small density="compact" color="secondary" class="mr-1"
               @click="openDialog('FieldsCompare', item)">字段对比</v-btn>
-            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('CmdList', item)">命令列表</v-btn>
+            <!-- <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('CmdList', item)">命令列表</v-btn> -->
             <v-btn small density="compact" color="success" class="mr-1"
               @click="openDialog('AddaxResult', item)">采集结果</v-btn>
             <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('LogFiles', item)">采集日志</v-btn>
             <v-btn small density="compact" color="error" @click="confirmDelete(item)">删除</v-btn>
+            <v-btn small density="compact" color="info" @click="doEtl(item)">采集</v-btn>
           </v-row>
         </template>
       </v-data-table-server>
@@ -101,6 +102,50 @@
         <v-spacer />
         <v-btn @click="deleteDialogVisible = false">取消</v-btn>
         <v-btn color="error" @click="isBatchDelete ? batchDeleteItems() : deleteItem()">确定</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- ETL进度对话框 -->
+  <v-dialog v-model="etlProgressVisible" width="500" persistent>
+    <v-card>
+      <v-card-title class="text-h6 d-flex align-center">
+        <v-icon class="mr-2" color="primary">mdi-database-sync</v-icon>
+        {{ etlProgressTitle }}
+      </v-card-title>
+      <v-card-text class="pb-4">
+        <div class="mb-4">
+          <div class="text-body-1 mb-2">{{ etlProgressMessage }}</div>
+          <!-- 不确定进度条 -->
+          <v-progress-linear :indeterminate="etlInProgress" :model-value="etlInProgress ? undefined : 100"
+            color="primary" height="8" rounded></v-progress-linear>
+        </div>
+        <!-- 当前处理信息 -->
+        <div v-if="currentProcessingInfo" class="text-caption text-grey-600">
+          {{ currentProcessingInfo }}
+        </div>
+        <!-- 结果信息 -->
+        <div v-if="etlResults.length > 0" class="mt-3">
+          <v-divider class="mb-2"></v-divider>
+          <div class="text-subtitle-2 mb-2">执行结果：</div>
+          <div class="result-container" style="max-height: 200px; overflow-y: auto;">
+            <v-chip v-for="(result, index) in etlResults" :key="index" :color="result.success ? 'success' : 'error'"
+              size="small" class="mr-1 mb-1">
+              <v-icon start :icon="result.success ? 'mdi-check' : 'mdi-alert'"></v-icon>
+              {{ result.message }}
+            </v-chip>
+          </div>
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn v-if="!etlInProgress" color="primary" @click="closeEtlProgress">
+          关闭
+        </v-btn>
+        <v-btn v-else variant="outlined" disabled>
+          <v-progress-circular indeterminate size="16" width="2" class="mr-2"></v-progress-circular>
+          执行中...
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -177,6 +222,10 @@ const selectOptions = [{
 {
   text: "采集相关日志",
   value: "LogFiles"
+},
+{
+  text: "手工采集",
+  value: "doEtl"
 }
 ];
 
@@ -213,10 +262,10 @@ const statusOptions = [{
 const runStatus = ref("");
 
 const headers = ref([
-  { title: '目标用户', align: 'center' as const, sortable: false, key: 'souSysid', width: '3%' },
-  { title: '系统名称', key: 'tid', align: 'center' as const, sortable: true, width: '13%' },
-  { title: '源用户', key: 'souOwner', align: 'center' as const, sortable: true, width: '5%' },
-  { title: '目标表名', key: 'destTablename', align: 'center' as const, sortable: true, width: '20%' },
+  { title: '系统名称', key: 'dbName', align: 'center' as const, sortable: true, width: '13%' },
+  { title: '源库', key: 'souOwner', align: 'center' as const, sortable: true, width: '5%' },
+  { title: '目标库', key: 'souSysid', align: 'center' as const, sortable: false, width: '3%' },
+  { title: '目标表', key: 'destTablename', align: 'center' as const, sortable: true, width: '20%' },
   { title: '状态', key: 'flag', align: 'center' as const, sortable: true, width: '3%' },
   { title: '剩余', key: 'retryCnt', align: 'center' as const, sortable: true, width: '2%' },
   { title: '耗时', key: 'runtime', align: 'center' as const, sortable: true, width: '3%' },
@@ -276,7 +325,7 @@ function setParams(compName: string, comp: any) {
     };
   } else if (compName === "LogFiles") {
     currentParams.value = {
-      tid: comp.destOwner + "_" + comp.destTablename + "|" + comp.tid
+      tid: comp.tid
     }
   }
   else {
@@ -286,14 +335,83 @@ function setParams(compName: string, comp: any) {
   }
 }
 
-const doEtl = (ctype: string) => {
-  OdsService.execETL(ctype)
-    .then(res => {
-      notify('启动成功: ' + (res.message || ''), 'success', 3000, 'mdi-check-circle');
-    })
-    .catch(res => {
-      notify('启动失败: ' + (res?.message || res), 'error', 4000, 'mdi-alert-circle');
+const doEtl = (item: any | null) => {
+  if (item != null) {
+    // 单个采集
+    showEtlProgress('手工采集', '正在执行单个表的数据采集...');
+    updateEtlProgress('正在执行单个表的数据采集...', `处理表: ${item.destTablename}`);
+
+    OdsService.execETL(item.tid, 300000).then(() => { // 设置5分钟超时
+      addEtlResult(`表 ${item.destTablename} 采集成功`, true);
+      updateEtlProgress('采集完成');
+      finishEtlProgress();
+      notify('手工采集任务已启动', 'success', 3000, 'mdi-check-circle');
+    }).catch(res => {
+      const errorMsg = res?.data || res?.message || '未知错误';
+      addEtlResult(`表 ${item.destTablename} 采集失败: ${errorMsg}`, false);
+      updateEtlProgress('采集失败');
+      finishEtlProgress();
+      notify('启动失败: ' + errorMsg, 'error', 4000, 'mdi-alert-circle');
     });
+    return;
+  }
+
+  if (selected.value.length === 0) return;
+
+  const tids = [...selected.value];
+  const totalCount = tids.length;
+
+  // 批量采集
+  showEtlProgress('批量手工采集', `正在执行 ${totalCount} 个表的数据采集...`);
+
+  let completedCount = 0;
+  let successCount = 0;
+  let failureCount = 0;
+
+  // 逐个执行，避免并发过多
+  const executeSequentially = async () => {
+    for (let i = 0; i < tids.length; i++) {
+      const currentTid = tids[i];
+      updateEtlProgress(
+        `正在处理第 ${i + 1}/${totalCount} 个表...`,
+        `当前处理: ${currentTid}`
+      );
+
+      try {
+        await OdsService.execETL(currentTid, 300000); // 设置5分钟超时
+        successCount++;
+        addEtlResult(`表 ${currentTid} 采集成功`, true);
+      } catch (res) {
+        failureCount++;
+        const errorMsg = res?.data || res?.message || '未知错误';
+        addEtlResult(`表 ${currentTid} 采集失败: ${errorMsg}`, false);
+      }
+
+      completedCount++;
+    }
+
+    // 所有任务完成
+    updateEtlProgress(`批量采集完成 - 成功: ${successCount}, 失败: ${failureCount}`);
+    finishEtlProgress();
+
+    // 清空选中项
+    selected.value = [];
+
+    // 显示总结通知
+    if (failureCount === 0) {
+      notify(`批量采集完成，全部 ${successCount} 个表采集成功`, 'success', 3000, 'mdi-check-circle');
+    } else if (successCount === 0) {
+      notify(`批量采集完成，全部 ${failureCount} 个表采集失败`, 'error', 4000, 'mdi-alert-circle');
+    } else {
+      notify(`批量采集完成，成功: ${successCount}, 失败: ${failureCount}`, 'warning', 4000, 'mdi-alert');
+    }
+  };
+
+  executeSequentially().catch((error) => {
+    updateEtlProgress('批量采集过程中发生错误');
+    finishEtlProgress();
+    notify('批量采集过程中发生错误: ' + (error?.message || ''), 'error', 4000, 'mdi-alert-circle');
+  });
 };
 
 const handleRecordUpdate = (newRecord) => {
@@ -368,6 +486,49 @@ const deleteDialogVisible = ref(false);
 const itemToDelete = ref(null);
 const isBatchDelete = ref(false);
 const deleteConfirmMessage = ref('');
+
+// ETL进度相关变量
+const etlProgressVisible = ref(false);
+const etlInProgress = ref(false);
+const etlProgressTitle = ref('');
+const etlProgressMessage = ref('');
+const currentProcessingInfo = ref('');
+const etlResults = ref([]);
+
+// ETL进度相关函数
+function showEtlProgress(title: string, message: string) {
+  etlProgressTitle.value = title;
+  etlProgressMessage.value = message;
+  etlInProgress.value = true;
+  etlResults.value = [];
+  currentProcessingInfo.value = '';
+  etlProgressVisible.value = true;
+}
+
+function updateEtlProgress(message: string, processingInfo?: string) {
+  etlProgressMessage.value = message;
+  if (processingInfo) {
+    currentProcessingInfo.value = processingInfo;
+  }
+}
+
+function addEtlResult(message: string, success: boolean) {
+  etlResults.value.push({ message, success });
+}
+
+function finishEtlProgress() {
+  etlInProgress.value = false;
+  currentProcessingInfo.value = '';
+}
+
+function closeEtlProgress() {
+  etlProgressVisible.value = false;
+  etlInProgress.value = false;
+  etlResults.value = [];
+  etlProgressTitle.value = '';
+  etlProgressMessage.value = '';
+  currentProcessingInfo.value = '';
+}
 
 function confirmDelete(item) {
   itemToDelete.value = item;
