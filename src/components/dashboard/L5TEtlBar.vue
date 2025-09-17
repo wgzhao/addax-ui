@@ -40,11 +40,11 @@ const chartReady = ref(false);
 
 // 动态生成图表数据
 const chartData = computed(() => {
-  const uniqueFIDs = [...new Set(rawData.value.map((item) => item.fid))].sort();
+  const uniqueFIDs = [...new Set(rawData.value.map((item) => item.db_id_etl))].sort();
   const groupedByDate = rawData.value.reduce((acc, item) => {
-    const date = item.tradeDate.toString();
+    const date = item.run_date.toString();
     if (!acc[date]) acc[date] = {};
-    acc[date][item.fid] = item.runtime;
+    acc[date][item.db_id_etl] = item.runtime;
     return acc;
   }, {});
 
@@ -63,7 +63,7 @@ const chartData = computed(() => {
 
   const datasets = dates.map((date, index) => ({
     label: date.toString(),
-    data: uniqueFIDs.map((fid) => groupedByDate[date][fid] || 0),
+    data: uniqueFIDs.map((db_id_etl) => groupedByDate[date][db_id_etl] || 0),
     backgroundColor: colors[index % colors.length],
     borderColor: colors[index % colors.length],
     borderWidth: 1,

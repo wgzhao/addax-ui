@@ -41,7 +41,7 @@
           <v-btn variant="tonal" prepend-icon="mdi-play" @click="updateSchema()">启动表更新</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl(null)">手动采集</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl(null)">批量采集</v-btn>
         </v-col>
       </v-row>
     </template>
@@ -372,19 +372,22 @@ const doEtl = (item: any | null) => {
   const executeSequentially = async () => {
     for (let i = 0; i < tids.length; i++) {
       const currentTid = tids[i];
+      // 通过 tid 获取表名等信息用于显示
+      const currentItem = ods.value.find(item => item.tid === currentTid);
+      const currentTableName = currentItem ? currentItem.destTablename : currentTid;
       updateEtlProgress(
         `正在处理第 ${i + 1}/${totalCount} 个表...`,
-        `当前处理: ${currentTid}`
+        `当前处理: ${currentTableName}`
       );
 
       try {
         await OdsService.execETL(currentTid, 300000); // 设置5分钟超时
         successCount++;
-        addEtlResult(`表 ${currentTid} 采集成功`, true);
+        addEtlResult(`表 ${currentTableName} 采集成功`, true);
       } catch (res) {
         failureCount++;
         const errorMsg = res?.data || res?.message || '未知错误';
-        addEtlResult(`表 ${currentTid} 采集失败: ${errorMsg}`, false);
+        addEtlResult(`表 ${currentTableName} 采集失败: ${errorMsg}`, false);
       }
 
       completedCount++;
