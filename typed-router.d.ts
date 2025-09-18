@@ -33,8 +33,6 @@ declare module 'vue-router/auto-routes' {
     '/plan-task': RouteRecordInfo<'/plan-task', '/plan-task', Record<never, never>, Record<never, never>>,
     '/realtime': RouteRecordInfo<'/realtime', '/realtime', Record<never, never>, Record<never, never>>,
     '/risk-monitor': RouteRecordInfo<'/risk-monitor', '/risk-monitor', Record<never, never>, Record<never, never>>,
-    '/sp-monitor': RouteRecordInfo<'/sp-monitor', '/sp-monitor', Record<never, never>, Record<never, never>>,
     '/system-info': RouteRecordInfo<'/system-info', '/system-info', Record<never, never>, Record<never, never>>,
-    '/task-group': RouteRecordInfo<'/task-group', '/task-group', Record<never, never>, Record<never, never>>,
   }
 }

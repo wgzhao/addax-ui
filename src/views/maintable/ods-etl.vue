@@ -317,7 +317,7 @@ function setParams(compName: string, comp: any) {
     };
   } else if (compName == "AddaxResult") {
     currentParams.value = {
-      tid: comp.spname
+      tid: comp.tid
     };
   } else if (compName === "BatchAdd") {
     currentParams.value = {

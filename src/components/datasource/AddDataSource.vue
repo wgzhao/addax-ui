@@ -1,99 +1,65 @@
 <template>
   <v-form fast-fail @submit.prevent="save">
-    <v-card denstify>
+    <v-card density="compact">
       <v-container>
-        <v-row>
-          <v-col cols="12" md="5">
-            <v-text-field v-model="sourceItem.dbName" label="数据库名称"></v-text-field>
+        <v-row dense>
+          <v-col cols="12" sm="6" md="2">
+            <v-text-field v-model="sourceItem.dbIdEtl" label="采集编号" density="compact"></v-text-field>
           </v-col>
-          <v-col cols="12" md="5">
-            <v-text-field v-model="sourceItem.dbConstr" label="数据源链接串"></v-text-field>
+          <v-col cols="12" sm="6" md="2">
+            <v-text-field v-model="sourceItem.dbName" label="采集名称" required density="compact"></v-text-field>
           </v-col>
-          <v-col cols="12" md="2">
+          <v-col cols="12" sm="6" md="3">
             <div>
-              <label class="text-body-2 mb-1 d-block">状态控制</label>
-              <v-switch v-model="sourceItem.bvalid" true-value="Y" false-value="N" color="primary" hide-details>
+              <v-switch v-model="sourceItem.bvalid" true-value="Y" false-value="N" color="primary" hide-details
+                density="compact">
                 <template v-slot:append>
-                  <v-chip size="small" :color="sourceItem.bvalid === 'Y' ? 'success' : 'error'"
-                    :text="sourceItem.bvalid === 'Y' ? '已启用' : '已禁用'" class="ml-2"></v-chip>
+                  <v-chip size="x-small" :color="sourceItem.bvalid === 'Y' ? 'success' : 'error'"
+                    :text="sourceItem.bvalid === 'Y' ? '已启用' : '已禁用'" class="ml-1"></v-chip>
                 </template>
               </v-switch>
             </div>
           </v-col>
         </v-row>
-        <v-row>
-          <div>
-            <h5 class="text-h8 mb-0 pb-0">采集信息</h5>
-          </div>
-          <v-divider></v-divider>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbIdEtl" label="采集编号"></v-text-field>
+        <v-row dense>
+          <v-col cols="12" sm="12" md="6">
+            <v-text-field v-model="sourceItem.dbConstr" placeholder="JDBC 连接串" label="JDBC 连接地址" required
+              density="compact"></v-text-field>
           </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbParalEtl" label="并发数"></v-text-field>
+          <v-col cols="12" sm="6" md="3">
+            <v-text-field v-model="sourceItem.dbUserEtl" complete="false" label="用户名" density="compact"></v-text-field>
           </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbUserEtl" label="用户名"></v-text-field>
+          <v-col cols="12" sm="6" md="3">
+            <v-text-field v-model="sourceItem.dbPassEtl" label="密码" type="password" density="compact"></v-text-field>
           </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbPassEtl" label="密码"></v-text-field>
+        </v-row>
+        <!-- 采集信息 -->
+        <v-row dense class="mt-3">
+          <v-col cols="12" sm="6" md="3">
+            <v-text-field v-model="sourceItem.dbParalEtl" label="并发数" type="number" placeholder="0 表示默认"
+              density="compact"></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            <v-text-field v-model="sourceItem.dbStart" placeholder="HH:mm 或 HH:mm:ss (例如: 08:30 或 08:30:15)"
+              label="采集时间" :rules="[timeFormatRule]" :error-messages="timeError" density="compact">
+            </v-text-field>
           </v-col>
         </v-row>
 
-        <v-row>
-          <div>
-            <h5 class="text-h8 mb-0 pb-0">数据服务信息</h5>
-          </div>
-          <v-divider></v-divider>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbIdDs" label="采集编号"></v-text-field>
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbParalDs" label="并发数"></v-text-field>
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbUserDs" label="用户名"></v-text-field>
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field v-model="sourceItem.dbPassDs" label="密码"></v-text-field>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <div>
-            <h5 class="text-h8 mb-0 pb-0">采集扩展信息</h5>
-          </div>
-          <v-divider></v-divider>
-          <v-col cols="12" md="6">
-            <v-text-field v-model="sourceItem.dbStartType" label="启动类型"></v-text-field>
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field v-model="sourceItem.dbStart" label="启动时间"></v-text-field>
-          </v-col>
-          <v-col cols="12" md="12">
-            <v-textarea v-model="sourceItem.dbJudgeSql" label="判断脚本" auto-grow></v-textarea>
-          </v-col>
-          <v-col cols="12" md="12">
-            <v-textarea v-model="sourceItem.dbJudgePre" label="采集前置脚本" auto-grow></v-textarea>
-          </v-col>
-          <v-col cols="12" md="12">
-            <v-textarea v-model="sourceItem.conf" label="其他配置" auto-grow></v-textarea>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12" md="12">
-            <v-textarea v-model="sourceItem.dbRemark" label="备注信息" auto-grow></v-textarea>
+        <!-- 备注信息 -->
+        <v-row dense class="mt-3">
+          <v-col cols="12">
+            <v-textarea v-model="sourceItem.dbRemark" label="备注信息" auto-grow rows="4" density="compact"></v-textarea>
           </v-col>
         </v-row>
       </v-container>
 
-      <v-card-actions>
-        <v-btn color="info" class="btn" v-if="mode === 'add' || mode === 'edit'" @click="testConnect">测试连接</v-btn>
+      <v-card-actions class="pa-3">
+        <v-btn color="info" size="small" v-if="mode === 'add' || mode === 'edit'" @click="testConnect">测试连接</v-btn>
         <v-spacer></v-spacer>
-        <v-btn type="submit" color="primary" class="btn" v-if="mode === 'add' || mode === 'edit'">保存</v-btn>
-        <v-btn type="reset" color="warning" v-if="mode === 'add' || mode === 'edit'">重置</v-btn>
-        <v-btn color="secondary" class="btn btn-secondary" @click="close">关闭</v-btn>
+        <v-btn type="submit" color="primary" size="small" v-if="mode === 'add' || mode === 'edit'">保存</v-btn>
+        <v-btn type="reset" color="warning" size="small" v-if="mode === 'add' || mode === 'edit'">重置</v-btn>
+        <v-btn color="secondary" size="small" @click="close">关闭</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -109,14 +75,70 @@ const props = defineProps({
   mode: String
 });
 
-
-
-const sourceItem = ref<TbImpDb>({})
+const sourceItem = ref<TbImpDb>({
+  dbIdEtl: '',
+  dbName: '',
+  dbConstr: '',
+  dbUserEtl: '',
+  dbPassEtl: '',
+  dbParalEtl: 0,
+  dbStart: '',
+  dbRemark: '',
+  bvalid: 'Y'
+})
 
 const emit = defineEmits(["closeDialog", "save"]);
 
+// 时间格式验证
+const timeFormatRule = computed(() => {
+  // 支持 HH:mm 和 HH:mm:ss 两种格式
+  const timeRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
+  return (value: string) => {
+    if (!value) return true; // 允许空值
+    if (!timeRegex.test(value)) {
+      return '时间格式不正确，请使用 HH:mm 或 HH:mm:ss 格式（如：08:30 或 08:30:15）';
+    }
+    return true;
+  };
+});
+
+// 时间错误消息
+const timeError = computed(() => {
+  if (!sourceItem.value.dbStart) return [];
+  // 支持 HH:mm 和 HH:mm:ss 两种格式
+  const timeRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
+  if (!timeRegex.test(sourceItem.value.dbStart)) {
+    return ['时间格式不正确，请使用 HH:mm 或 HH:mm:ss 格式（如：08:30 或 08:30:15）'];
+  }
+  return [];
+});
+
+// 时间格式化函数：自动补充秒数
+const formatTimeInput = (value: string) => {
+  if (!value) return value;
+
+  // 如果是 HH:mm 格式，自动补充 :00
+  const timeWithoutSeconds = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+  if (timeWithoutSeconds.test(value)) {
+    return value + ':00';
+  }
+
+  return value;
+};
+
 const save = () => {
   if (props.mode === "add" || props.mode === "edit") {
+    // 验证时间格式
+    if (sourceItem.value.dbStart && timeError.value.length > 0) {
+      notify('请检查启动时间格式', 'error');
+      return;
+    }
+
+    // 格式化时间输入，自动补充秒数
+    if (sourceItem.value.dbStart) {
+      sourceItem.value.dbStart = formatTimeInput(sourceItem.value.dbStart);
+    }
+
     DSService.save(sourceItem.value)
       .then(resp => {
         notify('保存成功', 'success');
