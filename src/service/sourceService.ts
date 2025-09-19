@@ -1,6 +1,6 @@
 // 数据源管理接口
 import Requests from "@/utils/requests";
-const apiPrefix = "/maintable/datasource";
+const apiPrefix = "/source";
 
 const list = () => {
   return Requests.get(apiPrefix);

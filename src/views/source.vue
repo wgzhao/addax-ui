@@ -68,8 +68,8 @@
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import DSService from "@/service/maintable/datasourceService";
-import AddDataSource from "@/components/datasource/AddDataSource.vue";
+import DSService from "@/service/sourceService";
+import AddDataSource from "@/components/source/AddSource.vue";
 import { notify } from '@/stores/notifier';
 
 const impdbs = ref([]);

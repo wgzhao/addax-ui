@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { notify } from '@/stores/notifier';
-import OdsService from "@/service/maintable/odsService";
+import OdsService from "@/service/tableService";
 
 const props = defineProps({
   tid: {

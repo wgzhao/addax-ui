@@ -1,8 +1,8 @@
 // 采集监控接口
 import Requests from '@/utils/requests'
 
-class EtlService {
-  prefix = '/etl'
+class MonitorService {
+  prefix = '/monitor'
   d = []
   // 数据源完成情况
   fetchAccomplishList() {
@@ -25,4 +25,4 @@ class EtlService {
     return Requests.get(this.prefix + '/realtimeTask')
   }
 }
-export const etlService = new EtlService()
+export const monitorService = new MonitorService()

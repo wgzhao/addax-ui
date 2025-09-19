@@ -1,10 +1,10 @@
 // 主表配置 - ODS 采集配置 API
 import Requests from "@/utils/requests";
 
-class OdsService {
-  prefix: string = "/maintable/ods";
+class TableService {
+  prefix: string = "/table";
   // 0. 主表列表
-  fetchOdsList(page: number, pageSize: number, q: string, runStatus?: string, sortBy?: any) {
+  fetchTableList(page: number, pageSize: number, q: string, runStatus?: string, sortBy?: any) {
     return Requests.get(this.prefix, {
       page: page,
       pageSize: pageSize,
@@ -16,7 +16,7 @@ class OdsService {
   }
 
   // 0.1 主表列表搜索
-  searchOdsList(page: number, pageSize: number, q: string) {
+  searchTableList(page: number, pageSize: number, q: string) {
     return Requests.get(this.prefix + "/search", {
       q: q,
       page: page,
@@ -25,7 +25,7 @@ class OdsService {
   }
 
   // 1. 主表详情
-  fetchOdsDetail(tid: string) {
+  fetchTableDetail(tid: string) {
     return Requests.get(this.prefix + "/" + tid);
   }
 
@@ -77,4 +77,4 @@ class OdsService {
   }
 }
 
-export default new OdsService();
+export default new TableService();

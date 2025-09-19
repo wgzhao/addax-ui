@@ -67,7 +67,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { notify } from '@/stores/notifier';
-import DSService from "@/service/maintable/datasourceService";
+import DSService from "@/service/sourceService";
 import { TbImpDb } from "@/types/database";
 
 const props = defineProps({

@@ -66,7 +66,7 @@ const urls = ref([
     title: "Home"
   },
   {
-    path: "/etl-monitor",
+    path: "/monitor",
     name: "ETL",
     title: "采集监控"
   },
@@ -75,27 +75,27 @@ const urls = ref([
     title: "系统一览"
   },
   {
-    path: "/maintable/ods-etl",
-    title: "数据采集"
+    path: "/table",
+    title: "采集表管理"
   },
   {
-    path: "/maintable/data-sources",
+    path: "/source",
     title: "数据源管理"
   },
   {
-    path: "/maintable/plan-task",
+    path: "/plan-task",
     title: "计划任务"
   },
   {
-    path: "/maintable/params",
+    path: "/param",
     title: "参数管理"
   },
   {
-    path: "/risk-monitor",
+    path: "/risk",
     title: "风险点检测"
   },
   {
-    path: "/closed-check",
+    path: "/check",
     title: "盘后检查"
   },
 ]);

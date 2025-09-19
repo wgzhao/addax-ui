@@ -32,7 +32,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import OdsService from "@/service/maintable/odsService";
+import OdsService from "@/service/tableService";
 // import DialogComp from "./DialogComp.vue";
 
 const props = defineProps({ tid: String });

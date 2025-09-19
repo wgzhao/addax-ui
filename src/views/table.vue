@@ -1,11 +1,10 @@
 <template>
-  <!-- 主表配置 -- ODS 采集配置-->
-  <v-card flat title="主表配置 - ODS 采集配置">
+  <v-card flat title="采集表配置">
     <template v-slot:text>
       <v-row justify="center" align-content="center">
         <v-col cols="col-2">
           <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
-            variant="outlined" hide-details @keyup.enter="searchOds" @click:append-inner="searchOds">
+            variant="outlined" hide-details @keyup.enter="searchtable" @click:append-inner="searchtable">
             <template #prepend>
               <span class="me-2">关键字查询</span>
             </template>
@@ -22,7 +21,7 @@
         </v-col>
         <!-- add search button -->
         <v-col cols="auto">
-          <v-btn variant="tonal" @click="searchOds">查询</v-btn>
+          <v-btn variant="tonal" @click="searchtable">查询</v-btn>
         </v-col>
         <v-spacer />
         <v-col cols="auto">
@@ -46,7 +45,7 @@
       </v-row>
     </template>
     <v-card-text>
-      <v-data-table-server density="compact" :items="ods" :headers="headers" :items-per-page="currPageSize"
+      <v-data-table-server density="compact" :items="table" :headers="headers" :items-per-page="currPageSize"
         :items-length="totalItems" item-value="tid" :loading="loading" @update:options="loadItems" show-select
         v-model="selected" :item-class="getRowClass">
         <template v-slot:item.action="{ item }">
@@ -87,7 +86,7 @@
       <v-card-text>
         <!-- 动态加载的内容 -->
         <component :is="currentComponent" v-bind="currentParams" @closeDialog="closeDialog"
-          @update:record="handleRecordUpdate" @update:batch="handleBatchUpdate" @refresh-data="searchOds" />
+          @update:record="handleRecordUpdate" @update:batch="handleBatchUpdate" @refresh-data="searchtable" />
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -156,19 +155,19 @@
 import { ref, shallowRef, defineAsyncComponent } from "vue";
 import { debounce } from '@/utils/debounce';
 import { createSort } from '@/utils/';
-import OdsService from "@/service/maintable/odsService";
+import tableService from "@/service/tableService";
 import { notify } from '@/stores/notifier';
 // 异步按需加载组件，减轻首屏体积
-const MainTableInfo = defineAsyncComponent(() => import('@/components/ods/MainTable.vue'));
-const FieldsCompare = defineAsyncComponent(() => import('@/components/ods/FieldsCompare.vue'));
-const CmdList = defineAsyncComponent(() => import('@/components/ods/CmdList.vue'));
-const TableUsed = defineAsyncComponent(() => import('@/components/ods/TableUsed.vue'));
-const AddaxResult = defineAsyncComponent(() => import('@/components/ods/AddaxResult.vue'));
-const BatchAdd = defineAsyncComponent(() => import('@/components/ods/BatchAdd.vue'));
-const LogFiles = defineAsyncComponent(() => import('@/components/ods/LogFiles.vue'));
-const BatchUpdate = defineAsyncComponent(() => import('@/components/ods/BatchUpdate.vue'));
+const MainTableInfo = defineAsyncComponent(() => import('@/components/table/MainTable.vue'));
+const FieldsCompare = defineAsyncComponent(() => import('@/components/table/FieldsCompare.vue'));
+const CmdList = defineAsyncComponent(() => import('@/components/table/CmdList.vue'));
+const TableUsed = defineAsyncComponent(() => import('@/components/table/TableUsed.vue'));
+const AddaxResult = defineAsyncComponent(() => import('@/components/table/AddaxResult.vue'));
+const BatchAdd = defineAsyncComponent(() => import('@/components/table/BatchAdd.vue'));
+const LogFiles = defineAsyncComponent(() => import('@/components/table/LogFiles.vue'));
+const BatchUpdate = defineAsyncComponent(() => import('@/components/table/BatchUpdate.vue'));
 
-const ods = ref([]);
+const table = ref([]);
 const search = ref("");
 const selected = ref([]);
 const currPageSize = ref(10);
@@ -341,7 +340,7 @@ const doEtl = (item: any | null) => {
     showEtlProgress('手工采集', '正在执行单个表的数据采集...');
     updateEtlProgress('正在执行单个表的数据采集...', `处理表: ${item.destTablename}`);
 
-    OdsService.execETL(item.tid, 300000).then(() => { // 设置5分钟超时
+    tableService.execETL(item.tid, 300000).then(() => { // 设置5分钟超时
       addEtlResult(`表 ${item.destTablename} 采集成功`, true);
       updateEtlProgress('采集完成');
       finishEtlProgress();
@@ -373,7 +372,7 @@ const doEtl = (item: any | null) => {
     for (let i = 0; i < tids.length; i++) {
       const currentTid = tids[i];
       // 通过 tid 获取表名等信息用于显示
-      const currentItem = ods.value.find(item => item.tid === currentTid);
+      const currentItem = table.value.find(item => item.tid === currentTid);
       const currentTableName = currentItem ? currentItem.destTablename : currentTid;
       updateEtlProgress(
         `正在处理第 ${i + 1}/${totalCount} 个表...`,
@@ -381,7 +380,7 @@ const doEtl = (item: any | null) => {
       );
 
       try {
-        await OdsService.execETL(currentTid, 300000); // 设置5分钟超时
+        await tableService.execETL(currentTid, 300000); // 设置5分钟超时
         successCount++;
         addEtlResult(`表 ${currentTableName} 采集成功`, true);
       } catch (res) {
@@ -418,9 +417,9 @@ const doEtl = (item: any | null) => {
 };
 
 const handleRecordUpdate = (newRecord) => {
-  const index = ods.value.findIndex(item => item.tid === newRecord.tid);
+  const index = table.value.findIndex(item => item.tid === newRecord.tid);
   if (index > -1) {
-    ods.value.splice(index, 1, newRecord); // 响应式替换单个记录
+    table.value.splice(index, 1, newRecord); // 响应式替换单个记录
   }
 };
 
@@ -435,10 +434,10 @@ const handleRecordUpdate = (newRecord) => {
  */
 const handleBatchUpdate = (payload) => {
   payload.tids.forEach(tid => {
-    const index = ods.value.findIndex(item => item.tid === tid);
+    const index = table.value.findIndex(item => item.tid === tid);
     if (index > -1) {
-      ods.value[index].flag = payload.flag;
-      ods.value[index].retryCnt = payload.retryCnt;
+      table.value[index].flag = payload.flag;
+      table.value[index].retryCnt = payload.retryCnt;
     }
   });
 };
@@ -461,10 +460,10 @@ const loadItems = ({
     currentSortParam.value = sortBy;
   }
   // const sortParam = sortBy?.length > 0 ? sortBy[0] : null; // 
-  OdsService.fetchOdsList(page - 1, itemsPerPage, search.value, runStatus.value,
+  tableService.fetchTableList(page - 1, itemsPerPage, search.value, runStatus.value,
     sortParam
   ).then(res => {
-    ods.value = res.data["content"];
+    table.value = res.data["content"];
     totalItems.value = res.data["totalElements"];
     loading.value = false;
   });
@@ -475,10 +474,11 @@ const _searchCore = () => loadItems({
   itemsPerPage: currPageSize.value,
   sortBy: currentSortParam.value
 });
-const searchOds = debounce(_searchCore, 400);
+
+const searchTable = debounce(_searchCore, 400);
 
 function updateSchema() {
-  OdsService.updateSchema().then(res => {
+  tableService.updateSchema().then(() => {
     notify('更新成功', 'success', 3000, 'mdi-check-circle');
   }).catch(res => {
     notify('更新失败: ' + (res?.data || res?.message || ''), 'error', 4000, 'mdi-alert-circle');
@@ -550,10 +550,10 @@ function confirmBatchDelete() {
 function deleteItem() {
   if (itemToDelete.value) {
     const tid = itemToDelete.value.tid;
-    OdsService.delete(tid).then(res => {
-      const index = ods.value.findIndex(i => i.tid === tid);
+    tableService.delete(tid).then(() => {
+      const index = table.value.findIndex(i => i.tid === tid);
       if (index > -1) {
-        ods.value.splice(index, 1); // 删除项
+        table.value.splice(index, 1); // 删除项
       }
       deleteDialogVisible.value = false;
       itemToDelete.value = null;
@@ -567,7 +567,7 @@ function batchDeleteItems() {
   // 并发删除所有选中项
   Promise.all(
     tids.map(tid =>
-      OdsService.delete(tid).catch(() => null) // swallow 单个失败，后续可加入失败提示收集
+      tableService.delete(tid).catch(() => null) // swallow 单个失败，后续可加入失败提示收集
     )
   ).then(() => {
     // 关闭确认框 & 清空选中

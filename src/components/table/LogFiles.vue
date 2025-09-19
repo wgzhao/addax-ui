@@ -59,7 +59,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import LogService from "@/service/maintable/logService";
+import LogService from "@/service/logService";
 
 // const dialog = defineModel({ required: true, default: true });
 const props = defineProps({ tid: String });

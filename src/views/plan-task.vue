@@ -1,19 +1,57 @@
 <template>
-  <!-- 计划任务 -->
-  <v-data-table :items="data" :headers="headers" density="compact"></v-data-table>
+  <v-data-table :items="data" :headers="headers" density="compact" :sort-by="[{ key: 'pnType', order: 'asc' }]">
+    <template v-slot:item.pnType="{ value }">
+      {{ getType(value) }}
+    </template>
+    <template v-slot:item.flag="{ value }">
+      <v-chip :color="getColor(value)">{{ value }}</v-chip>
+    </template>
+  </v-data-table>
 </template>
 <script setup lang="ts">
-  import { ref } from 'vue'
+import Requests from "@/utils/requests";
+import { onMounted, ref } from "vue";
+const headers = [
+  { title: "计划任务", key: "pnType" },
+  { title: "时间定点", key: "pnFixed" },
+  { title: "执行间隔（分钟）", key: "pnInterval" },
+  { title: "间隔时间范围", key: "pnRange" },
+  { title: "状态", key: "flag" },
+  { title: "符合", key: "bexit" },
+  { title: "执行开始时间", key: "startTime" },
+  { title: "执行结束时间", key: "endTime" },
+  { title: "耗时", key: "runtime" },
+  { title: "操作", key: "", value: "actions" }
+];
+const data = ref();
 
-  const headers = [
-    { key: 'runFreq', title: '频率', width: '5%' },
-    { key: 'flag', title: '状态', width: '5%' },
-    { key: 'spName', title: 'SP 名称', width: '20%' },
-    { key: 'startTime', title: '开始时间', width: '10%' },
-    { key: 'endTime', title: '结束时间', width: '10%' },
-    { key: 'runtime', title: '耗时(秒)', width: '5%' },
-    { key: 'actions', title: '操作', value: '' }
-  ]
+function getType(val: number) {
+  if (val == 0) {
+    return "每天";
+  }
+  if (val == 2) {
+    return "交易当天";
+  }
+  if (val == 3) {
+    return "交易日或标志";
+  }
+  return val;
+}
 
-  const data = ref()
+function getColor(flag: string) {
+  if (flag == "Y") {
+    return "green";
+  } else if (flag == "N") {
+    return "red";
+  } else {
+    return "blue";
+  }
+}
+
+onMounted(() => {
+  Requests.get("/maintable/plantask/list").then(res => {
+    data.value = res.data;
+  });
+});
 </script>
+<style></style>

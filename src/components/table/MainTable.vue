@@ -121,7 +121,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { notify } from '@/stores/notifier';
-import OdsService from "@/service/maintable/odsService";
+import OdsService from "@/service/tableService";
 // import MainTableType from "@/types/mainTable";
 
 const props = defineProps({

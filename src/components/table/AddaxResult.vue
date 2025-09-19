@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 // import DialogComp from "./DialogComp.vue";
-import OdsService from "@/service/maintable/odsService";
+import OdsService from "@/service/tableService";
 
 const props = defineProps({ tid: String });
 
