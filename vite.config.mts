@@ -40,11 +40,9 @@ export default defineConfig(({ mode }) => {
           configFile: "src/styles/settings.scss"
         }
       }),
-      Components(
-        {
-          dts: "src/types/components.d.ts",
-        }
-      ),
+      Components({
+        dts: "src/types/components.d.ts",
+      }),
       Fonts({
         fontsource: {
           families: [

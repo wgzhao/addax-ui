@@ -17,6 +17,7 @@
     "axios": "^1.12.2",
     "chart.js": "^4.5.0",
     "core-js": "^3.45.1",
+    "eslint-plugin-vuetify": "^2.5.3",
     "highlight.js": "^11.9.0",
     "highlightjs-vue-plugin": "^2.1.4",
     "lodash": "^4.17.21",

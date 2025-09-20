@@ -181,7 +181,7 @@ const saveOds = () => {
 
 onMounted(() => {
   console.log("tid: ", props.tid);
-  OdsService.fetchOdsDetail(props.tid).then(res => (mainTable.value = res.data));
+  OdsService.fetchTableDetail(props.tid).then(res => (mainTable.value = res.data));
 });
 </script>
 <style>

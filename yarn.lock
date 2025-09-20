@@ -1606,7 +1606,7 @@ eslint-plugin-unicorn@^61.0.2:
     semver "^7.7.2"
     strip-indent "^4.0.0"
 
-eslint-plugin-vue@^10.4.0:
+eslint-plugin-vue@>=9.6.0, eslint-plugin-vue@^10.4.0:
   version "10.4.0"
   resolved "https://registry.npmmirror.com/eslint-plugin-vue/-/eslint-plugin-vue-10.4.0.tgz#2ae20df43801d20515c58ec2ae0555bf1127a080"
   integrity sha512-K6tP0dW8FJVZLQxa2S7LcE1lLw3X8VvB3t887Q6CLrFVxHYBXGANbXvwNzYIu6Ughx1bSJ5BDT0YB3ybPT39lw==
@@ -1617,6 +1617,14 @@ eslint-plugin-vue@^10.4.0:
     postcss-selector-parser "^6.0.15"
     semver "^7.6.3"
     xml-name-validator "^4.0.0"
+
+eslint-plugin-vuetify@^2.5.3:
+  version "2.5.3"
+  resolved "https://registry.npmmirror.com/eslint-plugin-vuetify/-/eslint-plugin-vuetify-2.5.3.tgz#19e4b5834eb182dbb1b258af535e22c49107e9c0"
+  integrity sha512-HQQ3HSeg4lOQp+bImVuGsIQBgRexMGudZBZ8iK7ypQsNkKlVu2JSDDslOoTUGTj+QY/SE5PtXOwz0lMITuv8Rg==
+  dependencies:
+    eslint-plugin-vue ">=9.6.0"
+    requireindex "^1.2.0"
 
 eslint-scope@^8.2.0, eslint-scope@^8.4.0:
   version "8.4.0"
@@ -2575,6 +2583,11 @@ regjsparser@^0.12.0:
   integrity sha512-cnE+y8bz4NhMjISKbgeVJtqNbtf5QpjZP+Bslo+UqkIt9QPnX9q095eiRRASJG1/tz6dlNr6Z5NsBiWYokp6EQ==
   dependencies:
     jsesc "~3.0.2"
+
+requireindex@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmmirror.com/requireindex/-/requireindex-1.2.0.tgz#3463cdb22ee151902635aa6c9535d4de9c2ef1ef"
+  integrity sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==
 
 resolve-from@^4.0.0:
   version "4.0.0"

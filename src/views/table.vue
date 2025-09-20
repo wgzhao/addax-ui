@@ -4,7 +4,7 @@
       <v-row justify="center" align-content="center">
         <v-col cols="col-2">
           <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" single-line
-            variant="outlined" hide-details @keyup.enter="searchtable" @click:append-inner="searchtable">
+            variant="outlined" hide-details @keyup.enter="searchTable" @click:append-inner="searchTable">
             <template #prepend>
               <span class="me-2">关键字查询</span>
             </template>
@@ -21,7 +21,7 @@
         </v-col>
         <!-- add search button -->
         <v-col cols="auto">
-          <v-btn variant="tonal" @click="searchtable">查询</v-btn>
+          <v-btn variant="tonal" @click="searchTable">查询</v-btn>
         </v-col>
         <v-spacer />
         <v-col cols="auto">
@@ -86,7 +86,7 @@
       <v-card-text>
         <!-- 动态加载的内容 -->
         <component :is="currentComponent" v-bind="currentParams" @closeDialog="closeDialog"
-          @update:record="handleRecordUpdate" @update:batch="handleBatchUpdate" @refresh-data="searchtable" />
+          @update:record="handleRecordUpdate" @update:batch="handleBatchUpdate" @refresh-data="searchTable" />
       </v-card-text>
     </v-card>
   </v-dialog>
