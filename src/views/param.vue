@@ -4,9 +4,9 @@
     <v-col cols="col-6" align="left" justify="top">
       <v-card>
         <v-card-text>
-          <v-data-table :headers="headers" :items="dicts" density="compact">
+          <v-data-table :headers="dictHeaders" :items="dicts" density="compact">
             <template v-slot:item.actions="{ item }">
-              <v-icon icon="mdi-chevron-right" size="small" class="me-2" @click="getDictionary(item.dictCode)">
+              <v-icon icon="mdi-chevron-right" size="small" class="me-2" @click="getItems(item.code)">
               </v-icon>
             </template>
           </v-data-table>
@@ -19,14 +19,14 @@
         <v-card-text>
           <v-row>
             <v-col cols="auto">
-              <span class="text-h6">{{ currEntryCode }} 参数详情</span>
+              <span class="text-h6">{{ currCode }} 参数详情</span>
             </v-col>
             <v-spacer></v-spacer>
             <v-col>
               <v-btn color="info" class="btn btn-primary" @click="addItem">新增</v-btn>
             </v-col>
           </v-row>
-          <v-data-table v-if="dictionaries" :headers="dictionaryHeaders" :items="dictionaries" items-per-page="20"
+          <v-data-table v-if="sysItems" :headers="itemHeaders" :items="sysItems" items-per-page="20"
             density="default" class="elevation-1">
             <template v-slot:top>
               <!-- edit/new form -->
@@ -36,9 +36,9 @@
                     <span class="text-h5">{{ formTitle }}</span>
                   </v-card-title>
                   <v-card-text>
-                    <v-text-field v-model="editedItem.entryCode" label="参数值" disabled></v-text-field>
-                    <v-text-field v-model="editedItem.entryValue" label="参数项"></v-text-field>
-                    <v-textarea v-model="editedItem.entryContent" label="参数名称"></v-textarea>
+                    <v-text-field v-model="editedItem.dictCode" label="参数值" disabled></v-text-field>
+                    <v-text-field v-model="editedItem.itemKey" label="参数项"></v-text-field>
+                    <v-textarea v-model="editedItem.itemValue" label="参数名称"></v-textarea>
                     <v-text-field v-model="editedItem.remark" label="备注"></v-text-field>
                   </v-card-text>
                   <v-card-actions>
@@ -80,33 +80,35 @@
   </v-row>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed, watch, nextTick } from "vue";
 import DictService from "@/service/dictService";
 import { notify } from '@/stores/notifier';
+import { SysDict, SysItem } from '@/types/database';
 
-const dicts = ref([]);
-const dictionaries = ref([]);
-const headers = [
-  { title: "参数值", value: "dictCode", width: "10%" },
-  { title: "参数名称", value: "dictName", width: "25%" },
-  { title: "参数分类", value: "dictClass", width: "10%" },
-  { title: "参数说明", value: "remark", width: "50%" },
+const dicts = ref<SysDict[]>([]);
+const sysItems = ref<SysItem[]>([]);
+
+const dictHeaders = [
+  { title: "字典编号", value: "code", width: "10%" },
+  { title: "字典名称", value: "name", width: "25%" },
+  { title: "字典分类", value: "classification", width: "10%" },
+  { title: "说明", value: "remark", width: "50%" },
   { title: "#", value: "actions", width: "5%" }
 ];
-const dictionaryHeaders = [
-  { title: "参数值", value: "entryCode" },
-  { title: "参数项", value: "entryValue" },
-  { title: "参数名称", value: "entryContent" },
+const itemHeaders = [
+  { title: "字典编号", value: "dictCode" },
+  { title: "参数项", value: "itemKey" },
+  { title: "参数值", value: "itemValue" },
   { title: "备注", value: "remark", width: "30%" },
   { title: "Action", value: "actions", width: "10%" }
 ];
 const dialog = ref(false);
 const dialogDelete = ref(false);
-const currEntryCode = ref("");
+const currCode = ref<number>(0);
 const editedIndex = ref(-1);
-const editedItem = ref({});
-const defaultItem = ref({});
+const editedItem = ref<Partial<SysItem>>({});
+const defaultItem = ref<Partial<SysItem>>({});
 const formTitle = computed(() => {
   return editedIndex.value === -1 ? "New Item" : "Edit Item";
 });
@@ -127,17 +129,25 @@ const closeDelete = () => {
   });
 };
 watch(dialog, async newVal => {
-  dialog.value = newVal || close();
+  if (newVal) {
+    dialog.value = true;
+  } else {
+    close();
+  }
 });
 
 watch(dialogDelete, async newVal => {
-  dialogDelete.value = newVal || closeDelete();
+  if (newVal) {
+    dialogDelete.value = true;
+  } else {
+    closeDelete();
+  }
 });
 
-const getDictionary = code => {
-  currEntryCode.value = code;
-  DictService.listDictItems(code).then(res => {
-    dictionaries.value = res.data;
+const getItems = code => {
+  currCode.value = code;
+  DictService.listSysItems(code).then(res => {
+    sysItems.value = res.data;
   });
 };
 
@@ -148,29 +158,29 @@ const addItem = () => {
   // editedItem.value.entryCode = entryCode;
 
   editedItem.value = Object.assign({}, defaultItem.value);
-  editedItem.value.entryCode = currEntryCode.value;
+  editedItem.value.dictCode = currCode.value;
 
   dialog.value = !dialog.value;
 };
 const editItem = item => {
-  editedIndex.value = dictionaries.value.indexOf(item);
+  editedIndex.value = sysItems.value.indexOf(item);
   editedItem.value = Object.assign({}, item);
   dialog.value = true;
 };
 
 const deleteItem = item => {
-  editedIndex.value = dictionaries.value.indexOf(item);
+  editedIndex.value = sysItems.value.indexOf(item);
   editedItem.value = Object.assign({}, item);
   dialogDelete.value = true;
 };
 
 const deleteItemConfirm = () => {
-  const ec = editedItem.value.entryCode;
-  const ev = editedItem.value.entryValue;
+  const ec = editedItem.value.dictCode;
+  const ev = editedItem.value.itemKey;
   DictService.deleteDictItem(ec, ev)
     .then(() => {
       if (editedIndex.value > -1) {
-        dictionaries.value.splice(editedIndex.value, 1);
+        sysItems.value.splice(editedIndex.value, 1);
       }
       notify('删除成功', 'success');
       closeDelete();
@@ -180,13 +190,29 @@ const deleteItemConfirm = () => {
     });
 };
 const saveDictionary = () => {
-  if (editedIndex.value > -1) {
-    Object.assign(dictionaries.value[editedIndex.value], editedItem.value);
-  } else {
-    dictionaries.value.push(editedItem.value);
+  // 确保必要的字段存在
+  if (!editedItem.value.dictCode || !editedItem.value.itemKey) {
+    notify('请填写必要的字段', 'warning');
+    return;
   }
+
+  const itemToSave = editedItem.value as SysItem;
+  
+  if (editedIndex.value > -1) {
+    Object.assign(sysItems.value[editedIndex.value], itemToSave);
+  } else {
+    sysItems.value.push(itemToSave);
+  }
+  
+  // 创建Map对象用于API调用
+  const itemMap = new Map<string, string>();
+  itemMap.set('dictCode', String(itemToSave.dictCode));
+  itemMap.set('itemKey', itemToSave.itemKey);
+  if (itemToSave.itemValue) itemMap.set('itemValue', itemToSave.itemValue);
+  if (itemToSave.remark) itemMap.set('remark', itemToSave.remark);
+  
   // save
-  DictService.createOrUpdateDictItem(editedItem.value)
+  DictService.createOrUpdateDictItem(itemMap)
     .then(() => notify('保存成功', 'success'))
     .catch(err => notify('保存失败: ' + err, 'error'));
   close();

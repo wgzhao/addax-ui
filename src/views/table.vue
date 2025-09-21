@@ -29,37 +29,51 @@
             @click="confirmBatchDelete">批量删除</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-pencil"
+          <v-btn variant="tonal" prepend-icon="mdi-pencil" :disabled="selected.length === 0"
             @click="openDialog('BatchUpdate', 'BatchUpdate')">批量修改</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-plus" @click="openDialog('BatchAdd', 'BatchAdd')">批量新增表</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-plus" @click="openDialog('BatchAdd', 'BatchAdd')">新增表</v-btn>
         </v-col>
         <v-col cols="auto">
           <!-- old function doEtl('source') -->
-          <v-btn variant="tonal" prepend-icon="mdi-play" @click="updateSchema()">启动表更新</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-update" @click="updateSchema(null)">更新表信息</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-play" @click="doEtl(null)">批量采集</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-update" @click="updateSchema('all')">强制更新全部表信息</v-btn>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn variant="tonal" prepend-icon="mdi-database" :disabled="selected.length === 0" @click="doEtl(null)">批量采集</v-btn>
         </v-col>
       </v-row>
     </template>
     <v-card-text>
       <v-data-table-server density="compact" :items="table" :headers="headers" :items-per-page="currPageSize"
-        :items-length="totalItems" item-value="tid" :loading="loading" @update:options="loadItems" show-select
+        :items-length="totalItems" item-value="id" :loading="loading" @update:options="loadItems" show-select
         v-model="selected" :item-class="getRowClass">
+        <template v-slot:item.status="{ item }">
+          <v-chip 
+            :color="getStatusColor(item.status)" 
+            size="small" 
+            variant="flat"
+            class="font-weight-bold"
+          >
+            {{ item.status }}
+          </v-chip>
+        </template>
         <template v-slot:item.action="{ item }">
           <v-row justify="center" no-gutters>
             <v-btn small density="compact" color="primary" class="mr-1"
-              @click="openDialog('MainTableInfo', item)">主表信息</v-btn>
+              @click="openDialog('MainTableInfo', item)">表详情</v-btn>
             <v-btn small density="compact" color="secondary" class="mr-1"
               @click="openDialog('FieldsCompare', item)">字段对比</v-btn>
-            <!-- <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('CmdList', item)">命令列表</v-btn> -->
+            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('AddaxJob', item)">采集模板</v-btn>
             <v-btn small density="compact" color="success" class="mr-1"
               @click="openDialog('AddaxResult', item)">采集结果</v-btn>
             <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('LogFiles', item)">采集日志</v-btn>
-            <v-btn small density="compact" color="error" @click="confirmDelete(item)">删除</v-btn>
-            <v-btn small density="compact" color="info" @click="doEtl(item)">采集</v-btn>
+            <v-btn small density="compact" color="error" class="mr-1" @click="confirmDelete(item)">删除</v-btn>
+            <v-btn small density="compact" color="info" class="mr-1" @click="doEtl(item)">采集</v-btn>
+            <v-btn small density="compact" color="secondary" @click=" updateSchema(item.id)">表更新</v-btn>
           </v-row>
         </template>
       </v-data-table-server>
@@ -69,16 +83,14 @@
   <!-- 对话框 -->
   <v-dialog v-model="dialogVisible" fullwidth :retain-focus="false">
     <v-card>
-      <v-card-title>
-        <!-- <v-btn icon @click="closeDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn> -->
-        <v-list-item class="px-2">
-          <slot name="header" />
-          <template #append>
-            <v-btn class="btn btn-primary bg-primary" text="关闭" @click="closeDialog"></v-btn>
-          </template>
-        </v-list-item>
+      <v-card-title class="d-flex justify-space-between align-center px-4 py-3">
+        <span class="text-h6">{{ getDialogTitle() }}</span>
+        <v-btn 
+          variant="text" 
+          icon="mdi-close" 
+          size="small"
+          @click="closeDialog"
+        ></v-btn>
       </v-card-title>
 
       <v-divider />
@@ -160,7 +172,7 @@ import { notify } from '@/stores/notifier';
 // 异步按需加载组件，减轻首屏体积
 const MainTableInfo = defineAsyncComponent(() => import('@/components/table/MainTable.vue'));
 const FieldsCompare = defineAsyncComponent(() => import('@/components/table/FieldsCompare.vue'));
-const CmdList = defineAsyncComponent(() => import('@/components/table/CmdList.vue'));
+const AddaxJob = defineAsyncComponent(() => import('@/components/table/AddaxJob.vue'));
 const TableUsed = defineAsyncComponent(() => import('@/components/table/TableUsed.vue'));
 const AddaxResult = defineAsyncComponent(() => import('@/components/table/AddaxResult.vue'));
 const BatchAdd = defineAsyncComponent(() => import('@/components/table/BatchAdd.vue'));
@@ -186,7 +198,7 @@ const currentSortParam = ref([{
 const componentMap = {
   MainTableInfo,
   FieldsCompare,
-  CmdList,
+  AddaxJob,
   TableUsed,
   AddaxResult,
   BatchAdd,
@@ -195,7 +207,20 @@ const componentMap = {
 };
 
 function getRowClass(item: any) {
-  return selected.value.includes(item.tid) ? 'selected-row' : '';
+  return selected.value.includes(item.id) ? 'selected-row' : '';
+}
+
+// 根据状态返回对应的颜色
+function getStatusColor(status: string) {
+  const statusColorMap = {
+    'N': 'grey',           // N_未运行 - 灰色
+    'R': 'blue',           // R_正在运行 - 蓝色
+    'Y': 'success',        // Y_运行结束 - 绿色
+    'E': 'error',          // E_运行错误 - 红色
+    'X': 'warning',        // X_禁用 - 橙色
+    'W': 'purple'          // W_等待 - 紫色
+  };
+  return statusColorMap[status] || 'grey';
 }
 
 const selectOptions = [{
@@ -261,13 +286,13 @@ const statusOptions = [{
 const runStatus = ref("");
 
 const headers = ref([
-  { title: '系统名称', key: 'dbName', align: 'center' as const, sortable: true, width: '13%' },
-  { title: '源库', key: 'souOwner', align: 'center' as const, sortable: true, width: '5%' },
-  { title: '目标库', key: 'souSysid', align: 'center' as const, sortable: false, width: '3%' },
-  { title: '目标表', key: 'destTablename', align: 'center' as const, sortable: true, width: '20%' },
-  { title: '状态', key: 'flag', align: 'center' as const, sortable: true, width: '3%' },
+  { title: '系统名称', key: 'name', align: 'center' as const, sortable: true, width: '13%', value: (item) => `${item.name} (${item.code})` },
+  { title: '源库', key: 'sourceDb', align: 'center' as const, sortable: true, width: '5%' },
+  { title: '目标库', key: 'targetDb', align: 'center' as const, sortable: false, width: '5%' },
+  { title: '目标表', key: 'targetTable', align: 'center' as const, sortable: true, width: '20%' },
+  { title: '状态', key: 'status', align: 'center' as const, sortable: true, width: '3%' },
   { title: '剩余', key: 'retryCnt', align: 'center' as const, sortable: true, width: '2%' },
-  { title: '耗时', key: 'runtime', align: 'center' as const, sortable: true, width: '3%' },
+  { title: '耗时', key: 'duration', align: 'center' as const, sortable: true, width: '3%' },
   { title: '操作', key: 'action', align: 'center' as const, sortable: false, width: '40%' }
 ]);
 // 已使用全局 Notifier 替换旧的 alertMsg
@@ -283,8 +308,6 @@ const showModal = ref({
   LogFiles2: false,
 });
 
-type ShowModalKey = keyof typeof showModal.value;
-
 // 打开对话框并加载相应的组件
 function openDialog(componentName: string, com: any) {
   currentComponent.value = componentMap[componentName]
@@ -293,9 +316,31 @@ function openDialog(componentName: string, com: any) {
 }
 
 // 关闭对话框
+// 关闭对话框
 function closeDialog() {
   dialogVisible.value = false;
   currentComponent.value = null; // 清空内容
+}
+
+// 获取对话框标题
+function getDialogTitle() {
+  const componentTitleMap = {
+    'MainTableInfo': '主表信息',
+    'FieldsCompare': '字段对比', 
+    'CmdList': '命令列表',
+    'TableUsed': '使用场景',
+    'AddaxResult': '采集结果',
+    'BatchAdd': '批量新增表',
+    'LogFiles': '采集日志',
+    'BatchUpdate': '批量修改'
+  };
+  
+  if (!currentComponent.value) return '';
+  
+  const componentName = currentComponent.value.__name || 
+    Object.keys(componentMap).find(key => componentMap[key] === currentComponent.value);
+  
+  return componentTitleMap[componentName] || '详情';
 }
 
 function setParams(compName: string, comp: any) {
@@ -306,17 +351,23 @@ function setParams(compName: string, comp: any) {
     };
     return;
   }
-  if (compName == "MainTableInfo" || compName == "FieldsCompare" || compName == "CmdList") {
+  if (compName == "MainTableInfo") {
     currentParams.value = {
-      tid: comp.tid
+      table: comp
+    };
+    return;
+  }
+  if ( compName == "FieldsCompare" || compName == "AddaxJob") {
+    currentParams.value = {
+      tid: comp.id
     };
   } else if (compName == "TableUsed") {
     currentParams.value = {
-      tid: comp.destOwner + "." + comp.destTablename + "|" + comp.sysid
+      tid: comp.targetDb + "." + comp.targetTable + "|" + comp.sid
     };
   } else if (compName == "AddaxResult") {
     currentParams.value = {
-      tid: comp.tid
+      tid: comp.id
     };
   } else if (compName === "BatchAdd") {
     currentParams.value = {
@@ -324,12 +375,12 @@ function setParams(compName: string, comp: any) {
     };
   } else if (compName === "LogFiles") {
     currentParams.value = {
-      tid: comp.tid
+      tid: comp.id
     }
   }
   else {
     currentParams.value = {
-      tid: comp.tid
+      tid: comp.id
     };
   }
 }
@@ -338,19 +389,17 @@ const doEtl = (item: any | null) => {
   if (item != null) {
     // 单个采集
     showEtlProgress('手工采集', '正在执行单个表的数据采集...');
-    updateEtlProgress('正在执行单个表的数据采集...', `处理表: ${item.destTablename}`);
+    updateEtlProgress('正在执行单个表的数据采集...', `处理表: ${item.targetTable}`);
 
-    tableService.execETL(item.tid, 300000).then(() => { // 设置5分钟超时
-      addEtlResult(`表 ${item.destTablename} 采集成功`, true);
+    tableService.execETL(item.id, 300000).then(() => { // 设置5分钟超时
+      addEtlResult(`表 ${item.targetTable} 采集成功`, true);
       updateEtlProgress('采集完成');
       finishEtlProgress();
-      notify('手工采集任务已启动', 'success', 3000, 'mdi-check-circle');
     }).catch(res => {
       const errorMsg = res?.data || res?.message || '未知错误';
-      addEtlResult(`表 ${item.destTablename} 采集失败: ${errorMsg}`, false);
+      addEtlResult(`表 ${item.targetTable} 采集失败: ${errorMsg}`, false);
       updateEtlProgress('采集失败');
       finishEtlProgress();
-      notify('启动失败: ' + errorMsg, 'error', 4000, 'mdi-alert-circle');
     });
     return;
   }
@@ -371,9 +420,9 @@ const doEtl = (item: any | null) => {
   const executeSequentially = async () => {
     for (let i = 0; i < tids.length; i++) {
       const currentTid = tids[i];
-      // 通过 tid 获取表名等信息用于显示
-      const currentItem = table.value.find(item => item.tid === currentTid);
-      const currentTableName = currentItem ? currentItem.destTablename : currentTid;
+      // 通过 id 获取表名等信息用于显示
+      const currentItem = table.value.find(item => item.id === currentTid);
+      const currentTableName = currentItem ? currentItem.targetTable : currentTid;
       updateEtlProgress(
         `正在处理第 ${i + 1}/${totalCount} 个表...`,
         `当前处理: ${currentTableName}`
@@ -398,26 +447,16 @@ const doEtl = (item: any | null) => {
 
     // 清空选中项
     selected.value = [];
-
-    // 显示总结通知
-    if (failureCount === 0) {
-      notify(`批量采集完成，全部 ${successCount} 个表采集成功`, 'success', 3000, 'mdi-check-circle');
-    } else if (successCount === 0) {
-      notify(`批量采集完成，全部 ${failureCount} 个表采集失败`, 'error', 4000, 'mdi-alert-circle');
-    } else {
-      notify(`批量采集完成，成功: ${successCount}, 失败: ${failureCount}`, 'warning', 4000, 'mdi-alert');
-    }
   };
 
   executeSequentially().catch((error) => {
     updateEtlProgress('批量采集过程中发生错误');
     finishEtlProgress();
-    notify('批量采集过程中发生错误: ' + (error?.message || ''), 'error', 4000, 'mdi-alert-circle');
   });
 };
 
 const handleRecordUpdate = (newRecord) => {
-  const index = table.value.findIndex(item => item.tid === newRecord.tid);
+  const index = table.value.findIndex(item => item.id === newRecord.id);
   if (index > -1) {
     table.value.splice(index, 1, newRecord); // 响应式替换单个记录
   }
@@ -428,15 +467,15 @@ const handleRecordUpdate = (newRecord) => {
  * @param payload   
  * const payload = {
     tids: props.tid,
-    flag: flag.value,
+    status: status.value,
     retryCnt: retryCnt.value
   };
  */
 const handleBatchUpdate = (payload) => {
   payload.tids.forEach(tid => {
-    const index = table.value.findIndex(item => item.tid === tid);
+    const index = table.value.findIndex(item => item.id === tid);
     if (index > -1) {
-      table.value[index].flag = payload.flag;
+      table.value[index].status = payload.status;
       table.value[index].retryCnt = payload.retryCnt;
     }
   });
@@ -477,11 +516,16 @@ const _searchCore = () => loadItems({
 
 const searchTable = debounce(_searchCore, 400);
 
-function updateSchema() {
-  tableService.updateSchema().then(() => {
-    notify('更新成功', 'success', 3000, 'mdi-check-circle');
-  }).catch(res => {
-    notify('更新失败: ' + (res?.data || res?.message || ''), 'error', 4000, 'mdi-alert-circle');
+function updateSchema(isForce: string | null) {
+  tableService.updateSchema(isForce).then((response) => {
+    console.log('updateSchema response:', response);
+    // 使用后端返回的 data 字段作为提示消息
+    const message = response.data || '表结构更新任务已启动';
+    notify(message, 'success', 3000, 'mdi-check-circle');
+  }).catch(error => {
+    console.error('updateSchema error:', error);
+    const errorMsg = error?.response?.data?.message || error?.data || error?.message || error || '更新失败';
+    notify('更新失败: ' + errorMsg, 'error', 4000, 'mdi-alert-circle');
   });
 }
 
@@ -549,9 +593,9 @@ function confirmBatchDelete() {
 
 function deleteItem() {
   if (itemToDelete.value) {
-    const tid = itemToDelete.value.tid;
-    tableService.delete(tid).then(() => {
-      const index = table.value.findIndex(i => i.tid === tid);
+    const id = itemToDelete.value.id;
+    tableService.delete(id).then(() => {
+      const index = table.value.findIndex(i => i.id === id);
       if (index > -1) {
         table.value.splice(index, 1); // 删除项
       }

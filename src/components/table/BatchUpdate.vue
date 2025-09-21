@@ -9,7 +9,7 @@
       <v-container>
         <v-row>
           <v-col cols="12" md="6">
-            <v-select v-model="flag" :items="statusOptions" item-title="text" item-value="value" density="compact"
+            <v-select v-model="status" :items="statusOptions" item-title="text" item-value="value" density="compact"
               label="状态" hint="选择要更新的状态值" persistent-hint></v-select>
           </v-col>
           <v-col cols="12" md="6">
@@ -41,7 +41,7 @@ const props = defineProps({
   }
 });
 
-const flag = ref("N");
+const status = ref("N");
 const retryCnt = ref(3);
 const loading = ref(false);
 
@@ -50,7 +50,7 @@ const selectedCount = computed(() => {
 });
 
 const isValid = computed(() => {
-  return flag.value || (retryCnt.value !== null && retryCnt.value !== undefined);
+  return status.value || (retryCnt.value !== null && retryCnt.value !== undefined);
 });
 
 const statusOptions = [
@@ -71,7 +71,7 @@ function updateItem() {
 
   const payload = {
     tids: props.tid,
-    flag: flag.value,
+    status: status.value,
     retryCnt: retryCnt.value
   };
   loading.value = false;

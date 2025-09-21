@@ -49,7 +49,7 @@ function getColor(flag: string) {
 }
 
 onMounted(() => {
-  Requests.get("/maintable/plantask/list").then(res => {
+  Requests.get("/plan/list").then(res => {
     data.value = res.data;
   });
 });

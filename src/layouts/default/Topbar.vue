@@ -70,10 +70,10 @@ const urls = ref([
     name: "ETL",
     title: "采集监控"
   },
-  {
-    path: "/system-info",
-    title: "系统一览"
-  },
+  // {
+  //   path: "/system-info",
+  //   title: "系统一览"
+  // },
   {
     path: "/table",
     title: "采集表管理"
@@ -94,10 +94,10 @@ const urls = ref([
     path: "/risk",
     title: "风险点检测"
   },
-  {
-    path: "/check",
-    title: "盘后检查"
-  },
+  // {
+  //   path: "/check",
+  //   title: "盘后检查"
+  // },
 ]);
 
 const theme = useTheme();

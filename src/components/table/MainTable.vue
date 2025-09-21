@@ -6,110 +6,66 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="3" class="m-0">
-          <v-text-field v-model="mainTable.sysName" label="源系统"></v-text-field>
+          <v-text-field v-model="table.name" label="源系统"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.souFilter" label="源筛选"></v-text-field>
+          <v-text-field v-model="table.filter" label="过滤规则"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.souOwner" label="源用户"></v-text-field>
+          <v-text-field v-model="table.status" hint="N:未采集; Y:已采集; X:不采集;E:采集错误;R:正在采集" label="状态"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.souTablename" label="源表名"></v-text-field>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.destTablename" label="目标表"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.destPartKind" label="入库规则"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.flag" label="状态"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.retryCnt" label="剩余次数"></v-text-field>
+          <v-text-field v-model="table.retryCnt" label="剩余次数"></v-text-field>
         </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.paramSou" label="参数组"></v-text-field>
+          <v-text-field v-model="table.sourceDb" label="源库"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.bpreview" label="预发布"></v-text-field>
+          <v-text-field v-model="table.sourceTable" label="源表"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.bcreate" label="是否建表"></v-text-field>
+          <v-text-field v-model="table.targetDb" label="目标库"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.bupdate" label="是否更新"></v-text-field>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.realtimeInterval" label="实时间隔"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.realtimeTaskgroup" label="实时任务组"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.realtimeSouOwner" label="实时源用户"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.realtimeSouFilter" label="实时筛选条件"></v-text-field>
+          <v-text-field v-model="table.targetTable" label="目标表"></v-text-field>
         </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.realtimeFixed" label="实时定点"></v-text-field>
+          <v-text-field v-model="table.partKind" label="入库规则"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.etlKind" label="采集模式" hint="A:盘后采集,R:实时采集,默认为A"></v-text-field>
+          <v-text-field v-model="table.createFlag" label="是否建表"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.realtimeIntervalRange" label="实时间隔范围"></v-text-field>
+          <v-text-field v-model="table.updateFlag" label="是否更新"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.souSplit" label="源表分片字段"></v-text-field>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.afterRetryPntype" label="盘后重采计划"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.afterRetryFixed" label="盘后重采时间"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.startTime" label="开始时间"></v-text-field>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.endTime" label="结束时间"></v-text-field>
+          <v-text-field v-model="table.kind" label="采集模式" hint="A:盘后采集,R:实时采集,默认为A"></v-text-field>
         </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.runtime" label="运行耗时"></v-text-field>
+          <v-text-field v-model="table.startTime" label="开始时间"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.tid" label="编号"></v-text-field>
+          <v-text-field v-model="table.endTime" label="结束时间"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.runtimeAdd" label="运行耗时手工"></v-text-field>
+          <v-text-field v-model="table.duration" label="运行耗时"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="mainTable.remark" label="备注"></v-text-field>
+          <v-text-field v-model="table.remark" label="备注"></v-text-field>
         </v-col>
       </v-row>
     </v-container>
     <v-card-actions>
+      <v-spacer></v-spacer>
       <v-btn type="reset" class="bg-primary">取消</v-btn>
       <v-btn type="submit" class="btn btn-primary bg-primary">
         保存</v-btn>
@@ -119,70 +75,63 @@
   <!-- </dialog-comp> -->
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { notify } from '@/stores/notifier';
 import OdsService from "@/service/tableService";
-// import MainTableType from "@/types/mainTable";
+import { VEtlWithSource, EtlTable } from "@/types/database";
 
 const props = defineProps({
-  tid: {
-    type: String,
+  table: {
+    type: Object as () => VEtlWithSource,
     required: true,
   }
-}
-);
-
-const mainTable = ref({
-  sysName: "",
-  souFilter: "",
-  souOwner: "",
-  souTablename: "",
-  destTablename: "",
-  destPartKind: "",
-  flag: "",
-  retryCnt: 0,
-  paramSou: "",
-  bpreview: "",
-  bcreate: "",
-  bupdate: "",
-  realtimeInterval: "",
-  realtimeTaskgroup: "",
-  realtimeSouOwner: "",
-  realtimeSouFilter: "",
-  realtimeFixed: "",
-  etlKind: "",
-  realtimeIntervalRange: "",
-  souSplit: "",
-  afterRetryPntype: "",
-  afterRetryFixed: "",
-  startTime: "",
-  endTime: "",
-  runtime: "",
-  tid: "",
-  runtimeAdd: "",
-  remark: "",
 });
+
+// 创建本地的响应式副本用于编辑
+const table = ref<VEtlWithSource>({ ...props.table });
+
+// 监听props变化，同步更新本地副本
+watch(() => props.table, (newTable) => {
+  table.value = { ...newTable };
+}, { deep: true });
 
 // define emit
 const emit = defineEmits(["closeDialog", "update:record"]);
 
 const saveOds = () => {
-  mainTable.value["souSysid"] = mainTable.value["destOwner"].substring(3);
-  OdsService.save(mainTable.value)
+  // 从VEtlWithSource中提取EtlTable相关的属性
+  const etlTableData: Partial<EtlTable> = {
+    id: table.value.id,
+    sourceDb: table.value.sourceDb,
+    sourceTable: table.value.sourceTable,
+    targetDb: table.value.targetDb,
+    targetTable: table.value.targetTable,
+    partKind: table.value.partKind,
+    partName: table.value.partName,
+    filter: table.value.filter,
+    status: table.value.status,
+    kind: table.value.kind,
+    updateFlag: table.value.updateFlag,
+    createFlag: table.value.createFlag,
+    retryCnt: table.value.retryCnt,
+    startTime: table.value.startTime,
+    endTime: table.value.endTime,
+    maxRuntime: table.value.maxRuntime,
+    sid: table.value.sid,
+    duration: table.value.duration
+  };
+
+  OdsService.save(etlTableData)
     .then(() => {
       notify('保存成功', 'success');
       emit('closeDialog');
-      emit('update:record', mainTable.value);
+      emit('update:record', { ...table.value, ...etlTableData });
     })
     .catch(err => {
       notify('保存失败: ' + err, 'error');
     });
 };
 
-onMounted(() => {
-  console.log("tid: ", props.tid);
-  OdsService.fetchTableDetail(props.tid).then(res => (mainTable.value = res.data));
-});
 </script>
 <style>
 .v-input .v-field {

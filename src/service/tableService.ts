@@ -9,7 +9,7 @@ class TableService {
       page: page,
       pageSize: pageSize,
       q: q,
-      flag: runStatus,
+      status: runStatus,
       sortField: sortBy.sortField,
       sortOrder: sortBy.sortOrder
     });
@@ -64,16 +64,30 @@ class TableService {
   }
   // 7. 批量更新采集表的状态和重试测试
   updateStatus(data: any) {
-    return Requests.post(this.prefix + "/batchUpdateStatusAndFlag", data);
+    return Requests.post(this.prefix + "/batchUpdateStatus", data);
   }
   // 8. 表更新
 
-  updateSchema() {
-    return Requests.post(this.prefix + "/updateSchema")
+  updateSchema(flag: string | null) {
+    if (flag == null) {
+      // 默认更新逻辑
+      return Requests.post(this.prefix + "/updateSchema");
+    }
+    else if (flag === "all") {
+      // 强制更新逻辑
+      return Requests.post(this.prefix + "/updateSchema", { mode: "all" });
+    } else {
+        return Requests.post(this.prefix + "/updateSchema", { tid: flag });
+    }
   }
 
   delete(tid: string) {
     return Requests.delete(this.prefix + "/" + tid);
+  }
+
+  // 获取采集模板
+  fetchAddaxJob(tid: string) {
+    return Requests.get(this.prefix + "/addaxJob/" + tid);
   }
 }
 

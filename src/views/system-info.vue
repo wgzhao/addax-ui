@@ -64,11 +64,11 @@ const etlAndDsHeaders = [
 
 const etlInfoHeaders = [
   { title: '系统名称', key: 'sysName' },
-  { title: '源用户', key: 'souOwner' },
-  { title: '源表名', key: 'souTablename' },
-  { title: '源表筛选', key: 'souFilter' },
+  { title: '源用户', key: 'sourceDb' },
+  { title: '源表名', key: 'sourceTable' },
+  { title: '源表筛选', key: 'filter' },
   { title: '目标用户', key: 'destOwner' },
-  { title: '目标表名', key: 'destTablename' }
+  { title: '目标表名', key: 'targetTable' }
 ]
 
 const fetchData = () => {

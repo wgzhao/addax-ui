@@ -4,18 +4,18 @@
       <v-container>
         <v-row dense>
           <v-col cols="12" sm="6" md="2">
-            <v-text-field v-model="sourceItem.dbIdEtl" label="采集编号" density="compact"></v-text-field>
+            <v-text-field v-model="sourceItem.code" label="采集编号" density="compact"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="2">
-            <v-text-field v-model="sourceItem.dbName" label="采集名称" required density="compact"></v-text-field>
+            <v-text-field v-model="sourceItem.name" label="采集名称" required density="compact"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
             <div>
-              <v-switch v-model="sourceItem.bvalid" true-value="Y" false-value="N" color="primary" hide-details
+              <v-switch v-model="sourceItem.enabled" true-value="true" false-value="false" color="primary" hide-details
                 density="compact">
                 <template v-slot:append>
-                  <v-chip size="x-small" :color="sourceItem.bvalid === 'Y' ? 'success' : 'error'"
-                    :text="sourceItem.bvalid === 'Y' ? '已启用' : '已禁用'" class="ml-1"></v-chip>
+                  <v-chip size="x-small" :color="sourceItem.enabled ? 'success' : 'error'"
+                    :text="sourceItem.enabled ? '已启用' : '已禁用'" class="ml-1"></v-chip>
                 </template>
               </v-switch>
             </div>
@@ -23,24 +23,20 @@
         </v-row>
         <v-row dense>
           <v-col cols="12" sm="12" md="6">
-            <v-text-field v-model="sourceItem.dbConstr" placeholder="JDBC 连接串" label="JDBC 连接地址" required
+            <v-text-field v-model="sourceItem.url" placeholder="JDBC 连接串" label="JDBC 连接地址" required
               density="compact"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-text-field v-model="sourceItem.dbUserEtl" complete="false" label="用户名" density="compact"></v-text-field>
+            <v-text-field v-model="sourceItem.username" complete="false" label="用户名" density="compact"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-text-field v-model="sourceItem.dbPassEtl" label="密码" type="password" density="compact"></v-text-field>
+            <v-text-field v-model="sourceItem.pass" label="密码" type="password" density="compact"></v-text-field>
           </v-col>
         </v-row>
         <!-- 采集信息 -->
         <v-row dense class="mt-3">
-          <v-col cols="12" sm="6" md="3">
-            <v-text-field v-model="sourceItem.dbParalEtl" label="并发数" type="number" placeholder="0 表示默认"
-              density="compact"></v-text-field>
-          </v-col>
           <v-col cols="12" sm="6" md="6">
-            <v-text-field v-model="sourceItem.dbStart" placeholder="HH:mm 或 HH:mm:ss (例如: 08:30 或 08:30:15)"
+            <v-text-field v-model="sourceItem.startAt" placeholder="HH:mm 或 HH:mm:ss (例如: 08:30 或 08:30:15)"
               label="采集时间" :rules="[timeFormatRule]" :error-messages="timeError" density="compact">
             </v-text-field>
           </v-col>
@@ -49,7 +45,7 @@
         <!-- 备注信息 -->
         <v-row dense class="mt-3">
           <v-col cols="12">
-            <v-textarea v-model="sourceItem.dbRemark" label="备注信息" auto-grow rows="4" density="compact"></v-textarea>
+            <v-textarea v-model="sourceItem.remark" label="备注信息" auto-grow rows="4" density="compact"></v-textarea>
           </v-col>
         </v-row>
       </v-container>
@@ -68,23 +64,25 @@
 import { onMounted, ref, computed } from "vue";
 import { notify } from '@/stores/notifier';
 import DSService from "@/service/sourceService";
-import { TbImpDb } from "@/types/database";
+import { EtlSource } from "@/types/database";
 
 const props = defineProps({
   sid: String,
   mode: String
 });
 
-const sourceItem = ref<TbImpDb>({
-  dbIdEtl: '',
-  dbName: '',
-  dbConstr: '',
-  dbUserEtl: '',
-  dbPassEtl: '',
-  dbParalEtl: 0,
-  dbStart: '',
-  dbRemark: '',
-  bvalid: 'Y'
+const sourceItem = ref<EtlSource>({
+  id: 0,
+  code: "",
+  name: "",
+  url: "",
+  username: "",
+  pass: "",
+  startAt: "",
+  prerequisite: "",
+  preScript: "",
+  remark: "",
+  enabled: true
 })
 
 const emit = defineEmits(["closeDialog", "save"]);
@@ -104,10 +102,10 @@ const timeFormatRule = computed(() => {
 
 // 时间错误消息
 const timeError = computed(() => {
-  if (!sourceItem.value.dbStart) return [];
+  if (!sourceItem.value.startAt) return [];
   // 支持 HH:mm 和 HH:mm:ss 两种格式
   const timeRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
-  if (!timeRegex.test(sourceItem.value.dbStart)) {
+  if (!timeRegex.test(sourceItem.value.startAt)) {
     return ['时间格式不正确，请使用 HH:mm 或 HH:mm:ss 格式（如：08:30 或 08:30:15）'];
   }
   return [];
@@ -129,14 +127,14 @@ const formatTimeInput = (value: string) => {
 const save = () => {
   if (props.mode === "add" || props.mode === "edit") {
     // 验证时间格式
-    if (sourceItem.value.dbStart && timeError.value.length > 0) {
+    if (sourceItem.value.startAt && timeError.value.length > 0) {
       notify('请检查启动时间格式', 'error');
       return;
     }
 
     // 格式化时间输入，自动补充秒数
-    if (sourceItem.value.dbStart) {
-      sourceItem.value.dbStart = formatTimeInput(sourceItem.value.dbStart);
+    if (sourceItem.value.startAt) {
+      sourceItem.value.startAt = formatTimeInput(sourceItem.value.startAt);
     }
 
     DSService.save(sourceItem.value)
@@ -157,7 +155,7 @@ const close = () => {
 };
 
 const testConnect = () => {
-  DSService.testConnect(sourceItem.value.dbConstr, sourceItem.value.dbUserEtl, sourceItem.value.dbPassEtl)
+  DSService.testConnect(sourceItem.value.url, sourceItem.value.username, sourceItem.value.pass)
     .then(resp => {
       if (resp.code === 0) {
         notify('连接成功', 'success');

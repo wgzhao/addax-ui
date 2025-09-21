@@ -44,7 +44,7 @@
               </div>
             </v-overlay>
             <!-- 日志内容 -->
-            <div v-if="fContent" class="font-monospace text-body-2 pa-4 log-content" v-html="fContent"></div>
+            <div v-if="fContent" class="text-body-2 pa-4 log-content" v-html="fContent"></div>
             <!-- 加载失败状态 -->
             <div v-else-if="!loading" class="text-center pa-8">
               <v-icon size="48" color="error" class="mb-4">mdi-alert-circle</v-icon>
@@ -107,6 +107,11 @@ const getContent = (id: number) => {
 onMounted(() => {
   LogService.getLogFiles(props.tid).then(res => {
     logList.value = res.data;
+    // 如果有日志文件，自动选择并加载最新的一条（第一条）
+    if (res.data && res.data.length > 0) {
+      const latestLog = res.data[0];
+      getContent(latestLog.id);
+    }
   });
 });
 </script>
@@ -122,6 +127,7 @@ onMounted(() => {
   font-size: 0.875rem;
   min-height: 200px;
   /* 确保有足够的高度显示加载状态 */
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 }
 
 .log-content::-webkit-scrollbar {

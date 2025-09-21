@@ -19,10 +19,5 @@ class MonitorService {
   fetchRejectTask() {
     return Requests.get(this.prefix + '/rejectTask')
   }
-
-  // 日间实时采集任务执行情况
-  fetchRealtimeTask() {
-    return Requests.get(this.prefix + '/realtimeTask')
-  }
 }
 export const monitorService = new MonitorService()

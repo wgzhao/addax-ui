@@ -1,18 +1,18 @@
 <template>
   <!-- ODS 采集 - 批量新增表 -->
-  <v-card title="ODS 采集 - 批量新增表">
+  <v-card flat>
     <v-card-text>
       <v-row>
-        <v-col cols="4">
-          <v-select :items="sourceSystemList" item-title="name" v-model="selectedSourceId" item-value="sysid"
+        <v-col cols="3">
+          <v-select :items="sourceSystemList" item-title="name" v-model="selectedSourceId" item-value="id"
             density="compact" return-object single-line>
             <template #prepend>
               <span class="me-2">选择采集源</span>
             </template>
           </v-select>
         </v-col>
-        <v-col cols="4">
-          <v-select :items="sourceDbs" :disabled="!selectedSourceId.url" v-model="selectedDb" density="compact"
+        <v-col cols="3">
+          <v-select :items="sourceDbs" :disabled="!selectedSourceId?.url" v-model="selectedDb" density="compact"
             single-line>
             <template #prepend>
               <span class="me-2">选择库</span>
@@ -22,9 +22,26 @@
             </template>
           </v-select>
         </v-col>
+      <!-- 目标库名设置行 -->
+ 
+        <v-col cols="2" >
+          <v-text-field 
+            v-model="targetDb" 
+            label="目标库名" 
+            density="compact"
+            hint="默认库名: ods + 源系统编号"
+            persistent-hint
+            :rules="[rules.required]"
+          >
+            <template #prepend>
+              <span class="me-2">目标库</span>
+            </template>
+          </v-text-field>
+        </v-col>
+
         <v-spacer />
         <v-col cols="2">
-          <v-btn color="primary" @click="saveItems" :loading="loadingSave" :disabled="selectedCnt === 0">保存</v-btn>
+          <v-btn color="primary" @click="saveItems" :loading="loadingSave" :disabled="selectedCnt === 0 || !targetDb">保存</v-btn>
         </v-col>
       </v-row>
 
@@ -45,7 +62,7 @@
       <div class="table-container">
         <!-- tables -->
         <v-data-table :items="tables" :headers="headers" :items-per-page="15" density="compact" show-select
-          v-model="selectedTables" :search="search" item-value="souTablename" v-if="tables.length > 0" return-object />
+          v-model="selectedTables" :search="search" item-value="sourceTable" v-if="tables.length > 0" return-object />
 
         <v-alert v-else-if="loadingTables" type="info" variant="tonal" class="mt-4">
           正在加载表列表，请稍候...
@@ -82,6 +99,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { notify } from '@/stores/notifier';
 import request from "@/utils/requests";
+import { EtlSource, EtlTable } from "@/types/database";
 
 const props = defineProps({
   tid: {
@@ -94,11 +112,12 @@ const props = defineProps({
 const emit = defineEmits(['closeDialog', 'refresh-data']);
 
 const headers = ref([
-  { title: "源系统", key: "souSysid" },
-  { title: "源筛选", key: "souFilter" },
-  { title: "源用户", key: "souOwner" },
-  { title: "源表名", key: "souTablename" },
-  { title: "目标表", key: "destTablename" }
+  { title: "源系统", key: "sid" },
+  { title: "源筛选", key: "filter" },
+  { title: "源用户", key: "sourceDb" },
+  { title: "源表名", key: "sourceTable" },
+  { title: "目标库", key: "targetDb" },
+  { title: "目标表", key: "targetTable" }
 ]);
 
 // Loading states
@@ -108,56 +127,38 @@ const tableLoadError = ref('');
 const showSuccessDialog = ref(false);
 const successMessage = ref('');
 const search = ref(''); // 新增：搜索关键字
-const selectedTables = ref<Table[]>([]); // 新增：已选择的表格
+const selectedTables = ref<EtlTable[]>([]); // 新增：已选择的表格
+const targetDb = ref(''); // 新增：目标库名
 
-interface Table {
-  souSysid: string;
-  souFilter: string;
-  souOwner: string;
-  souTablename: string;
-  destTablename: string;
-  destPartKind: string;
-  flag: string;
-  paramSou: string;
-  bupdate: string;
-  bcreate: string;
-  retryCnt: number;
-  etlKind: string;
-  bpreview: string;
-  realtimeInterval: number;
-  btdh: string;
-  runtimeAdd: number;
-}
+// 表单验证规则
+const rules = {
+  required: (value: string) => !!value || '此字段为必填项'
+};
+
+
 // 选择的采集源ID
-const selectedSourceId = ref({
-  sysid: "",
-  url: "",
-  username: "",
-  password: "",
-  name: ""
-});
+const selectedSourceId = ref<EtlSource | null>(null);
 
 const selectedDb = ref()
 
-const tables = ref<Table[]>([]);
+const tables = ref<EtlTable[]>([]);
 
-const defaultItem = ref<Table>({
-  souSysid: "",
-  souFilter: "1=1",
-  souOwner: "",
-  souTablename: "",
-  destTablename: "",
-  destPartKind: "D",
-  flag: "W",
-  paramSou: "C",
-  bupdate: "Y",
-  bcreate: "Y",
+const defaultItem = ref<EtlTable>({
+  id: null,
+  sourceDb: "",
+  sourceTable: "",
+  targetDb: "",
+  targetTable: "",
+  partKind: "D",
+  partName: "logdate",
+  filter: "1=1",
+  status: "N",
+  kind: "A",
+  updateFlag: "Y",
+  createFlag: "Y",
   retryCnt: 3,
-  etlKind: "A",
-  bpreview: "N",
-  realtimeInterval: 0,
-  btdh: "N",
-  runtimeAdd: 0
+  sid: null,
+  duration: 0
 });
 
 const sourceSystemList = ref([]);
@@ -167,18 +168,26 @@ const sourceDbs = ref([]);
 const selectedCnt = computed(() => selectedTables.value.length);
 
 watch(selectedSourceId, (val) => {
-  if (val.url) {
+  if (val?.url) {
     getDbsBySourceId();
+  }
+  // 自动设置目标库名
+  if (val?.code) {
+    targetDb.value = 'ods' + val.code.toLowerCase();
+  } else {
+    targetDb.value = '';
   }
 });
 
 const getDbsBySourceId = async () => {
+  if (!selectedSourceId.value) return;
+  
   try {
-    const res = await request.post(`/maintable/ods/dbSources`,
+    const res = await request.post(`/table/dbSources`,
       {
         url: selectedSourceId.value.url,
         username: selectedSourceId.value.username,
-        password: selectedSourceId.value.password
+        password: selectedSourceId.value.pass
       }
     );
     sourceDbs.value = res.data;
@@ -189,7 +198,7 @@ const getDbsBySourceId = async () => {
 };
 
 const fetchSourceData = () => {
-  request.get("/maintable/ods/sourceSystem").then(res => {
+  request.get("/table/sourceSystem").then(res => {
     sourceSystemList.value = res.data;
   }).catch(error => {
     console.error("获取源系统列表失败", error);
@@ -202,28 +211,35 @@ const saveItems = async () => {
     return;
   }
 
+  if (!targetDb.value) {
+    notify('请设置目标库名', 'warning');
+    return;
+  }
+
   loadingSave.value = true;
 
   // set destPardKind for each item and fix destTablename
   const itemsToSave = selectedTables.value.map(item => {
     const saveItem = { ...item };
+    // set targetDb for all items
+    saveItem.targetDb = targetDb.value;
     // set destTablename
-    if (saveItem.destTablename == "") {
-      saveItem.destTablename = saveItem.souTablename;
+    if (saveItem.targetTable == "") {
+      saveItem.targetTable = saveItem.sourceTable;
     }
     return saveItem;
   });
 
   try {
     // save data
-    const response = await request.post("/maintable/ods/batchSave", itemsToSave, {
+    const response = await request.post("/table/batchSave", itemsToSave, {
       headers: {
         "Content-Type": "application/json"
       }
     });
 
     // Show success message
-    successMessage.value = `成功添加 ${itemsToSave.length} 个表`;
+    successMessage.value = `成功添加 ${itemsToSave.length} 个表到目标库 ${targetDb.value}`;
     showSuccessDialog.value = true;
 
   } catch (error) {
@@ -241,7 +257,7 @@ const handleSuccessConfirm = () => {
 };
 
 const getTables = async () => {
-  if (!selectedSourceId.value.sysid || !selectedDb.value) {
+  if (!selectedSourceId.value?.id || !selectedDb.value) {
     tableLoadError.value = '请选择源系统和数据库';
     return;
   }
@@ -253,12 +269,12 @@ const getTables = async () => {
     // clear tables
     tables.value = [];
 
-    const res = await request.post(`/maintable/ods/tables`,
+    const res = await request.post(`/table/tables`,
       {
-        sysId: selectedSourceId.value.sysid,
+        id: selectedSourceId.value.id,
         url: selectedSourceId.value.url,
         username: selectedSourceId.value.username,
-        password: selectedSourceId.value.password,
+        pass: selectedSourceId.value.pass,
         db: selectedDb.value
       }
     );
@@ -267,13 +283,13 @@ const getTables = async () => {
       res.data.forEach(element => {
         // new defaultItem and populate it
         const newItem = { ...defaultItem.value };
-        newItem.souSysid = selectedSourceId.value.sysid;
-        newItem.souOwner = selectedDb.value;
-        newItem.souTablename = element;
-        newItem.destTablename = element;
+        newItem.sid = selectedSourceId.value!.id;
+        newItem.sourceDb = selectedDb.value;
+        newItem.sourceTable = element;
+        newItem.targetDb = targetDb.value; // 设置目标库名
+        newItem.targetTable = element;
         tables.value.push(newItem);
       });
-      console.log(tables.value);
       // Show feedback
       tableLoadError.value = '';
 

@@ -29,15 +29,6 @@
         </v-card>
       </v-col>
 
-      <!-- 日间实时采集任务（占用全宽） -->
-      <v-col cols="12">
-        <v-card flat :title="headers[3].title">
-          <v-card-text>
-            <v-data-table :items="data.realtimeTask" :headers="headers[3].headers" density="compact"
-              :sort-by="headers[3].sortBy" class="elevation-1" />
-          </v-card-text>
-        </v-card>
-      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -50,7 +41,6 @@ const data = ref({
   accomplishList: [],
   specialTask: [],
   rejectTask: [],
-  realtimeTask: []
 })
 
 const headers = [
@@ -162,34 +152,19 @@ const headers = [
       { title: '开始时间', key: 'startTs' },
       { title: '结束时间', key: 'endTs' }
     ]
-  },
-  {
-    name: 'realtimeTask',
-    api: 'realtimeTask',
-    title: '日间实时采集任务执行情况(最近1小时)',
-    sortBy: [],
-    headers: [
-      { title: '最近一次', key: 'LAST_TIMES' },
-      { title: '下一次', key: 'NEXT_TIMES' },
-      { title: '任务名称', key: 'SPNAME' },
-      { title: '开始时间', key: 'START_TIME' },
-      { title: '结束时间', key: 'END_TIME' }
-    ]
   }
 ]
 
 const getData = async () => {
   try {
-    const [accomplishList, specialTask, rejectTask, realtimeTask] = await Promise.all([
+    const [accomplishList, specialTask, rejectTask] = await Promise.all([
       monitorService.fetchAccomplishList(),
       monitorService.fetchSpecialTask(),
       monitorService.fetchRejectTask(),
-      monitorService.fetchRealtimeTask()
     ])
     data.value.accomplishList = accomplishList.data
     data.value.specialTask = specialTask.data
     data.value.rejectTask = rejectTask.data
-    data.value.realtimeTask = realtimeTask.data
   } catch (error) {
     console.error('Error fetching data:', error)
   }

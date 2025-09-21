@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddaxJob: typeof import('./../components/table/AddaxJob.vue')['default']
     AddaxResult: typeof import('./../components/table/AddaxResult.vue')['default']
     AddSource: typeof import('./../components/source/AddSource.vue')['default']
     AppBreadcrumb: typeof import('./../components/AppBreadcrumb.vue')['default']
@@ -24,6 +25,7 @@ declare module 'vue' {
     LogModal: typeof import('./../components/table/LogModal.vue')['default']
     MainTable: typeof import('./../components/table/MainTable.vue')['default']
     NavbarThemeSwitcher: typeof import('./../components/NavbarThemeSwitcher.vue')['default']
+    Notifier: typeof import('./../components/Notifier.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TableUsed: typeof import('./../components/table/TableUsed.vue')['default']

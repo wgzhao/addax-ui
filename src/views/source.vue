@@ -19,15 +19,15 @@
       </template>
       <v-card-text>
         <v-data-table :items="impdbs" :headers="headers" :search="searchValue" density="compact" items-per-page="20">
-          <template v-slot:item.bvalid="{ item }">
-            <v-chip size="small" :color="item.bvalid === 'Y' ? 'success' : 'error'"
-              :text="item.bvalid === 'Y' ? '已启用' : '已禁用'" class="ml-2"></v-chip>
+          <template v-slot:item.enabled="{ item }">
+            <v-chip size="small" :color="item.enabled == true ? 'success' : 'error'"
+              :text="item.enabled == true ? '已启用' : '已禁用'" class="ml-2"></v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn color="secondary" class="btn btn-xs btn-info me-2" @click="doAction(item.id, 'show')">详情</v-btn>
             <v-btn color="primary" class="btn btn-xs btn-warning me-2" @click="doAction(item.id, 'edit')">编辑</v-btn>
             <v-btn color="error" class="btn btn-xs btn-danger"
-              @click="openDeleteDialog(item.id, item.dbName)">删除</v-btn>
+              @click="openDeleteDialog(item.id, item.name)">删除</v-btn>
             <!-- <a href="#" class="btn btn-xs btn-info">使用场景</a>
                         <a href="#" class="btn btn-xs btn-info">探索源库</a> -->
           </template>
@@ -85,35 +85,12 @@ const title = computed(() => {
 const sourceItem = ref({});
 const searchValue = ref("");
 const headers = [
-  { title: "名称", key: "dbName" },
-  { title: "采集编号", key: "dbIdEtl" },
-  { title: "服务编号", key: "dbIdDs" },
-  { title: "连接串", key: "dbConstr" },
-  { title: "是否启用", key: "bvalid" },
+  { title: "名称", key: "name" },
+  { title: "采集编号", key: "code" },
+  { title: "连接串", key: "url" },
+  { title: "是否启用", key: "enabled" },
   {
-    title: "采集时间", key: "dbStart", value: item => {
-      if (!item.dbStart) return '-';
-      const strValue = String(item.dbStart);
-
-      // Single digit (e.g., 7 → 07:00)
-      if (strValue.length === 1) {
-        return `0${strValue}:00`;
-      }
-      // Two digits (e.g., 12 → 12:00)
-      else if (strValue.length === 2) {
-        return `${strValue}:00`;
-      }
-      // Three digits (e.g., 120 → 01:20)
-      else if (strValue.length === 3) {
-        return `0${strValue.charAt(0)}:${strValue.substring(1)}`;
-      }
-      // Four digits (e.g., 2203 → 22:03)
-      else if (strValue.length === 4) {
-        return `${strValue.substring(0, 2)}:${strValue.substring(2)}`;
-      }
-
-      return item.dbStart;
-    }
+    title: "采集时间", key: "startAt"
   },
   { title: "操作", value: "actions", align: "center" }
 ];
