@@ -52,51 +52,28 @@ const headers = [
     headers: [
       {
         title: '启动',
-        key: 'dbStart',
-        value: (item) => {
-          if (!item.dbStart) return '-'
-          const strValue = String(item.dbStart)
-
-          // Single digit (e.g., 7 → 07:00)
-          if (strValue.length === 1) {
-            return `0${strValue}:00`
-          }
-          // Two digits (e.g., 12 → 12:00)
-          else if (strValue.length === 2) {
-            return `${strValue}:00`
-          }
-          // Three digits (e.g., 120 → 01:20)
-          else if (strValue.length === 3) {
-            return `0${strValue.charAt(0)}:${strValue.substring(1)}`
-          }
-          // Four digits (e.g., 2203 → 22:03)
-          else if (strValue.length === 4) {
-            return `${strValue.substring(0, 2)}:${strValue.substring(2)}`
-          }
-
-          return item.dbStart
-        }
+        key: 'start_at',
       },
-      { title: '数据源', key: 'sysname' },
+      { title: '数据源', key: 'sys_name' },
       {
         title: '整体情况',
         align: 'center',
         value: '',
         children: [
-          { title: '总数', key: 'totalCnt' },
-          { title: '完成数', key: 'overCnt' },
+          { title: '总数', key: 'total_cnt' },
+          { title: '完成数', key: 'succ_cnt' },
           {
             title: '完成率',
             key: 'overPrec',
-            value: (item) => `${Math.round(item.overPrec * 100)}%`,
+            value: (item) => `${Math.round(item.succ_cnt / item.total_cnt * 100)}%`,
             cellProps: ({ value }) => ({
               class: value === '100%' ? 'text-success' : 'text-warning'
             })
           },
-          { title: '运行', key: 'runCnt' },
-          { title: '错误', key: 'errCnt' },
-          { title: '未执行', key: 'noCnt' },
-          { title: '未建表', key: 'waitCnt' }
+          { title: '运行', key: 'run_cnt' },
+          { title: '错误', key: 'fail_cnt' },
+          { title: '未执行', key: 'no_run_cnt' },
+          { title: '未建表', key: 'no_create_table_cnt' }
         ]
       },
       {
@@ -104,9 +81,9 @@ const headers = [
         align: 'center',
         value: '',
         children: [
-          { title: '开始时间', key: 'startTimeLtd' },
-          { title: '结束时间', key: 'endTimeLtd' },
-          { title: '耗时(秒)', key: 'runtimeLtd' }
+          { title: '开始时间', key: 'y_begin_at' },
+          { title: '结束时间', key: 'y_finish_at' },
+          { title: '耗时(秒)', key: 'y_take_secs' }
         ]
       },
       {
@@ -114,9 +91,9 @@ const headers = [
         align: 'center',
         value: '',
         children: [
-          { title: '开始时间', key: 'startTimeTd' },
-          { title: '结束时间', key: 'endTimeTd' },
-          { title: '耗时', key: 'runtimeTd' }
+          { title: '开始时间', key: 't_begin_at' },
+          { title: '结束时间', key: 't_finish_at' },
+          { title: '耗时', key: 't_take_secs' }
         ]
       }
     ]

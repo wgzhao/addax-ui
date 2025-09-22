@@ -1,18 +1,24 @@
 <template>
-  <v-form fast-fail @submit.prevent="save">
+  <v-form ref="form" fast-fail @submit.prevent="save">
     <v-card density="compact">
       <v-container>
         <v-row dense>
           <v-col cols="12" sm="6" md="2">
-            <v-text-field v-model="sourceItem.code" label="采集编号" density="compact"></v-text-field>
+            <v-text-field v-model="sourceItem.code" label="采集编号" density="compact" autocomplete="off"
+              :rules="[rules.required, rules.codeExistsRule]" :disabled="mode === 'edit'"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="2">
-            <v-text-field v-model="sourceItem.name" label="采集名称" required density="compact"></v-text-field>
+            <v-text-field v-model="sourceItem.name" label="采集名称" :rules="[rules.required]"
+              density="compact"></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="2">
+            <v-text-field v-model="sourceItem.startAt" placeholder="HH:mm 或 HH:mm:ss (例如: 08:30 或 08:30:15)"
+              label="采集时间" :rules="[timeFormatRule]" :error-messages="timeError" density="compact">
+            </v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <div>
-              <v-switch v-model="sourceItem.enabled" true-value="true" false-value="false" color="primary" hide-details
-                density="compact">
+            <div class="d-flex align-center">
+              <v-switch v-model="sourceItem.enabled" color="primary" hide-details density="compact">
                 <template v-slot:append>
                   <v-chip size="x-small" :color="sourceItem.enabled ? 'success' : 'error'"
                     :text="sourceItem.enabled ? '已启用' : '已禁用'" class="ml-1"></v-chip>
@@ -23,22 +29,15 @@
         </v-row>
         <v-row dense>
           <v-col cols="12" sm="12" md="6">
-            <v-text-field v-model="sourceItem.url" placeholder="JDBC 连接串" label="JDBC 连接地址" required
+            <v-text-field v-model="sourceItem.url" placeholder="JDBC 连接串" label="JDBC 连接地址" :rules="[rules.required]"
               density="compact"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-text-field v-model="sourceItem.username" complete="false" label="用户名" density="compact"></v-text-field>
+            <v-text-field v-model="sourceItem.username" label="用户名" density="compact" autocomplete="off"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-text-field v-model="sourceItem.pass" label="密码" type="password" density="compact"></v-text-field>
-          </v-col>
-        </v-row>
-        <!-- 采集信息 -->
-        <v-row dense class="mt-3">
-          <v-col cols="12" sm="6" md="6">
-            <v-text-field v-model="sourceItem.startAt" placeholder="HH:mm 或 HH:mm:ss (例如: 08:30 或 08:30:15)"
-              label="采集时间" :rules="[timeFormatRule]" :error-messages="timeError" density="compact">
-            </v-text-field>
+            <v-text-field v-model="sourceItem.pass" label="密码" type="password" density="compact"
+              autocomplete="new-password"></v-text-field>
           </v-col>
         </v-row>
 
@@ -70,6 +69,8 @@ const props = defineProps({
   sid: String,
   mode: String
 });
+
+const form = ref<any>(null);
 
 const sourceItem = ref<EtlSource>({
   id: 0,
@@ -124,8 +125,55 @@ const formatTimeInput = (value: string) => {
   return value;
 };
 
-const save = () => {
+const codeError = ref<string[]>([]);
+
+const rules = {
+  required: (value: string) => !!value || '必填项',
+  codeExistsRule: (value: string) => {
+    if (props.mode !== 'add') {
+      return true;
+    }
+    if (!value) return true;
+    return DSService.checkCode(value)
+      .then(resp => {
+        return !resp.data || '编号已存在';
+      })
+      .catch(error => {
+        notify('检查编号失败: ' + (error.message || error), 'error');
+        return '编号校验失败，请稍后重试';
+      });
+  }
+};
+
+const codeExistsRule = [
+  value => {
+    if (codeError.value.length > 0) {
+      return DSService.checkCode(sourceItem.value.code)
+        .then(resp => {
+          if (resp.data) {
+            return '编号已存在';
+          } else {
+            return true;
+          }
+        })
+        .catch(error => {
+          // 在这种情况下，我们可能不希望在字段上显示错误，
+          // 而是使用 notify，因为这可能是一个网络或服务器问题
+          return true;
+        });
+    }
+    return true;
+  }
+]
+
+const save = async () => {
   if (props.mode === "add" || props.mode === "edit") {
+    const { valid } = await form.value.validate();
+    if (!valid) {
+      notify('请修正表单中的错误', 'error');
+      return;
+    }
+
     // 验证时间格式
     if (sourceItem.value.startAt && timeError.value.length > 0) {
       notify('请检查启动时间格式', 'error');

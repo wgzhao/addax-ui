@@ -21,4 +21,9 @@ const deleteItem = (id: string) => {
 const testConnect = (url: string, username: string, password: string) => {
   return Requests.post(apiPrefix + "/testConnect", { url: url, username: username, password:password });
 }
-export default { list, get, save, deleteItem, testConnect };
+
+const checkCode = (code: string) => {
+  return Requests.get(`${apiPrefix}/checkCode/${code}`);
+};
+
+export default { list, get, save, deleteItem, testConnect, checkCode };
