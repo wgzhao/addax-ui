@@ -199,6 +199,9 @@ export interface EtlTable {
   targetTable: string // 目标表名，即Hive的表名
   partKind?: string // 分区类型，D - 按每日分区，如果为空，则表示不分区
   partName?: string // 目标表分区字段名称
+  partFormat?: string // 目标表分区字段格式
+  storageFormat?: string // 目标表存储格式，默认是 orc
+  compressFormat?: string // 目标表的压缩格式，默认是 lz4
   filter?: string // 采集过滤条件，即where条件
   status?: string // 当前采集状态：N-还没有采集;W-等待采集;E-采集发生错误;R-正在采集;X-不再采集
   kind?: string // 采集类型:A-自动采集(默认值);M-手工采集;R-实时采集

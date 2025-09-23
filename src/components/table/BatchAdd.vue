@@ -22,27 +22,44 @@
             </template>
           </v-select>
         </v-col>
-      <!-- 目标库名设置行 -->
- 
-        <v-col cols="2" >
-          <v-text-field 
-            v-model="targetDb" 
-            label="目标库名" 
-            density="compact"
-            hint="默认库名: ods + 源系统编号"
-            persistent-hint
-            :rules="[rules.required]"
-          >
-            <template #prepend>
-              <span class="me-2">目标库</span>
-            </template>
-          </v-text-field>
-        </v-col>
 
         <v-spacer />
-        <v-col cols="2">
-          <v-btn color="primary" @click="saveItems" :loading="loadingSave" :disabled="selectedCnt === 0 || !targetDb">保存</v-btn>
+        <v-col cols="4">
+          <v-btn color="primary" @click="saveItems" :loading="loadingSave"
+            :disabled="selectedCnt === 0 || !targetDb">保存</v-btn>
         </v-col>
+      </v-row>
+      <v-row>
+        <!-- 目标库名设置行 -->
+
+        <v-col cols="2">
+          <v-text-field v-model="targetDb" label="目标库名" density="compact" hint="默认库名: ods + 源系统编号" persistent-hint
+            :rules="[rules.required]">
+          </v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-text-field v-model="partName" label="分区字段名" density="compact" hint="目标表的分区字段" persistent-hint>
+          </v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-select v-model="partFormat" :items="partitionFormats" label="分区格式" density="compact" hint="分区日期格式"
+            persistent-hint>
+            <template #append>
+              <span class="text-caption">{{ partitionFormatExample }}</span>
+            </template>
+          </v-select>
+        </v-col>
+        <v-col cols="2">
+          <v-combobox v-model="storageFormat" :items="storageFormats" label="存储格式" density="compact" hint="目标表存储格式"
+            persistent-hint>
+          </v-combobox>
+        </v-col>
+        <v-col cols="2">
+          <v-combobox v-model="compressFormat" :items="compressFormats" label="压缩格式" density="compact" hint="目标表压缩格式"
+            persistent-hint>
+          </v-combobox>
+        </v-col>
+
       </v-row>
 
       <!-- Search field for tables - fixed width to prevent icon overlap -->
@@ -129,6 +146,26 @@ const successMessage = ref('');
 const search = ref(''); // 新增：搜索关键字
 const selectedTables = ref<EtlTable[]>([]); // 新增：已选择的表格
 const targetDb = ref(''); // 新增：目标库名
+const partName = ref('dt'); // 新增：分区字段名
+const partFormat = ref('yyyyMMdd'); // 新增：分区格式
+const storageFormat = ref('orc'); // 新增：存储格式
+const compressFormat = ref('lz4'); // 新增：压缩格式
+const partitionFormats = ref(['yyyyMMdd', 'yyyy-MM-dd', 'yyyy/MM/dd']);
+const storageFormats = ref(['orc', 'parquet', 'avro', 'textfile']);
+const compressFormats = ref(['lz4', 'snappy', 'gzip', 'zstd', 'zlib']);
+
+const partitionFormatExample = computed(() => {
+  if (!partFormat.value) return '';
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const day = now.getDate().toString().padStart(2, '0');
+
+  return partFormat.value
+    .replace('yyyy', year.toString())
+    .replace('MM', month)
+    .replace('dd', day);
+});
 
 // 表单验证规则
 const rules = {
@@ -150,7 +187,10 @@ const defaultItem = ref<EtlTable>({
   targetDb: "",
   targetTable: "",
   partKind: "D",
-  partName: "logdate",
+  partName: "dt",
+  partFormat: "yyyyMMdd",
+  storageFormat: "orc",
+  compressFormat: "lz4",
   filter: "1=1",
   status: "N",
   kind: "A",
@@ -181,7 +221,7 @@ watch(selectedSourceId, (val) => {
 
 const getDbsBySourceId = async () => {
   if (!selectedSourceId.value) return;
-  
+
   try {
     const res = await request.post(`/table/dbSources`,
       {
@@ -223,6 +263,10 @@ const saveItems = async () => {
     const saveItem = { ...item };
     // set targetDb for all items
     saveItem.targetDb = targetDb.value;
+    saveItem.partName = partName.value;
+    saveItem.partFormat = partFormat.value;
+    saveItem.storageFormat = storageFormat.value;
+    saveItem.compressFormat = compressFormat.value;
     // set destTablename
     if (saveItem.targetTable == "") {
       saveItem.targetTable = saveItem.sourceTable;
@@ -287,6 +331,10 @@ const getTables = async () => {
         newItem.sourceDb = selectedDb.value;
         newItem.sourceTable = element;
         newItem.targetDb = targetDb.value; // 设置目标库名
+        newItem.partName = partName.value;
+        newItem.partFormat = partFormat.value;
+        newItem.storageFormat = storageFormat.value;
+        newItem.compressFormat = compressFormat.value;
         newItem.targetTable = element;
         tables.value.push(newItem);
       });

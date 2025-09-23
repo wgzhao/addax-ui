@@ -1,8 +1,7 @@
 <template>
   <!-- ODS 主表信息 ODS采集主表配置-->
   <!-- <v-sheet class="mx-auto"> -->
-  <!-- <dialog-comp v-model="dialog" title="ODS采集主表配置"> -->
-  <v-form fast-fail @submit.prevent="saveOds" title="ODS采集主表配置">
+  <v-form fast-fail @submit.prevent="saveOds" title="采集主表配置">
     <v-container>
       <v-row>
         <v-col cols="12" md="3" class="m-0">
@@ -36,8 +35,20 @@
 
       <v-row>
         <v-col cols="12" md="3">
-          <v-text-field v-model="table.partKind" label="入库规则"></v-text-field>
+          <v-text-field v-model="table.partKind" label="分区类型"></v-text-field>
         </v-col>
+        <v-col cols="12" md="3">
+          <v-text-field v-model="table.partName" label="分区字段"></v-text-field>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-text-field v-model="table.partFormat" label="分区格式"></v-text-field>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-text-field v-model="table.kind" label="采集模式" hint="A:盘后采集,R:实时采集,默认为A"></v-text-field>
+        </v-col>
+      </v-row>
+
+      <v-row>
         <v-col cols="12" md="3">
           <v-text-field v-model="table.createFlag" label="是否建表"></v-text-field>
         </v-col>
@@ -45,7 +56,10 @@
           <v-text-field v-model="table.updateFlag" label="是否更新"></v-text-field>
         </v-col>
         <v-col cols="12" md="3">
-          <v-text-field v-model="table.kind" label="采集模式" hint="A:盘后采集,R:实时采集,默认为A"></v-text-field>
+          <v-text-field v-model="table.storageFormat" label="存储格式"></v-text-field>
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-text-field v-model="table.compressFormat" label="压缩格式"></v-text-field>
         </v-col>
       </v-row>
 
@@ -108,6 +122,9 @@ const saveOds = () => {
     targetTable: table.value.targetTable,
     partKind: table.value.partKind,
     partName: table.value.partName,
+    partFormat: table.value.partFormat,
+    storageFormat: table.value.storageFormat,
+    compressFormat: table.value.compressFormat,
     filter: table.value.filter,
     status: table.value.status,
     kind: table.value.kind,

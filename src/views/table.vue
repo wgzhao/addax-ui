@@ -43,7 +43,8 @@
           <v-btn variant="tonal" prepend-icon="mdi-update" @click="updateSchema('all')">强制更新全部表信息</v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn variant="tonal" prepend-icon="mdi-database" :disabled="selected.length === 0" @click="doEtl(null)">批量采集</v-btn>
+          <v-btn variant="tonal" prepend-icon="mdi-database" :disabled="selected.length === 0"
+            @click="doEtl(null)">批量采集</v-btn>
         </v-col>
       </v-row>
     </template>
@@ -52,25 +53,20 @@
         :items-length="totalItems" item-value="id" :loading="loading" @update:options="loadItems" show-select
         v-model="selected" :item-class="getRowClass">
         <template v-slot:item.status="{ item }">
-          <v-chip 
-            :color="getStatusColor(item.status)" 
-            size="small" 
-            variant="flat"
-            class="font-weight-bold"
-          >
+          <v-chip :color="getStatusColor(item.status)" size="small" variant="flat" class="font-weight-bold">
             {{ item.status }}
           </v-chip>
         </template>
         <template v-slot:item.action="{ item }">
           <v-row justify="center" no-gutters>
             <v-btn small density="compact" color="primary" class="mr-1"
-              @click="openDialog('MainTableInfo', item)">表详情</v-btn>
+              @click="openDialog('MainTableInfo', item)">详情</v-btn>
             <v-btn small density="compact" color="secondary" class="mr-1"
-              @click="openDialog('FieldsCompare', item)">字段对比</v-btn>
-            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('AddaxJob', item)">采集模板</v-btn>
+              @click="openDialog('FieldsCompare', item)">字段</v-btn>
+            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('AddaxJob', item)">模板</v-btn>
             <v-btn small density="compact" color="success" class="mr-1"
-              @click="openDialog('AddaxResult', item)">采集结果</v-btn>
-            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('LogFiles', item)">采集日志</v-btn>
+              @click="openDialog('AddaxResult', item)">结果</v-btn>
+            <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('LogFiles', item)">日志</v-btn>
             <v-btn small density="compact" color="error" class="mr-1" @click="confirmDelete(item)">删除</v-btn>
             <v-btn small density="compact" color="info" class="mr-1" @click="doEtl(item)">采集</v-btn>
             <v-btn small density="compact" color="secondary" @click=" updateSchema(item.id)">表更新</v-btn>
@@ -85,12 +81,7 @@
     <v-card>
       <v-card-title class="d-flex justify-space-between align-center px-4 py-3">
         <span class="text-h6">{{ getDialogTitle() }}</span>
-        <v-btn 
-          variant="text" 
-          icon="mdi-close" 
-          size="small"
-          @click="closeDialog"
-        ></v-btn>
+        <v-btn variant="text" icon="mdi-close" size="small" @click="closeDialog"></v-btn>
       </v-card-title>
 
       <v-divider />
@@ -286,10 +277,12 @@ const statusOptions = [{
 const runStatus = ref("");
 
 const headers = ref([
-  { title: '系统名称', key: 'name', align: 'center' as const, sortable: true, width: '13%', value: (item) => `${item.name} (${item.code})` },
+  { title: '系统名称', key: 'name', align: 'center' as const, sortable: true, width: '12%', value: (item) => `${item.name} (${item.code})` },
   { title: '源库', key: 'sourceDb', align: 'center' as const, sortable: true, width: '5%' },
-  { title: '目标库', key: 'targetDb', align: 'center' as const, sortable: false, width: '5%' },
-  { title: '目标表', key: 'targetTable', align: 'center' as const, sortable: true, width: '20%' },
+  { title: '目标库', key: 'targetDb', align: 'center' as const, sortable: false, width: '4%' },
+  { title: '目标表', key: 'targetTable', align: 'center' as const, sortable: true, width: '15%' },
+  // { title: '分区字段', key: 'partName', align: 'center' as const, sortable: true, width: '5%' },
+  // { title: '分区格式', key: 'partFormat', align: 'center' as const, sortable: true, width: '5%' },
   { title: '状态', key: 'status', align: 'center' as const, sortable: true, width: '3%' },
   { title: '剩余', key: 'retryCnt', align: 'center' as const, sortable: true, width: '2%' },
   { title: '耗时', key: 'duration', align: 'center' as const, sortable: true, width: '3%' },
@@ -326,7 +319,7 @@ function closeDialog() {
 function getDialogTitle() {
   const componentTitleMap = {
     'MainTableInfo': '主表信息',
-    'FieldsCompare': '字段对比', 
+    'FieldsCompare': '字段对比',
     'CmdList': '命令列表',
     'TableUsed': '使用场景',
     'AddaxResult': '采集结果',
@@ -334,12 +327,12 @@ function getDialogTitle() {
     'LogFiles': '采集日志',
     'BatchUpdate': '批量修改'
   };
-  
+
   if (!currentComponent.value) return '';
-  
-  const componentName = currentComponent.value.__name || 
+
+  const componentName = currentComponent.value.__name ||
     Object.keys(componentMap).find(key => componentMap[key] === currentComponent.value);
-  
+
   return componentTitleMap[componentName] || '详情';
 }
 
@@ -357,7 +350,7 @@ function setParams(compName: string, comp: any) {
     };
     return;
   }
-  if ( compName == "FieldsCompare" || compName == "AddaxJob") {
+  if (compName == "FieldsCompare" || compName == "AddaxJob") {
     currentParams.value = {
       tid: comp.id
     };
