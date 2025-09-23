@@ -47,9 +47,9 @@ class Requests {
       (response) => {
         const resp: ResponseData<any> = response.data
         if (typeof resp.code !== 'undefined' && resp.code !== 0) {
-          notify(resp.message || '请求失败', 'error')
+          // notify(resp.message || '请求失败', 'error')
           // 统一包装为 rejected Promise
-          return Promise.reject(resp.message)
+          return Promise.reject(resp)
         }
         // 将处理结果重新赋回以保持 AxiosResponse 形状
         ;(response as any).data = resp

@@ -55,7 +55,7 @@ const areaData = computed(() => ({
       pointHitRadius: 10,
       pointBorderWidth: 2,
       fill: true,
-      data: last12MonthsEtlData.value.map((item) => item.num),
+      data: last12MonthsEtlData.value.map((item) => item.total_gb),
     },
   ],
 }));

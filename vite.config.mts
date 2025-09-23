@@ -1,10 +1,10 @@
 // Plugins
-import Components from "unplugin-vue-components/vite";
-import Vue from "@vitejs/plugin-vue";
-import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-// import ViteFonts from 'unplugin-fonts/vite'
+import Components from 'unplugin-vue-components/vite'
+import Vue from '@vitejs/plugin-vue'
+import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import Fonts from 'unplugin-fonts/vite'
+import VueRouter from 'unplugin-vue-router/vite'
 import Layouts from "vite-plugin-vue-layouts";
-import VueRouter from "unplugin-vue-router/vite";
 import { loadEnv } from "vite";
 
 // Utilities
@@ -22,7 +22,8 @@ export default defineConfig(({ mode }) => {
             src: "src/views",
             path: ""
           }
-        ]
+        ],
+        dts: "src/types/vue-router.d.ts",
       }),
       Layouts({
         layoutsDirs: "src/layouts",
@@ -39,8 +40,30 @@ export default defineConfig(({ mode }) => {
           configFile: "src/styles/settings.scss"
         }
       }),
-      Components()
+      Components({
+        dts: "src/types/components.d.ts",
+      }),
+      Fonts({
+        fontsource: {
+          families: [
+            {
+              name: 'Roboto',
+              weights: [100, 300, 400, 500, 700, 900],
+              styles: ['normal', 'italic'],
+            },
+          ],
+        },
+      }),
     ],
+    optimizeDeps: {
+      exclude: [
+        'vuetify',
+        'vue-router',
+        'unplugin-vue-router/runtime',
+        'unplugin-vue-router/data-loaders',
+        'unplugin-vue-router/data-loaders/basic',
+      ],
+    },
     define: { "process.env": {} },
     resolve: {
       alias: {

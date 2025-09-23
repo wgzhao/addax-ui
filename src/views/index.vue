@@ -63,18 +63,13 @@
             <v-card-title class="detail-title">项目完成率</v-card-title>
             <v-card-text>
               <v-list class="progress-list" dense>
-                <v-list-item v-for="ratio in ratios" :key="ratio.overPrec">
-                  <v-progress-linear
-                    :model-value="ratio.overPrec"
-                    :class="ratio.bgColor"
-                    height="20"
-                    rounded
+                <v-list-item v-for="ratio in ratios" :key="ratio.over_prec_str">
+                  <v-progress-linear :model-value="ratio.over_prec_str" :class="ratio.bg_color" height="20" rounded
                     :color="isDark ? 'cyan' : 'blue'"
-                    :bg-color="isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'"
-                  >
+                    :bg-color="isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'">
                     <template v-slot:default="{ value }">
                       <span class="progress-text">
-                        {{ ratio.sysname }} - {{ Math.round(value) }}%
+                        {{ ratio.source_name }} - {{ ratio.over_prec_str }}
                       </span>
                     </template>
                   </v-progress-linear>
@@ -100,223 +95,223 @@
 </template>
 
 <script setup lang="ts">
-  import request from '@/utils/requests'
-  import { ref, onMounted, computed } from 'vue'
-  import LineChart from '@/components/dashboard/LineChart.vue'
-  import L5TEtlBar from '@/components/dashboard/L5TEtlBar.vue'
-  import { useTheme } from 'vuetify' // Vuetify 主题钩子
+import request from '@/utils/requests'
+import { ref, onMounted, computed } from 'vue'
+import LineChart from '@/components/dashboard/LineChart.vue'
+import L5TEtlBar from '@/components/dashboard/L5TEtlBar.vue'
+import { useTheme } from 'vuetify' // Vuetify 主题钩子
 
-  const vuetifyTheme = useTheme()
-  const isDark = computed(() => vuetifyTheme.current.value.dark)
+const vuetifyTheme = useTheme()
+const isDark = computed(() => vuetifyTheme.current.value.dark)
 
-  const ratios = ref([])
-  const lastEtlData = ref(0.0)
-  const tableCount = ref(0)
+const ratios = ref([])
+const lastEtlData = ref(0.0)
+const tableCount = ref(0)
 
-  function fetchRatio() {
-    try {
-      request.get('/dashboard/accomplishRatio').then((res) => (ratios.value = res.data))
-      request.get('/dashboard/lastEtlData').then((res) => (lastEtlData.value = res.data))
-      request.get('/dashboard/tableCount').then((res) => (tableCount.value = res.data))
-    } catch (error) {
-      console.error('Error fetching ratios:', error)
-    }
+function fetchRatio() {
+  try {
+    request.get('/dashboard/accomplishRatio').then((res) => (ratios.value = res.data))
+    request.get('/dashboard/lastEtlData').then((res) => (lastEtlData.value = res.data))
+    request.get('/dashboard/tableCount').then((res) => (tableCount.value = res.data))
+  } catch (error) {
+    console.error('Error fetching ratios:', error)
   }
+}
 
-  onMounted(() => {
-    fetchRatio()
-  })
+onMounted(() => {
+  fetchRatio()
+})
 </script>
 
 <style scoped>
-  .dashboard-container {
-    min-height: 100vh;
-    width: 100vw;
-    position: relative;
-    overflow-x: hidden;
-    transition: background 0.3s ease;
-  }
+.dashboard-container {
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow-x: hidden;
+  transition: background 0.3s ease;
+}
 
-  .dark-mode {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  }
+.dark-mode {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
 
-  .dashboard-container:not(.dark-mode) {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
-  }
+.dashboard-container:not(.dark-mode) {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+}
 
-  .background-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-  }
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
 
-  .dark-mode .background-overlay {
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.8) 80%);
-  }
+.dark-mode .background-overlay {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.8) 80%);
+}
 
-  .dashboard-container:not(.dark-mode) .background-overlay {
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, rgba(255, 255, 255, 0.8) 80%);
-  }
+.dashboard-container:not(.dark-mode) .background-overlay {
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, rgba(255, 255, 255, 0.8) 80%);
+}
 
-  .header-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+.header-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-  .dashboard-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  }
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
 
-  .dark-mode .dashboard-title {
-    color: #ffffff;
-  }
+.dark-mode .dashboard-title {
+  color: #ffffff;
+}
 
-  .dashboard-container:not(.dark-mode) .dashboard-title {
-    color: #1a237e;
-  }
+.dashboard-container:not(.dark-mode) .dashboard-title {
+  color: #1a237e;
+}
 
-  .stat-card {
-    transition: transform 0.3s ease;
-  }
+.stat-card {
+  transition: transform 0.3s ease;
+}
 
-  .dark-mode .stat-card {
-    background: linear-gradient(145deg, #1e40af 0%, #1e1e5f 100%);
-  }
+.dark-mode .stat-card {
+  background: linear-gradient(145deg, #1e40af 0%, #1e1e5f 100%);
+}
 
-  .dashboard-container:not(.dark-mode) .stat-card {
-    background: linear-gradient(145deg, #42a5f5 0%, #1976d2 100%);
-  }
+.dashboard-container:not(.dark-mode) .stat-card {
+  background: linear-gradient(145deg, #42a5f5 0%, #1976d2 100%);
+}
 
-  .stat-card:hover {
-    transform: translateY(-5px);
-  }
+.stat-card:hover {
+  transform: translateY(-5px);
+}
 
-  .stat-icon {
-    opacity: 0.8;
-    position: absolute;
-    top: 16px;
-    left: 16px;
-  }
+.stat-icon {
+  opacity: 0.8;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
 
-  .dark-mode .stat-icon {
-    color: #ffffff;
-  }
+.dark-mode .stat-icon {
+  color: #ffffff;
+}
 
-  .dashboard-container:not(.dark-mode) .stat-icon {
-    color: #ffffff;
-  }
+.dashboard-container:not(.dark-mode) .stat-icon {
+  color: #ffffff;
+}
 
-  .stat-title {
-    font-size: 1.2rem;
-    font-weight: 500;
-    text-align: center;
-  }
+.stat-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+}
 
-  .dark-mode .stat-title {
-    color: #e0f2fe;
-  }
+.dark-mode .stat-title {
+  color: #e0f2fe;
+}
 
-  .dashboard-container:not(.dark-mode) .stat-title {
-    color: #ffffff;
-  }
+.dashboard-container:not(.dark-mode) .stat-title {
+  color: #ffffff;
+}
 
-  .stat-value {
-    font-size: 3rem;
-    font-weight: 800;
-    line-height: 1;
-  }
+.stat-value {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+}
 
-  .dark-mode .stat-value {
-    color: #ffffff;
-  }
+.dark-mode .stat-value {
+  color: #ffffff;
+}
 
-  .dashboard-container:not(.dark-mode) .stat-value {
-    color: #ffffff;
-  }
+.dashboard-container:not(.dark-mode) .stat-value {
+  color: #ffffff;
+}
 
-  .chart-card {
-    backdrop-filter: blur(10px);
-  }
+.chart-card {
+  backdrop-filter: blur(10px);
+}
 
-  .dark-mode .chart-card {
-    background: rgba(30, 64, 175, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
+.dark-mode .chart-card {
+  background: rgba(30, 64, 175, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  .dashboard-container:not(.dark-mode) .chart-card {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-  }
+.dashboard-container:not(.dark-mode) .chart-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 
-  .chart-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
 
-  .dark-mode .chart-title {
-    color: #bae6fd;
-  }
+.dark-mode .chart-title {
+  color: #bae6fd;
+}
 
-  .dashboard-container:not(.dark-mode) .chart-title {
-    color: #1976d2;
-  }
+.dashboard-container:not(.dark-mode) .chart-title {
+  color: #1976d2;
+}
 
-  .chart-container {
-    height: 400px;
-  }
+.chart-container {
+  height: 400px;
+}
 
-  .detail-card {
-    backdrop-filter: blur(10px);
-  }
+.detail-card {
+  backdrop-filter: blur(10px);
+}
 
-  .dark-mode .detail-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
+.dark-mode .detail-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-  .dashboard-container:not(.dark-mode) .detail-card {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-  }
+.dashboard-container:not(.dark-mode) .detail-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 
-  .detail-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-  }
+.detail-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
 
-  .dark-mode .detail-title {
-    color: #bae6fd;
-  }
+.dark-mode .detail-title {
+  color: #bae6fd;
+}
 
-  .dashboard-container:not(.dark-mode) .detail-title {
-    color: #1976d2;
-  }
+.dashboard-container:not(.dark-mode) .detail-title {
+  color: #1976d2;
+}
 
-  .progress-list {
-    background: transparent;
-  }
+.progress-list {
+  background: transparent;
+}
 
-  .progress-text {
-    font-weight: 500;
-    padding-left: 8px;
-  }
+.progress-text {
+  font-weight: 500;
+  padding-left: 8px;
+}
 
-  .dark-mode .progress-text {
-    color: #ffffff;
-  }
+.dark-mode .progress-text {
+  color: #ffffff;
+}
 
-  .dashboard-container:not(.dark-mode) .progress-text {
-    color: #333333;
-  }
+.dashboard-container:not(.dark-mode) .progress-text {
+  color: #333333;
+}
 
-  .bar-chart-container {
-    height: 300px;
-  }
+.bar-chart-container {
+  height: 300px;
+}
 </style>

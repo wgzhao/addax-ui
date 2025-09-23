@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import DefaultLayout from './layouts/DefaultLayout.vue';
 import LoginLayout from './layouts/LoginLayout.vue';
+import Notifier from './components/Notifier.vue';
 
 const route = useRoute();
 const layout = computed(() => {
@@ -14,41 +15,9 @@ const layout = computed(() => {
 <template>
   <component :is="layout">
     <router-view />
-    <!-- 全局通知条 -->
-    <Notifier />
   </component>
+  <!-- 全局通知条 - 移到外层确保始终显示 -->
+  <Notifier />
 </template>
 
 <style></style>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { useNotifier } from './stores/notifier';
-
-// 内联一个轻量通知组件，避免单独文件
-const Notifier = defineComponent({
-  name: 'Notifier',
-  setup() {
-    const { notice, hide } = useNotifier();
-    return { notice, hide };
-  },
-  template: `
-    <v-snackbar
-      v-model="notice.show"
-      :timeout="notice.timeout"
-      :color="notice.color"
-      location="bottom right"
-      elevation="4"
-    >
-      <div class="d-flex align-center">
-        <v-icon v-if="notice.icon" class="me-2">{{ notice.icon }}</v-icon>
-        <span>{{ notice.text }}</span>
-      </div>
-      <template #actions>
-        <v-btn variant="text" @click="hide">关闭</v-btn>
-      </template>
-    </v-snackbar>`
-});
-
-export default { components: { Notifier } };
-</script>

@@ -66,65 +66,38 @@ const urls = ref([
     title: "Home"
   },
   {
-    path: "/etl-monitor",
+    path: "/monitor",
     name: "ETL",
     title: "采集监控"
   },
+  // {
+  //   path: "/system-info",
+  //   title: "系统一览"
+  // },
   {
-    path: "/sp-monitor",
-    title: "SP监控",
-    icon: "fa-desktop"
+    path: "/table",
+    title: "采集表管理"
   },
   {
-    path: "/task-group",
-    title: "任务组"
+    path: "/source",
+    title: "数据源管理"
   },
   {
-    path: "/risk-monitor",
+    path: "/plan-task",
+    title: "计划任务"
+  },
+  {
+    path: "/param",
+    title: "参数管理"
+  },
+  {
+    path: "/risk",
     title: "风险点检测"
   },
-  {
-    path: "/realtime",
-    title: "实时监控"
-  },
-  {
-    path: "/closed-check",
-    title: "盘后检查"
-  },
-  {
-    path: "/system-info",
-    title: "系统一览"
-  },
-  {
-    path: "/maintable",
-    title: "主表配置",
-    children: [
-      {
-        path: "/maintable/ods-etl",
-        title: "ODS 采集"
-      },
-      {
-        path: "/maintable/sp",
-        title: "SP 计算"
-      },
-      {
-        path: "/maintable/data-service",
-        title: "数据服务"
-      },
-      {
-        path: "/maintable/plan-task",
-        title: "计划任务"
-      },
-      {
-        path: "/maintable/params",
-        title: "参数管理"
-      },
-      {
-        path: "/maintable/data-sources",
-        title: "数据源管理"
-      }
-    ]
-  }
+  // {
+  //   path: "/check",
+  //   title: "盘后检查"
+  // },
 ]);
 
 const theme = useTheme();
