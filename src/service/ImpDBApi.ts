@@ -6,15 +6,14 @@ const fetchImpdbs = () => {
   const error = ref('')
 
   const load = async () => {
-    Requests.get('/impdb/list')
-      .then((response) => {
-        this.impdbs.value = response.data
-        return response
-      })
-      .catch((error) => {
-        error.value = 'Not available at the moment'
-      })
-  }
+    try {
+      const response = await Requests.get('/impdb/list');
+      impdbs.value = response as any[];
+    } catch (err) {
+      error.value = 'Not available at the moment';
+      console.error(err);
+    }
+  };
   return { impdbs, error, load }
 }
 

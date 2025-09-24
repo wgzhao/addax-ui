@@ -138,17 +138,16 @@ const saveOds = () => {
     duration: table.value.duration
   };
 
-  OdsService.save(etlTableData)
-    .then(() => {
+  OdsService.save(etlTableData as EtlTable)
+    .then((updatedRecord) => {
       notify('保存成功', 'success');
       emit('closeDialog');
-      emit('update:record', { ...table.value, ...etlTableData });
+      emit('update:record', { ...table.value, ...updatedRecord });
     })
     .catch(err => {
       notify('保存失败: ' + err, 'error');
     });
 };
-
 </script>
 <style>
 .v-input .v-field {

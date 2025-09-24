@@ -18,7 +18,7 @@
         </v-row>
       </template>
       <v-card-text>
-        <v-data-table :items="impdbs" :headers="headers" :search="searchValue" density="compact" items-per-page="20">
+        <v-data-table :items="sources" :headers="headers" :search="searchValue" density="compact" items-per-page="20">
           <template v-slot:item.enabled="{ item }">
             <v-chip size="small" :color="item.enabled == true ? 'success' : 'error'"
               :text="item.enabled == true ? '已启用' : '已禁用'" class="ml-2"></v-chip>
@@ -26,8 +26,7 @@
           <template v-slot:item.actions="{ item }">
             <v-btn color="secondary" class="btn btn-xs btn-info me-2" @click="doAction(item.id, 'show')">详情</v-btn>
             <v-btn color="primary" class="btn btn-xs btn-warning me-2" @click="doAction(item.id, 'edit')">编辑</v-btn>
-            <v-btn color="error" class="btn btn-xs btn-danger"
-              @click="openDeleteDialog(item.id, item.name)">删除</v-btn>
+            <v-btn color="error" class="btn btn-xs btn-danger" @click="openDeleteDialog(item.id, item.name)">删除</v-btn>
             <!-- <a href="#" class="btn btn-xs btn-info">使用场景</a>
                         <a href="#" class="btn btn-xs btn-info">探索源库</a> -->
           </template>
@@ -72,7 +71,7 @@ import DSService from "@/service/sourceService";
 import AddDataSource from "@/components/source/AddSource.vue";
 import { notify } from '@/stores/notifier';
 
-const impdbs = ref([]);
+const sources = ref([]);
 const isShow = ref(false)
 const deleteDialog = ref(false);
 const itemIdToDelete = ref(null);
@@ -105,10 +104,11 @@ const params = ref({})
 const retrieveImpDB = () => {
   DSService.list()
     .then(resp => {
-      impdbs.value = resp.data;
+      sources.value = resp;
     })
     .catch(error => {
       console.log(error);
+      notify('加载数据源列表失败: ' + error, 'error');
     });
 };
 
@@ -155,12 +155,12 @@ const confirmDelete = () => {
 const deleteSource = (id) => {
   console.log(`删除记录 ID: ${id}`);
   // 这里实现删除逻辑，例如调用 API 接口或移除本地数据
-  DSService.deleteItem(id)
-    .then(resp => {
+  DSService.delete(id)
+    .then(() => {
       notify('删除成功', 'success');
-      impdbs.value = impdbs.value.filter((item) => item.id !== id);
+      sources.value = sources.value.filter((item) => item.id !== id);
       // 如果当前列表被删到 0，可重新拉取一遍（为未来分页兼容）
-      if (impdbs.value.length === 0) {
+      if (sources.value.length === 0) {
         retrieveImpDB();
       }
       itemIdToDelete.value = null;

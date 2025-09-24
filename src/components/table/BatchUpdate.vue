@@ -76,10 +76,10 @@ function updateItem() {
   };
   loading.value = false;
   // Here you would call your actual update service
-  OdsService.updateStatus(payload)
-    .then(() => {
-      console.log('Items updated successfully');
-      notify('批量更新成功', 'success');
+  OdsService.batchUpdateStatus(payload)
+    .then((count) => {
+      console.log(`${count} items updated successfully`);
+      notify(`批量更新成功 ${count} 条记录`, 'success');
       emit('closeDialog');
       emit('update:batch', payload);
     })

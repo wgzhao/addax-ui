@@ -129,19 +129,17 @@ const codeError = ref<string[]>([]);
 
 const rules = {
   required: (value: string) => !!value || '必填项',
-  codeExistsRule: (value: string) => {
-    if (props.mode !== 'add') {
+  codeExistsRule: async (value: string) => {
+    if (props.mode !== 'add' || !value) {
       return true;
     }
-    if (!value) return true;
-    return DSService.checkCode(value)
-      .then(resp => {
-        return !resp.data || '编号已存在';
-      })
-      .catch(error => {
-        notify('检查编号失败: ' + (error.message || error), 'error');
-        return '编号校验失败，请稍后重试';
-      });
+    try {
+      const exists = await DSService.checkCode(value);
+      return !exists || '编号已存在';
+    } catch (error) {
+      notify('检查编号失败: ' + (error.message || error), 'error');
+      return '编号校验失败，请稍后重试';
+    }
   }
 };
 
@@ -186,7 +184,7 @@ const save = async () => {
     }
 
     DSService.save(sourceItem.value)
-      .then(resp => {
+      .then(() => {
         notify('保存成功', 'success');
         emit('save'); // 发出save事件，通知父组件更新列表
         emit('closeDialog'); // 关闭对话框
@@ -203,9 +201,13 @@ const close = () => {
 };
 
 const testConnect = () => {
-  DSService.testConnect(sourceItem.value.url, sourceItem.value.username, sourceItem.value.pass)
+  DSService.testConnection({
+    url: sourceItem.value.url,
+    username: sourceItem.value.username,
+    password: sourceItem.value.pass
+  })
     .then(resp => {
-      if (resp.code === 0) {
+      if (resp) {
         notify('连接成功', 'success');
       } else {
         notify('连接失败', 'warning');
@@ -218,16 +220,15 @@ const testConnect = () => {
 onMounted(() => {
   console.log("mode = ", props.mode);
   if (props.sid != "-1") {
-    DSService.get(props.sid)
+    DSService.get(Number(props.sid))
       .then(resp => {
-        sourceItem.value = resp.data;
-        return resp;
+        sourceItem.value = resp;
       })
       .catch(error => {
         console.log(error);
+        notify(`加载数据源失败: ${error}`, 'error');
       });
   }
-
 })
 
 

@@ -69,7 +69,7 @@
             <v-btn small density="compact" color="info" class="mr-1" @click="openDialog('LogFiles', item)">日志</v-btn>
             <v-btn small density="compact" color="error" class="mr-1" @click="confirmDelete(item)">删除</v-btn>
             <v-btn small density="compact" color="info" class="mr-1" @click="doEtl(item)">采集</v-btn>
-            <v-btn small density="compact" color="secondary" @click=" updateSchema(item.id)">表更新</v-btn>
+            <v-btn small density="compact" color="secondary" @click=" updateSchema(item)">表更新</v-btn>
           </v-row>
         </template>
       </v-data-table-server>
@@ -389,7 +389,7 @@ const doEtl = (item: any | null) => {
       updateEtlProgress('采集完成');
       finishEtlProgress();
     }).catch(res => {
-      const errorMsg = res?.data || res?.message || '未知错误';
+      const errorMsg = res || '未知错误';
       addEtlResult(`表 ${item.targetTable} 采集失败: ${errorMsg}`, false);
       updateEtlProgress('采集失败');
       finishEtlProgress();
@@ -427,7 +427,7 @@ const doEtl = (item: any | null) => {
         addEtlResult(`表 ${currentTableName} 采集成功`, true);
       } catch (res) {
         failureCount++;
-        const errorMsg = res?.data || res?.message || '未知错误';
+        const errorMsg = res || '未知错误';
         addEtlResult(`表 ${currentTableName} 采集失败: ${errorMsg}`, false);
       }
 
@@ -477,8 +477,8 @@ const handleBatchUpdate = (payload) => {
 interface LoadItemsOptions {
   page: number;
   itemsPerPage: number;
-  sortBy: any
-};
+  sortBy: any;
+}
 
 const loadItems = ({
   page,
@@ -491,12 +491,15 @@ const loadItems = ({
   if (sortParam.sortField != null) {
     currentSortParam.value = sortBy;
   }
-  // const sortParam = sortBy?.length > 0 ? sortBy[0] : null; // 
+  // v-data-table-server page is 1-based, while backend API is 0-based.
   tableService.fetchTableList(page - 1, itemsPerPage, search.value, runStatus.value,
     sortParam
   ).then(res => {
-    table.value = res.data["content"];
-    totalItems.value = res.data["totalElements"];
+    table.value = res.content;
+    totalItems.value = res.totalElements;
+    loading.value = false;
+  }).catch(error => {
+    notify(`加载失败: ${error}`, 'error');
     loading.value = false;
   });
 };
@@ -509,15 +512,20 @@ const _searchCore = () => loadItems({
 
 const searchTable = debounce(_searchCore, 400);
 
-function updateSchema(isForce: string | null) {
-  tableService.updateSchema(isForce).then((response) => {
-    console.log('updateSchema response:', response);
-    // 使用后端返回的 data 字段作为提示消息
-    const message = response.data || '表结构更新任务已启动';
+function updateSchema(item: any | null) {
+  let params: { mode?: string; tid?: string } = {};
+  if (typeof item === 'string' && item === 'all') {
+    params.mode = 'all';
+  } else if (item && typeof item === 'object' && item.id) {
+    params.tid = item.id;
+  }
+  // if item is null, params is an empty object, for backward compatibility.
+
+  tableService.updateSchema(params).then((response) => {
+    const message = response || '表结构更新任务已启动';
     notify(message, 'success', 3000, 'mdi-check-circle');
   }).catch(error => {
-    console.error('updateSchema error:', error);
-    const errorMsg = error?.response?.data?.message || error?.data || error?.message || error || '更新失败';
+    const errorMsg = error || '更新失败';
     notify('更新失败: ' + errorMsg, 'error', 4000, 'mdi-alert-circle');
   });
 }
@@ -592,8 +600,12 @@ function deleteItem() {
       if (index > -1) {
         table.value.splice(index, 1); // 删除项
       }
+      notify('删除成功', 'success');
       deleteDialogVisible.value = false;
       itemToDelete.value = null;
+    }).catch(error => {
+      notify(`删除失败: ${error}`, 'error');
+      deleteDialogVisible.value = false;
     });
   }
 }
@@ -604,14 +616,19 @@ function batchDeleteItems() {
   // 并发删除所有选中项
   Promise.all(
     tids.map(tid =>
-      tableService.delete(tid).catch(() => null) // swallow 单个失败，后续可加入失败提示收集
+      tableService.delete(tid)
     )
   ).then(() => {
+    notify('批量删除成功', 'success');
     // 关闭确认框 & 清空选中
     deleteDialogVisible.value = false;
     selected.value = [];
     // 重新加载数据，防止当前页面空白
     // 直接调用核心加载函数，避免 debounce 延迟
+    _searchCore();
+  }).catch(error => {
+    notify(`批量删除时发生错误: ${error}`, 'error');
+    deleteDialogVisible.value = false;
     _searchCore();
   });
 }

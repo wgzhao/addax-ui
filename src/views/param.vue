@@ -26,8 +26,8 @@
               <v-btn color="info" class="btn btn-primary" @click="addItem">新增</v-btn>
             </v-col>
           </v-row>
-          <v-data-table v-if="sysItems" :headers="itemHeaders" :items="sysItems" items-per-page="20"
-            density="default" class="elevation-1">
+          <v-data-table v-if="sysItems" :headers="itemHeaders" :items="sysItems" items-per-page="20" density="default"
+            class="elevation-1">
             <template v-slot:top>
               <!-- edit/new form -->
               <v-dialog v-model="dialog" max-width="500px">
@@ -45,7 +45,7 @@
                     <v-btn color="info" @click="close">
                       取消
                     </v-btn>
-                    <v-btn color="primary" @click="saveDictionary">
+                    <v-btn color="primary" @click="saveItem">
                       保存
                     </v-btn>
                   </v-card-actions>
@@ -147,7 +147,7 @@ watch(dialogDelete, async newVal => {
 const getItems = code => {
   currCode.value = code;
   DictService.listSysItems(code).then(res => {
-    sysItems.value = res.data;
+    sysItems.value = res;
   });
 };
 
@@ -189,37 +189,51 @@ const deleteItemConfirm = () => {
       notify('删除失败: ' + err, 'error');
     });
 };
-const saveDictionary = () => {
+const saveItem = () => {
   // 确保必要的字段存在
   if (!editedItem.value.dictCode || !editedItem.value.itemKey) {
     notify('请填写必要的字段', 'warning');
     return;
   }
 
-  const itemToSave = editedItem.value as SysItem;
-  
-  if (editedIndex.value > -1) {
-    Object.assign(sysItems.value[editedIndex.value], itemToSave);
-  } else {
-    sysItems.value.push(itemToSave);
-  }
-  
-  // 创建Map对象用于API调用
-  const itemMap = new Map<string, string>();
-  itemMap.set('dictCode', String(itemToSave.dictCode));
-  itemMap.set('itemKey', itemToSave.itemKey);
-  if (itemToSave.itemValue) itemMap.set('itemValue', itemToSave.itemValue);
-  if (itemToSave.remark) itemMap.set('remark', itemToSave.remark);
-  
+  // const itemToSave = editedItem.value as SysItem;
+
+  // if (editedIndex.value > -1) {
+  //   Object.assign(sysItems.value[editedIndex.value], itemToSave);
+  // } else {
+  //   sysItems.value.push(itemToSave);
+  // }
+
+  // // 创建Map对象用于API调用
+  // const itemMap = new Map<string, string>();
+  // itemMap.set('dictCode', String(itemToSave.dictCode));
+  // itemMap.set('itemKey', itemToSave.itemKey);
+  // if (itemToSave.itemValue) itemMap.set('itemValue', itemToSave.itemValue);
+  // if (itemToSave.remark) itemMap.set('remark', itemToSave.remark);
+
   // save
-  DictService.createOrUpdateDictItem(itemMap)
-    .then(() => notify('保存成功', 'success'))
-    .catch(err => notify('保存失败: ' + err, 'error'));
+  if (editedIndex.value > -1) {
+    // update
+    DictService.updateDictItem(editedItem.value as SysItem)
+      .then(() => {
+        notify('保存成功', 'success');
+        sysItems[editedIndex.value] = editedItem.value as SysItem;
+      })
+      .catch(err => notify('保存失败: ' + err, 'error'));
+  } else {
+    // create
+    DictService.createDictItem(editedItem.value as SysItem)
+      .then((res) => {
+        sysItems.value.push(res);
+        notify('保存成功', 'success');
+      })
+      .catch(err => notify('保存失败: ' + err, 'error'));
+  }
   close();
 };
 onMounted(() => {
   DictService.listDicts().then(res => {
-    dicts.value = res.data;
+    dicts.value = res;
   });
 });
 </script>

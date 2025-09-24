@@ -115,7 +115,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { notify } from '@/stores/notifier';
-import request from "@/utils/requests";
+import tableService from "@/service/tableService";
+import sourceService from "@/service/sourceService";
 import { EtlSource, EtlTable } from "@/types/database";
 
 const props = defineProps({
@@ -208,7 +209,7 @@ const sourceDbs = ref([]);
 const selectedCnt = computed(() => selectedTables.value.length);
 
 watch(selectedSourceId, (val) => {
-  if (val?.url) {
+  if (val?.id) {
     getDbsBySourceId();
   }
   // 自动设置目标库名
@@ -223,25 +224,20 @@ const getDbsBySourceId = async () => {
   if (!selectedSourceId.value) return;
 
   try {
-    const res = await request.post(`/table/dbSources`,
-      {
-        url: selectedSourceId.value.url,
-        username: selectedSourceId.value.username,
-        password: selectedSourceId.value.pass
-      }
-    );
-    sourceDbs.value = res.data;
+    sourceDbs.value = await sourceService.fetchDatabasesBySource(selectedSourceId.value.id);
   } catch (error) {
     console.error("获取数据库列表失败", error);
+    notify(`获取数据库列表失败: ${error}`, 'error');
     sourceDbs.value = [];
   }
 };
 
 const fetchSourceData = () => {
-  request.get("/table/sourceSystem").then(res => {
-    sourceSystemList.value = res.data;
+  sourceService.fetchSourceSystems().then(res => {
+    sourceSystemList.value = res;
   }).catch(error => {
     console.error("获取源系统列表失败", error);
+    notify(`获取源系统列表失败: ${error}`, 'error');
   });
 };
 
@@ -276,19 +272,15 @@ const saveItems = async () => {
 
   try {
     // save data
-    const response = await request.post("/table/batchSave", itemsToSave, {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+    const response = await tableService.batchSave(itemsToSave);
 
     // Show success message
-    successMessage.value = `成功添加 ${itemsToSave.length} 个表到目标库 ${targetDb.value}`;
+    successMessage.value = `成功添加 ${response} 个表到目标库 ${targetDb.value}`;
     showSuccessDialog.value = true;
 
   } catch (error) {
     console.error('保存失败', error);
-    notify('保存失败: ' + (error.response?.data || error.message || '未知错误'), 'error');
+    notify('保存失败: ' + (error || '未知错误'), 'error');
   } finally {
     loadingSave.value = false;
   }
@@ -313,18 +305,10 @@ const getTables = async () => {
     // clear tables
     tables.value = [];
 
-    const res = await request.post(`/table/tables`,
-      {
-        id: selectedSourceId.value.id,
-        url: selectedSourceId.value.url,
-        username: selectedSourceId.value.username,
-        pass: selectedSourceId.value.pass,
-        db: selectedDb.value
-      }
-    );
+    const res = await sourceService.fetchUncollectedTables(selectedSourceId.value.id, selectedDb.value);
 
-    if (res.data && res.data.length > 0) {
-      res.data.forEach(element => {
+    if (res && res.length > 0) {
+      res.forEach(element => {
         // new defaultItem and populate it
         const newItem = { ...defaultItem.value };
         newItem.sid = selectedSourceId.value!.id;
@@ -347,7 +331,7 @@ const getTables = async () => {
     }
   } catch (error) {
     console.error("获取表失败", error);
-    tableLoadError.value = '获取表失败: ' + (error.response?.data || error.message || "未知错误");
+    tableLoadError.value = '获取表失败: ' + (error || "未知错误");
   } finally {
     loadingTables.value = false;
   }

@@ -1,5 +1,5 @@
 // import axios from "axios";
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { notify } from '@/stores/notifier'
 import { useAuthStore } from '@/stores/auth'
 
@@ -44,54 +44,55 @@ class Requests {
 
     // 配置响应拦截器
     this.instance.interceptors.response.use(
-      (response) => {
-        const resp: ResponseData<any> = response.data
-        if (typeof resp.code !== 'undefined' && resp.code !== 0) {
-          // notify(resp.message || '请求失败', 'error')
-          // 统一包装为 rejected Promise
-          return Promise.reject(resp)
-        }
-        // 将处理结果重新赋回以保持 AxiosResponse 形状
-        ;(response as any).data = resp
-        return response
+      (response: AxiosResponse) => {
+        return response.data
       },
-      (error) => {
-        // 处理响应错误
-        if (error.response?.status === 401) {
-          const authStore = useAuthStore()
-          authStore.logout() // Token 失效时，自动登出
-          window.location.href = '/login' // 跳转至登录页
+      (error: AxiosError) => {
+        // 统一处理非 2xx 状态码的错误
+        let message = '请求发生错误';
+        if (error.response) {
+          // 服务器返回了错误响应
+          const data: any = error.response;
+          // 尝试从响应体中获取更具体的错误信息
+          if (data && typeof data === 'string') {
+            message = data;
+          } else if (data && data.message) {
+            message = data.message;
+          } else {
+            message = `请求错误: ${error.response.data.code} ${error.response.data.message}`;
+          }
+        } else if (error.request) {
+          // 请求已发出，但没有收到响应
+          message = '无法连接到服务器，请检查您的网络';
+        } else {
+          // 设置请求时触发了一个错误
+          message = error.message;
         }
-
-        console.log('response error: ', error.message)
-
-        // alert(msg);
-        return Promise.reject(error)
-        // snackbar.showMessage(message);
-
-        // return Promise.reject(error); // 将错误内容抛出给业务逻辑去处理
+        console.error('API Error:', message, error);
+        // 抛出错误，以便业务代码的 .catch() 块可以捕获
+        return Promise.reject(new Error(message));
       }
     )
   }
 
   // GET 方法
   get<T = any>(url: string, params?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.get<ResponseData<T>>(url, { params, ...config }).then((r) => r.data as any)
+    return this.instance.get<ResponseData<T>>(url, { params, ...config }).then((r) => r as any)
   }
 
   // POST 方法
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.post<ResponseData<T>>(url, data, { ...config }).then((r) => r.data as any)
+    return this.instance.post<ResponseData<T>>(url, data, { ...config }).then((r) => r as any)
   }
 
   // PUT 方法
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.put<ResponseData<T>>(url, data, { ...config }).then((r) => r.data as any)
+    return this.instance.put<ResponseData<T>>(url, data, { ...config }).then((r) => r as any)
   }
 
   // DELETE 方法
   delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.delete<ResponseData<T>>(url, { ...config }).then((r) => r.data as any)
+    return this.instance.delete<ResponseData<T>>(url, { ...config }).then((r) => r as any)
   }
 }
 

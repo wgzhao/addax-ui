@@ -7,12 +7,11 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { notify } from "@/stores/notifier";
 // import DialogComp from "./DialogComp.vue";
 import OdsService from "@/service/tableService";
 
 const props = defineProps({ tid: String });
-
-// const dialog = defineModel({ required: true, default: true });
 
 const headers = [
   { title: "日期", value: "runDate" },
@@ -28,8 +27,10 @@ const headers = [
 const results = ref([]);
 
 onMounted(() => {
-  OdsService.fetchAddaxResult(props.tid).then(res => {
-    results.value = res.data;
+  OdsService.fetchAddaxResult(Number(props.tid)).then(res => {
+    results.value = res;
+  }).catch(err => {
+    notify(`加载采集结果失败: ${err}`, 'error');
   });
 });
 </script>

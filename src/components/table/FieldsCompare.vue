@@ -1,7 +1,16 @@
 <template>
   <!-- 字段对比 -->
   <!-- <dialog-comp title="字段对比" v-model="dialog"> -->
-  <v-data-table :headers="headers" :items="fields" hide-default-footer density="compact" no-data-text="无数据">
+  <v-data-tablonMounted(()=> {
+    OdsService.fetchFieldsCompare(Number(props.tid))
+    .then(res => {
+    fields.value = res;
+    })
+    .catch(err => {
+    console.log(err);
+    notify(`加载字段对比失败: ${err}`, 'error');
+    });
+    });s="headers" :items="fields" hide-default-footer density="compact" no-data-text="无数据">
     <template v-slot:item="{ item }">
       <tr>
         <td rowspan="3">{{ item.columnId }}</td>
@@ -27,11 +36,12 @@
         <td>{{ item.tblComment }}</td>
       </tr>
     </template>
-  </v-data-table>
-  <!-- </dialog-comp> -->
+    </v-data-table>
+    <!-- </dialog-comp> -->
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { notify } from "@/stores/notifier";
 import OdsService from "@/service/tableService";
 import type { EtlColumn } from "@/types/database";
 // import DialogComp from "./DialogComp.vue";
@@ -95,12 +105,13 @@ const headers1 = ref([
   // }
 ]);
 onMounted(() => {
-  OdsService.fetchFieldsCompare(props.tid)
+  OdsService.fetchFieldsCompare(Number(props.tid))
     .then(res => {
-      fields.value = res.data;
+      fields.value = res;
     })
     .catch(err => {
       console.log(err);
+      notify(`加载字段对比失败: ${err}`, 'error');
     });
 });
 </script>

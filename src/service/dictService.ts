@@ -1,33 +1,38 @@
 // 参数管理接口
 import { ref } from 'vue'
 import Requests from '@/utils/requests'
+import { SysDict, SysItem } from '@/types/database'
 
-const apiPrefix = ref('/param')
+const apiPrefix = ref('/dicts')
 
-const listDicts = () => {
-  return Requests.get(apiPrefix.value + '/dicts')
+const listDicts = (): Promise<SysDict[]> => {
+  return Requests.get(apiPrefix.value) as unknown as Promise<SysDict[]>
 }
 
-const createOrUpdateDict = (dict: Map<string, string>) => {
-  return Requests.post(apiPrefix.value + '/dict', dict)
+const createOrUpdateDict = (dict: SysDict): Promise<SysDict> => {
+  return Requests.post(`${apiPrefix.value}/dict`, dict) as unknown as Promise<SysDict>
 }
 
-const deleteDict = (code: number) => {
-  return Requests.delete(apiPrefix.value + '/dicts/' + code)
+const deleteDict = (code: number): Promise<void> => {
+  return Requests.delete(`${apiPrefix.value}/${code}`) as unknown as Promise<void>
 }
 
 // items means the dictionary table
 
-const listSysItems = (dictCode: number) => {
-  return Requests.get(apiPrefix.value + '/dictionaries/' + dictCode)
+const listSysItems = (dictCode: number): Promise<SysItem[]> => {
+  return Requests.get(`${apiPrefix.value}/${dictCode}/items`) as unknown as Promise<SysItem[]>
 }
 
-const createOrUpdateDictItem = (dictItem: Map<string, string>) => {
-  return Requests.post(apiPrefix.value + '/dictionaries', dictItem)
+const createDictItem = (dictItem: SysItem): Promise<SysItem> => {
+  return Requests.post(`${apiPrefix.value}/${dictItem.dictCode}/items`, dictItem) as unknown as Promise<SysItem>
 }
 
-const deleteDictItem = (dictCode: number, itemKey: string) => {
-  return Requests.delete(`${apiPrefix.value}/dictionaries/${dictCode}/${itemKey}`)
+const updateDictItem = (dictItem: SysItem): Promise<SysItem> => {
+  return Requests.put(`${apiPrefix.value}/${dictItem.dictCode}/items/${dictItem.itemKey}`, dictItem) as unknown as Promise<SysItem>
+}
+
+const deleteDictItem = (dictCode: number, itemKey: string): Promise<void> => {
+  return Requests.delete(`${apiPrefix.value}/${dictCode}/items/${itemKey}`) as unknown as Promise<void>
 }
 
 export default {
@@ -35,6 +40,7 @@ export default {
   createOrUpdateDict,
   deleteDict,
   listSysItems,
-  createOrUpdateDictItem,
+  createDictItem,
+  updateDictItem,
   deleteDictItem
 }

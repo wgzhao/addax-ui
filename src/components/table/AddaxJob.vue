@@ -4,34 +4,29 @@
       <v-icon left class="mr-2">mdi-code-json</v-icon>
       Addax 采集任务配置
     </v-card-title>
-    
+
     <v-card-text>
       <div v-if="loading" class="d-flex justify-center">
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </div>
-      
+
       <div v-else-if="error" class="text-error">
         <v-alert type="error" class="mb-4">
           {{ error }}
         </v-alert>
       </div>
-      
+
       <div v-else-if="jobContent" class="json-container">
         <div class="d-flex justify-space-between align-center mb-3">
           <v-chip color="primary" size="small">
             <v-icon left size="small">mdi-file-code</v-icon>
             JSON 配置
           </v-chip>
-          <v-btn 
-            size="small" 
-            variant="outlined" 
-            @click="copyToClipboard"
-            prepend-icon="mdi-content-copy"
-          >
+          <v-btn size="small" variant="outlined" @click="copyToClipboard" prepend-icon="mdi-content-copy">
             复制
           </v-btn>
         </div>
-        
+
         <v-card variant="outlined" class="code-card">
           <pre><code 
             ref="codeElement" 
@@ -40,7 +35,7 @@
           ></code></pre>
         </v-card>
       </div>
-      
+
       <div v-else class="text-center text-medium-emphasis">
         <v-icon size="48" class="mb-2">mdi-file-document-outline</v-icon>
         <p>暂无配置内容</p>
@@ -65,8 +60,8 @@ hljs.registerLanguage('json', json);
 
 const { notify } = useNotifier();
 
-const props = defineProps({ 
-  tid: Number 
+const props = defineProps({
+  tid: Number
 });
 
 const jobContent = ref("");
@@ -77,7 +72,7 @@ const codeElement = ref<HTMLElement | null>(null);
 // 计算属性：高亮后的代码
 const highlightedCode = computed(() => {
   if (!jobContent.value) return '';
-  
+
   try {
     // 尝试格式化 JSON
     const formatted = JSON.stringify(JSON.parse(jobContent.value), null, 2);
@@ -104,20 +99,20 @@ onMounted(() => {
     error.value = '缺少任务ID参数';
     return;
   }
-  
+
   loading.value = true;
   error.value = '';
-  
-  TableService.fetchAddaxJob(String(props.tid))
+
+  TableService.fetchAddaxJob(props.tid)
     .then(res => {
-      jobContent.value = res.data || '';
+      jobContent.value = res || '';
       if (!jobContent.value) {
         error.value = '获取到的配置内容为空';
       }
     })
     .catch(err => {
       console.error('获取 Addax 任务配置失败:', err);
-      error.value = err?.response?.data?.message || err?.message || '获取配置失败';
+      error.value = err || '获取配置失败';
     })
     .finally(() => {
       loading.value = false;
