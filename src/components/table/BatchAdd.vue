@@ -79,7 +79,11 @@
       <div class="table-container">
         <!-- tables -->
         <v-data-table :items="tables" :headers="headers" :items-per-page="15" density="compact" show-select
-          v-model="selectedTables" :search="search" item-value="sourceTable" v-if="tables.length > 0" return-object />
+          v-model="selectedTables" :search="search" item-value="name" v-if="tables.length > 0" return-object>
+          <template #item.tblComment="{ item }">
+            <div class="comment-cell">{{ item.tblComment }}</div>
+          </template>
+        </v-data-table>
 
         <v-alert v-else-if="loadingTables" type="info" variant="tonal" class="mt-4">
           正在加载表列表，请稍候...
@@ -117,7 +121,8 @@ import { ref, onMounted, computed, watch } from "vue";
 import { notify } from '@/stores/notifier';
 import tableService from "@/service/tableService";
 import sourceService from "@/service/sourceService";
-import { EtlSource, EtlTable } from "@/types/database";
+import { EtlSource, EtlTable, TableMeta } from "@/types/database";
+import Table from "@/views/table.vue";
 
 const props = defineProps({
   tid: {
@@ -134,6 +139,7 @@ const headers = ref([
   { title: "源筛选", key: "filter" },
   { title: "源用户", key: "sourceDb" },
   { title: "源表名", key: "sourceTable" },
+  { title: "表注释", key: "tblComment" },
   { title: "目标库", key: "targetDb" },
   { title: "目标表", key: "targetTable" }
 ]);
@@ -199,7 +205,8 @@ const defaultItem = ref<EtlTable>({
   createFlag: "Y",
   retryCnt: 3,
   sid: null,
-  duration: 0
+  duration: 0,
+  tblComment: ""
 });
 
 const sourceSystemList = ref([]);
@@ -233,7 +240,7 @@ const getDbsBySourceId = async () => {
 };
 
 const fetchSourceData = () => {
-  sourceService.fetchSourceSystems().then(res => {
+  sourceService.list().then(res => {
     sourceSystemList.value = res;
   }).catch(error => {
     console.error("获取源系统列表失败", error);
@@ -308,18 +315,19 @@ const getTables = async () => {
     const res = await sourceService.fetchUncollectedTables(selectedSourceId.value.id, selectedDb.value);
 
     if (res && res.length > 0) {
-      res.forEach(element => {
+      res.forEach((element: TableMeta) => {
         // new defaultItem and populate it
         const newItem = { ...defaultItem.value };
         newItem.sid = selectedSourceId.value!.id;
         newItem.sourceDb = selectedDb.value;
-        newItem.sourceTable = element;
+        newItem.sourceTable = element.name;
         newItem.targetDb = targetDb.value; // 设置目标库名
         newItem.partName = partName.value;
         newItem.partFormat = partFormat.value;
         newItem.storageFormat = storageFormat.value;
         newItem.compressFormat = compressFormat.value;
-        newItem.targetTable = element;
+        newItem.targetTable = element.name;
+        newItem.tblComment = element.comment;
         tables.value.push(newItem);
       });
       // Show feedback

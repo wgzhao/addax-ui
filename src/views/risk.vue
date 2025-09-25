@@ -18,7 +18,7 @@
   </template>
 </template>
 <script setup>
-import RiskService from '@/service/riskService'
+import riskService from '@/service/risk-service'
 
 import { ref, onUnmounted } from 'vue'
 
@@ -97,15 +97,15 @@ const search = ref(null)
 
 // 获取数据
 const fetchData = () => {
-  RiskService.sysRisks().then((res) => {
+  riskService.sysRisks().then((res) => {
     data.value['sysRisk'] = res.data
     // sysRisk.value = res.data;
   })
-  RiskService.fieldsChanges().then((res) => {
+  riskService.fieldsChanges().then((res) => {
     data.value['odsFieldChange'] = res.data
     // odsFieldChange.value = res.data;
   })
-  RiskService.smsDetails().then((res) => {
+  riskService.smsDetails().then((res) => {
     data.value['smsDetail'] = res.data
     // smsDetail.value = res.data;
   })

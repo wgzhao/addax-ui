@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { notify } from '@/stores/notifier';
-import DSService from "@/service/sourceService";
+import sourceService from "@/service/source-service";
 import { EtlSource } from "@/types/database";
 
 const props = defineProps({
@@ -134,7 +134,7 @@ const rules = {
       return true;
     }
     try {
-      const exists = await DSService.checkCode(value);
+      const exists = await sourceService.checkCode(value);
       return !exists || '编号已存在';
     } catch (error) {
       notify('检查编号失败: ' + (error.message || error), 'error');
@@ -146,7 +146,7 @@ const rules = {
 const codeExistsRule = [
   value => {
     if (codeError.value.length > 0) {
-      return DSService.checkCode(sourceItem.value.code)
+      return sourceService.checkCode(sourceItem.value.code)
         .then(resp => {
           if (resp.data) {
             return '编号已存在';
@@ -183,7 +183,7 @@ const save = async () => {
       sourceItem.value.startAt = formatTimeInput(sourceItem.value.startAt);
     }
 
-    DSService.save(sourceItem.value)
+    sourceService.save(sourceItem.value)
       .then(() => {
         notify('保存成功', 'success');
         emit('save'); // 发出save事件，通知父组件更新列表
@@ -201,7 +201,7 @@ const close = () => {
 };
 
 const testConnect = () => {
-  DSService.testConnection({
+  sourceService.testConnection({
     url: sourceItem.value.url,
     username: sourceItem.value.username,
     password: sourceItem.value.pass
@@ -220,7 +220,7 @@ const testConnect = () => {
 onMounted(() => {
   console.log("mode = ", props.mode);
   if (props.sid != "-1") {
-    DSService.get(Number(props.sid))
+    sourceService.get(Number(props.sid))
       .then(resp => {
         sourceItem.value = resp;
       })

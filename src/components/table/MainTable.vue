@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { notify } from '@/stores/notifier';
-import OdsService from "@/service/tableService";
+import tableService from "@/service/table-service";
 import { VEtlWithSource, EtlTable } from "@/types/database";
 
 const props = defineProps({
@@ -138,7 +138,7 @@ const saveOds = () => {
     duration: table.value.duration
   };
 
-  OdsService.save(etlTableData as EtlTable)
+  tableService.save(etlTableData as EtlTable)
     .then((updatedRecord) => {
       notify('保存成功', 'success');
       emit('closeDialog');

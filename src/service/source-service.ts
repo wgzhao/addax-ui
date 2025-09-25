@@ -1,6 +1,6 @@
 // 数据源管理接口
 import Requests from "@/utils/requests";
-import type { EtlSource } from "@/types/database";
+import type { EtlSource, TableMeta } from "@/types/database";
 
 class SourceService {
   prefix: string = "/sources";
@@ -32,12 +32,12 @@ class SourceService {
 
   // 测试数据源连接
   testConnection(params: { url: string; username: string; password?: string }): Promise<boolean> {
-    return Requests.post(`${this.prefix}/testConnect`, params) as unknown as Promise<boolean>;
+    return Requests.post(`${this.prefix}/test-connect`, params) as unknown as Promise<boolean>;
   }
 
   // 检查编号是否存在
   checkCode(code: string): Promise<boolean> {
-    return Requests.get(`${this.prefix}?code=${code}`) as unknown as Promise<boolean>;
+    return Requests.get(`${this.prefix}/check-code?code=${code}`) as unknown as Promise<boolean>;
   }
 
   // 查询采集源下所有数据库
@@ -46,8 +46,8 @@ class SourceService {
   }
 
   // 查询未采集的表
-  fetchUncollectedTables(sourceId: number, dbName: string): Promise<string[]> {
-    return Requests.get(`${this.prefix}/${sourceId}/databases/${dbName}/tables/uncollected`) as unknown as Promise<string[]>;
+  fetchUncollectedTables(sourceId: number, dbName: string): Promise<TableMeta[]> {
+    return Requests.get(`${this.prefix}/${sourceId}/databases/${dbName}/tables/uncollected`) as unknown as Promise<TableMeta[]>;
   }
 }
 

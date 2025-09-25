@@ -158,7 +158,8 @@
 import { ref, shallowRef, defineAsyncComponent } from "vue";
 import { debounce } from '@/utils/debounce';
 import { createSort } from '@/utils/';
-import tableService from "@/service/tableService";
+import tableService from "@/service/table-service";
+import taskService from "@/service/task-service";
 import { notify } from '@/stores/notifier';
 // 异步按需加载组件，减轻首屏体积
 const MainTableInfo = defineAsyncComponent(() => import('@/components/table/MainTable.vue'));
@@ -384,7 +385,7 @@ const doEtl = (item: any | null) => {
     showEtlProgress('手工采集', '正在执行单个表的数据采集...');
     updateEtlProgress('正在执行单个表的数据采集...', `处理表: ${item.targetTable}`);
 
-    tableService.execETL(item.id, 300000).then(() => { // 设置5分钟超时
+    taskService.executeTask(item.id, 300000).then(() => { // 设置5分钟超时
       addEtlResult(`表 ${item.targetTable} 采集成功`, true);
       updateEtlProgress('采集完成');
       finishEtlProgress();
@@ -422,7 +423,7 @@ const doEtl = (item: any | null) => {
       );
 
       try {
-        await tableService.execETL(currentTid, 300000); // 设置5分钟超时
+        await taskService.executeTask(currentTid, 300000); // 设置5分钟超时
         successCount++;
         addEtlResult(`表 ${currentTableName} 采集成功`, true);
       } catch (res) {
@@ -513,13 +514,14 @@ const _searchCore = () => loadItems({
 const searchTable = debounce(_searchCore, 400);
 
 function updateSchema(item: any | null) {
-  let params: { mode?: string; tid?: string } = {};
+  let params: { mode?: string; tid?: number } = {};
   if (typeof item === 'string' && item === 'all') {
     params.mode = 'all';
   } else if (item && typeof item === 'object' && item.id) {
     params.tid = item.id;
+  } else {
+    params.mode = 'need';
   }
-  // if item is null, params is an empty object, for backward compatibility.
 
   tableService.updateSchema(params).then((response) => {
     const message = response || '表结构更新任务已启动';

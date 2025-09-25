@@ -55,13 +55,16 @@ class TableService {
   }
 
     // 启动采集
-  execETL(tableId: number, timeout = 60000): Promise<string> {
+  execCollect(tableId: number, timeout = 60000): Promise<string> {
     return Requests.post(`${this.prefix}/${tableId}/start`, {}, { timeout }) as unknown as Promise<string>;
   }
 
   // 更新表结构
-  updateSchema(params: { mode?: string; tid?: string }): Promise<string> {
-    return Requests.post(`${this.prefix}/update-schema`, params) as unknown as Promise<string>;
+  updateSchema(params: { mode?: string; tid?: number }): Promise<string> {
+    if (params.tid) {
+      return Requests.post(`${this.prefix}/${params.tid}/actions/refresh`, {}) as unknown as Promise<string>;
+    }
+    return Requests.post(`${this.prefix}/actions/refresh`, {}, { params: { mode: params.mode } }) as unknown as Promise<string>;
   }
 
   // 批量更新表状态

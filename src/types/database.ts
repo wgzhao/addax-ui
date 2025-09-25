@@ -213,6 +213,12 @@ export interface EtlTable {
   maxRuntime?: number // 采集可持续的最大时间
   sid: number // 采集源ID，对应etl_source表id
   duration?: number // 采集耗时，单位为秒
+  tblComment?: string // 目标表的注释
+}
+
+export interface TableMeta {
+  name: string // 表名
+  comment?: string // 表注释
 }
 
 export interface VEtlWithSource extends EtlTable {
@@ -283,6 +289,11 @@ export interface Notification {
   createAt: Date // 消息生成的时间，自动生成
 }
 
+export interface DbConnect {
+  url: string
+  username?: string
+  password?: string
+}
 // ========== 兼容性接口和业务组合接口 ==========
 
 // 原有的业务接口，保持兼容性

@@ -15,7 +15,6 @@ declare module 'vue' {
     AppRegister: typeof import('./../components/AppRegister.vue')['default']
     BatchAdd: typeof import('./../components/table/BatchAdd.vue')['default']
     BatchUpdate: typeof import('./../components/table/BatchUpdate.vue')['default']
-    CmdList: typeof import('./../components/table/CmdList.vue')['default']
     DialogComp: typeof import('./../components/table/DialogComp.vue')['default']
     FieldsCompare: typeof import('./../components/table/FieldsCompare.vue')['default']
     HelloWorld: typeof import('./../components/HelloWorld.vue')['default']

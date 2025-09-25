@@ -67,7 +67,7 @@
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import DSService from "@/service/sourceService";
+import sourceService from "@/service/source-service";
 import AddDataSource from "@/components/source/AddSource.vue";
 import { notify } from '@/stores/notifier';
 
@@ -102,7 +102,7 @@ const actions = [
 
 const params = ref({})
 const retrieveImpDB = () => {
-  DSService.list()
+  sourceService.list()
     .then(resp => {
       sources.value = resp;
     })
@@ -155,7 +155,7 @@ const confirmDelete = () => {
 const deleteSource = (id) => {
   console.log(`删除记录 ID: ${id}`);
   // 这里实现删除逻辑，例如调用 API 接口或移除本地数据
-  DSService.delete(id)
+  sourceService.delete(id)
     .then(() => {
       notify('删除成功', 'success');
       sources.value = sources.value.filter((item) => item.id !== id);

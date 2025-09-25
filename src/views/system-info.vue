@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import SystemInfoService from '@/service/systemInfoService'
+import systemInfoService from '@/service/system-info-service'
 import type { ETLAndDS } from '@/types/database'
 import type { LoadItemsOptions } from '@/types'
 
@@ -72,7 +72,7 @@ const etlInfoHeaders = [
 ]
 
 const fetchData = () => {
-  SystemInfoService.getEtlAndDs(filter.value).then((res) => {
+  systemInfoService.getEtlAndDs(filter.value).then((res) => {
     etlAndDs.value = res.data
   })
   loadItems(etlInfoParams.value)
@@ -85,7 +85,7 @@ const loadItems = ({ page, itemsPerPage, sortBy }: LoadItemsOptions) => {
     itemsPerPage: itemsPerPage,
     sortBy: sortBy
   }
-  SystemInfoService.getEtlInfo(etlInfoParams.value).then((res) => {
+  systemInfoService.getEtlInfo(etlInfoParams.value).then((res) => {
     etlInfo.value = res.data.content
     etlInfoParams.value = {
       page: res.data.pageable.pageNumber,

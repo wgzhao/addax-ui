@@ -94,6 +94,11 @@ class Requests {
   delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
     return this.instance.delete<ResponseData<T>>(url, { ...config }).then((r) => r as any)
   }
+
+  // PATCH 方法
+  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
+    return this.instance.patch<ResponseData<T>>(url, data, { ...config }).then((r) => r as any)
+  }
 }
 
 export default new Requests(import.meta.env.VITE_API_BASE_URL)

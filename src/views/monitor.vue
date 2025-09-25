@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { monitorService } from '@/service/monitorService'
+import { monitorService } from '@/service/monitor-service'
 
 const data = ref({
   accomplishList: [],

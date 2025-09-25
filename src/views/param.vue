@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, nextTick } from "vue";
-import DictService from "@/service/dictService";
+import dictService from "@/service/dict-service";
 import { notify } from '@/stores/notifier';
 import { SysDict, SysItem } from '@/types/database';
 
@@ -146,7 +146,7 @@ watch(dialogDelete, async newVal => {
 
 const getItems = code => {
   currCode.value = code;
-  DictService.listSysItems(code).then(res => {
+  dictService.listSysItems(code).then(res => {
     sysItems.value = res;
   });
 };
@@ -177,7 +177,7 @@ const deleteItem = item => {
 const deleteItemConfirm = () => {
   const ec = editedItem.value.dictCode;
   const ev = editedItem.value.itemKey;
-  DictService.deleteDictItem(ec, ev)
+  dictService.deleteDictItem(ec, ev)
     .then(() => {
       if (editedIndex.value > -1) {
         sysItems.value.splice(editedIndex.value, 1);
@@ -214,7 +214,7 @@ const saveItem = () => {
   // save
   if (editedIndex.value > -1) {
     // update
-    DictService.updateDictItem(editedItem.value as SysItem)
+    dictService.updateDictItem(editedItem.value as SysItem)
       .then(() => {
         notify('保存成功', 'success');
         sysItems[editedIndex.value] = editedItem.value as SysItem;
@@ -222,7 +222,7 @@ const saveItem = () => {
       .catch(err => notify('保存失败: ' + err, 'error'));
   } else {
     // create
-    DictService.createDictItem(editedItem.value as SysItem)
+    dictService.createDictItem(editedItem.value as SysItem)
       .then((res) => {
         sysItems.value.push(res);
         notify('保存成功', 'success');
@@ -232,7 +232,7 @@ const saveItem = () => {
   close();
 };
 onMounted(() => {
-  DictService.listDicts().then(res => {
+  dictService.listDicts().then(res => {
     dicts.value = res;
   });
 });
