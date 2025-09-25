@@ -28,5 +28,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TableUsed: typeof import('./../components/table/TableUsed.vue')['default']
+    TaskEtlProgress: typeof import('./../components/task/TaskEtlProgress.vue')['default']
+    TaskList: typeof import('./../components/task/TaskList.vue')['default']
   }
 }

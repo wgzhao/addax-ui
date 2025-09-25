@@ -80,6 +80,10 @@
       title: '采集表管理'
     },
     {
+      path: '/task',
+      title: '采集任务管理'
+    },
+    {
       path: '/source',
       title: '数据源管理'
     },

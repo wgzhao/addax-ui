@@ -28,6 +28,7 @@ declare module 'vue-router/auto-routes' {
     '/source': RouteRecordInfo<'/source', '/source', Record<never, never>, Record<never, never>>,
     '/system-info': RouteRecordInfo<'/system-info', '/system-info', Record<never, never>, Record<never, never>>,
     '/table': RouteRecordInfo<'/table', '/table', Record<never, never>, Record<never, never>>,
+    '/task': RouteRecordInfo<'/task', '/task', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -79,6 +80,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/views/table.vue': {
       routes: '/table'
+      views: never
+    }
+    'src/views/task.vue': {
+      routes: '/task'
       views: never
     }
   }
