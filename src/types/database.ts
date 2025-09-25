@@ -3,7 +3,7 @@
 // 系统字典表 sys_dict
 export interface SysDict {
   code: number // 条目编号
-  name?: string // 条目名称  
+  name?: string // 条目名称
   classification?: string // 分类
   remark?: string // 说明
 }

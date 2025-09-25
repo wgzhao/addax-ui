@@ -49,28 +49,28 @@ class Requests {
       },
       (error: AxiosError) => {
         // 统一处理非 2xx 状态码的错误
-        let message = '请求发生错误';
+        let message = '请求发生错误'
         if (error.response) {
           // 服务器返回了错误响应
-          const data: any = error.response;
+          const data: any = error.response
           // 尝试从响应体中获取更具体的错误信息
           if (data && typeof data === 'string') {
-            message = data;
+            message = data
           } else if (data && data.message) {
-            message = data.message;
+            message = data.message
           } else {
-            message = `请求错误: ${error.response.data.code} ${error.response.data.message}`;
+            message = `请求错误: ${error.response.data.code} ${error.response.data.message}`
           }
         } else if (error.request) {
           // 请求已发出，但没有收到响应
-          message = '无法连接到服务器，请检查您的网络';
+          message = '无法连接到服务器，请检查您的网络'
         } else {
           // 设置请求时触发了一个错误
-          message = error.message;
+          message = error.message
         }
-        console.error('API Error:', message, error);
+        console.error('API Error:', message, error)
         // 抛出错误，以便业务代码的 .catch() 块可以捕获
-        return Promise.reject(new Error(message));
+        return Promise.reject(new Error(message))
       }
     )
   }

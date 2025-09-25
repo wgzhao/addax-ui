@@ -7,17 +7,17 @@ class MonitorService {
   // 数据源完成情况
   fetchAccomplishList() {
     // fetch data via api and return
-    return Requests.get(this.prefix + '/accomplishList')
+    return Requests.get(this.prefix + '/accomplish')
   }
 
   // 特殊任务提醒：错误、耗时过长、有重试、有拒绝行
   fetchSpecialTask() {
-    return Requests.get(this.prefix + '/specialTask')
+    return Requests.get(this.prefix + '/special-task')
   }
 
   // 采集拒绝行信息
   fetchRejectTask() {
-    return Requests.get(this.prefix + '/rejectTask')
+    return Requests.get(this.prefix + '/reject-task')
   }
 }
 export const monitorService = new MonitorService()

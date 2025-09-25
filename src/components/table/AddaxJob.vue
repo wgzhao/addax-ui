@@ -22,14 +22,19 @@
             <v-icon left size="small">mdi-file-code</v-icon>
             JSON 配置
           </v-chip>
-          <v-btn size="small" variant="outlined" @click="copyToClipboard" prepend-icon="mdi-content-copy">
+          <v-btn
+            size="small"
+            variant="outlined"
+            @click="copyToClipboard"
+            prepend-icon="mdi-content-copy"
+          >
             复制
           </v-btn>
         </div>
 
         <v-card variant="outlined" class="code-card">
-          <pre><code 
-            ref="codeElement" 
+          <pre><code
+            ref="codeElement"
             class="language-json hljs"
             v-html="highlightedCode"
           ></code></pre>
@@ -44,147 +49,149 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import hljs from 'highlight.js/lib/core';
-import json from 'highlight.js/lib/languages/json';
-// 可以选择以下主题之一：
-import 'highlight.js/styles/atom-one-dark.css'; // 深色主题，适合暗色界面
-// import 'highlight.js/styles/github.css'; // GitHub 风格
-// import 'highlight.js/styles/vs.css'; // Visual Studio 风格  
-// import 'highlight.js/styles/default.css'; // 默认主题
-import TableService from "@/service/tableService";
-import { useNotifier } from '@/stores/notifier';
+  import { ref, computed, onMounted } from 'vue'
+  import hljs from 'highlight.js/lib/core'
+  import json from 'highlight.js/lib/languages/json'
+  // 可以选择以下主题之一：
+  import 'highlight.js/styles/atom-one-dark.css' // 深色主题，适合暗色界面
+  // import 'highlight.js/styles/github.css'; // GitHub 风格
+  // import 'highlight.js/styles/vs.css'; // Visual Studio 风格
+  // import 'highlight.js/styles/default.css'; // 默认主题
+  import tableService from '@/service/table-service'
+  import { useNotifier } from '@/stores/notifier'
 
-// 注册 JSON 语言支持
-hljs.registerLanguage('json', json);
+  // 注册 JSON 语言支持
+  hljs.registerLanguage('json', json)
 
-const { notify } = useNotifier();
+  const { notify } = useNotifier()
 
-const props = defineProps({
-  tid: Number
-});
+  const props = defineProps({
+    tid: Number
+  })
 
-const jobContent = ref("");
-const loading = ref(false);
-const error = ref("");
-const codeElement = ref<HTMLElement | null>(null);
+  const jobContent = ref('')
+  const loading = ref(false)
+  const error = ref('')
+  const codeElement = ref<HTMLElement | null>(null)
 
-// 计算属性：高亮后的代码
-const highlightedCode = computed(() => {
-  if (!jobContent.value) return '';
+  // 计算属性：高亮后的代码
+  const highlightedCode = computed(() => {
+    if (!jobContent.value) return ''
 
-  try {
-    // 尝试格式化 JSON
-    const formatted = JSON.stringify(JSON.parse(jobContent.value), null, 2);
-    // 应用语法高亮
-    return hljs.highlight(formatted, { language: 'json' }).value;
-  } catch (e) {
-    // 如果不是有效的 JSON，直接高亮原始内容
-    return hljs.highlight(jobContent.value, { language: 'json' }).value;
-  }
-});
+    try {
+      // 尝试格式化 JSON
+      const formatted = JSON.stringify(JSON.parse(jobContent.value), null, 2)
+      // 应用语法高亮
+      return hljs.highlight(formatted, { language: 'json' }).value
+    } catch (e) {
+      // 如果不是有效的 JSON，直接高亮原始内容
+      return hljs.highlight(jobContent.value, { language: 'json' }).value
+    }
+  })
 
-// 复制到剪贴板
-async function copyToClipboard() {
-  try {
-    await navigator.clipboard.writeText(jobContent.value);
-    notify('配置已复制到剪贴板', 'success', 2000, 'mdi-check');
-  } catch (err) {
-    notify('复制失败，请手动复制', 'error', 3000, 'mdi-alert');
-  }
-}
-
-onMounted(() => {
-  if (!props.tid) {
-    error.value = '缺少任务ID参数';
-    return;
+  // 复制到剪贴板
+  async function copyToClipboard() {
+    try {
+      await navigator.clipboard.writeText(jobContent.value)
+      notify('配置已复制到剪贴板', 'success', 2000, 'mdi-check')
+    } catch (err) {
+      notify('复制失败，请手动复制', 'error', 3000, 'mdi-alert')
+    }
   }
 
-  loading.value = true;
-  error.value = '';
+  onMounted(() => {
+    if (!props.tid) {
+      error.value = '缺少任务ID参数'
+      return
+    }
 
-  TableService.fetchAddaxJob(props.tid)
-    .then(res => {
-      jobContent.value = res || '';
-      if (!jobContent.value) {
-        error.value = '获取到的配置内容为空';
-      }
-    })
-    .catch(err => {
-      console.error('获取 Addax 任务配置失败:', err);
-      error.value = err || '获取配置失败';
-    })
-    .finally(() => {
-      loading.value = false;
-    });
-});
+    loading.value = true
+    error.value = ''
+
+    tableService
+      .fetchAddaxJob(props.tid)
+      .then((res) => {
+        jobContent.value = res || ''
+        if (!jobContent.value) {
+          error.value = '获取到的配置内容为空'
+        }
+      })
+      .catch((err) => {
+        console.error('获取 Addax 任务配置失败:', err)
+        error.value = err || '获取配置失败'
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  })
 </script>
 <style scoped>
-.json-container {
-  width: 100%;
-}
+  .json-container {
+    width: 100%;
+  }
 
-.code-card {
-  background-color: #ffffff;
-  border: 1px solid #d1d9e0;
-  border-radius: 8px;
-  overflow: hidden;
-}
+  .code-card {
+    background-color: #ffffff;
+    border: 1px solid #d1d9e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
 
-.code-card pre {
-  margin: 0;
-  padding: 16px;
-  background-color: transparent;
-  overflow-x: auto;
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
+  .code-card pre {
+    margin: 0;
+    padding: 16px;
+    background-color: transparent;
+    overflow-x: auto;
+    font-family:
+      'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 
-.code-card code {
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-  font-family: inherit;
-  font-size: inherit;
-}
+  .code-card code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-family: inherit;
+    font-size: inherit;
+  }
 
-/* 深色主题适配 */
-.v-theme--dark .code-card {
-  background-color: #1e1e1e;
-  border: 1px solid #3e3e3e;
-}
+  /* 深色主题适配 */
+  .v-theme--dark .code-card {
+    background-color: #1e1e1e;
+    border: 1px solid #3e3e3e;
+  }
 
-/* 滚动条样式 */
-.code-card pre::-webkit-scrollbar {
-  height: 8px;
-}
+  /* 滚动条样式 */
+  .code-card pre::-webkit-scrollbar {
+    height: 8px;
+  }
 
-.code-card pre::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
+  .code-card pre::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
 
-.code-card pre::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-}
+  .code-card pre::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
 
-.code-card pre::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
-}
+  .code-card pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
 
-.v-theme--dark .code-card pre::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-}
+  .v-theme--dark .code-card pre::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
 
-.v-theme--dark .code-card pre::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-}
+  .v-theme--dark .code-card pre::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+  }
 
-.v-theme--dark .code-card pre::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
+  .v-theme--dark .code-card pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
 </style>

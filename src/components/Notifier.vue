@@ -6,7 +6,7 @@
     location="top right"
     elevation="4"
     z-index="9999"
-    style="margin-top: 80px;"
+    style="margin-top: 80px"
     class="custom-snackbar"
   >
     <div class="d-flex align-center">
@@ -20,34 +20,34 @@
 </template>
 
 <script setup lang="ts">
-import { useNotifier } from '@/stores/notifier';
+  import { useNotifier } from '@/stores/notifier'
 
-const { notice, hide } = useNotifier();
+  const { notice, hide } = useNotifier()
 </script>
 
 <style scoped>
-/* 深色主题下的额外优化 */
-.v-theme--dark .custom-snackbar {
-  /* 确保文字对比度 */
-  color: rgba(255, 255, 255, 0.95) !important;
-}
+  /* 深色主题下的额外优化 */
+  .v-theme--dark .custom-snackbar {
+    /* 确保文字对比度 */
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
 
-/* 浅色主题下的优化 */
-.v-theme--light .custom-snackbar {
-  color: rgba(0, 0, 0, 0.87) !important;
-}
+  /* 浅色主题下的优化 */
+  .v-theme--light .custom-snackbar {
+    color: rgba(0, 0, 0, 0.87) !important;
+  }
 
-/* 通用优化 */
-.custom-snackbar {
-  backdrop-filter: blur(8px);
-  border-radius: 8px !important;
-}
+  /* 通用优化 */
+  .custom-snackbar {
+    backdrop-filter: blur(8px);
+    border-radius: 8px !important;
+  }
 
-.custom-snackbar .v-btn {
-  opacity: 0.8;
-}
+  .custom-snackbar .v-btn {
+    opacity: 0.8;
+  }
 
-.custom-snackbar .v-btn:hover {
-  opacity: 1;
-}
+  .custom-snackbar .v-btn:hover {
+    opacity: 1;
+  }
 </style>

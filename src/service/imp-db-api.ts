@@ -7,13 +7,13 @@ const fetchImpdbs = () => {
 
   const load = async () => {
     try {
-      const response = await Requests.get('/impdb/list');
-      impdbs.value = response as any[];
+      const response = await Requests.get('/impdb/list')
+      impdbs.value = response as any[]
     } catch (err) {
-      error.value = 'Not available at the moment';
-      console.error(err);
+      error.value = 'Not available at the moment'
+      console.error(err)
     }
-  };
+  }
   return { impdbs, error, load }
 }
 

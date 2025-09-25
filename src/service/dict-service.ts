@@ -24,15 +24,23 @@ const listSysItems = (dictCode: number): Promise<SysItem[]> => {
 }
 
 const createDictItem = (dictItem: SysItem): Promise<SysItem> => {
-  return Requests.post(`${apiPrefix.value}/${dictItem.dictCode}/items`, dictItem) as unknown as Promise<SysItem>
+  return Requests.post(
+    `${apiPrefix.value}/${dictItem.dictCode}/items`,
+    dictItem
+  ) as unknown as Promise<SysItem>
 }
 
 const updateDictItem = (dictItem: SysItem): Promise<SysItem> => {
-  return Requests.put(`${apiPrefix.value}/${dictItem.dictCode}/items/${dictItem.itemKey}`, dictItem) as unknown as Promise<SysItem>
+  return Requests.put(
+    `${apiPrefix.value}/${dictItem.dictCode}/items/${dictItem.itemKey}`,
+    dictItem
+  ) as unknown as Promise<SysItem>
 }
 
 const deleteDictItem = (dictCode: number, itemKey: string): Promise<void> => {
-  return Requests.delete(`${apiPrefix.value}/${dictCode}/items/${itemKey}`) as unknown as Promise<void>
+  return Requests.delete(
+    `${apiPrefix.value}/${dictCode}/items/${itemKey}`
+  ) as unknown as Promise<void>
 }
 
 export default {

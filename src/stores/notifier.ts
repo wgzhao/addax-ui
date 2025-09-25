@@ -13,7 +13,7 @@ const notice = ref<Notice>({ show: false, text: '', color: 'info', timeout: 3000
 
 export function useNotifier() {
   const theme = useTheme()
-  
+
   // 根据主题调整颜色
   const getAdaptiveColor = (color: string) => {
     if (theme.global.current.value.dark) {
@@ -22,11 +22,11 @@ export function useNotifier() {
         case 'success':
           return 'green-darken-2' // 深绿色，更适合深色主题
         case 'error':
-          return 'red-darken-2'   // 深红色
+          return 'red-darken-2' // 深红色
         case 'warning':
           return 'orange-darken-2' // 深橙色
         case 'info':
-          return 'blue-darken-2'   // 深蓝色
+          return 'blue-darken-2' // 深蓝色
         default:
           return color
       }
@@ -35,16 +35,16 @@ export function useNotifier() {
       return color
     }
   }
-  
+
   function notify(text: string, color: string = 'info', timeout = 3000, icon?: string) {
     const adaptiveColor = getAdaptiveColor(color)
     notice.value = { show: true, text, color: adaptiveColor, timeout, icon }
   }
-  
+
   function hide() {
     notice.value.show = false
   }
-  
+
   return { notice, notify, hide }
 }
 
@@ -52,7 +52,7 @@ export function useNotifier() {
 export function notify(text: string, color: string = 'info', timeout = 3000, icon?: string) {
   // 这里需要创建一个临时的 composable 来获取主题
   const isDark = document.documentElement.classList.contains('v-theme--dark')
-  
+
   const getAdaptiveColor = (color: string) => {
     if (isDark) {
       switch (color) {
@@ -70,7 +70,7 @@ export function notify(text: string, color: string = 'info', timeout = 3000, ico
     }
     return color
   }
-  
+
   const adaptiveColor = getAdaptiveColor(color)
   notice.value = { show: true, text, color: adaptiveColor, timeout, icon }
 }
