@@ -13,7 +13,7 @@ const dialog = defineModel({ required: true, default: true });
 
 const props = defineProps({ tid: String });
 
-const headers: DataTableHeader[] =
+const headers: DataTableHeader[] = [
   { title: "场景类别", value: "kind" },
   { title: "名称", value: "used" }
 ];

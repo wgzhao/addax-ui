@@ -84,6 +84,12 @@
   }
 </script>
 
-<style scoped>
-  /* 可根据实际需求补充样式 */
-</style>
+<route lang="json">
+{
+  "meta": {
+    "title": "采集任务管理",
+    "icon": "mdi-database-cog",
+    "requiresAuth": true
+  }
+}
+</route>

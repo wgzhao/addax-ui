@@ -26,4 +26,13 @@
     })
   })
 </script>
+<route lang="json">
+{
+  "meta": {
+    "title": "盘后检查",
+    "icon": "mdi-check",
+    "requiresAuth": true
+  }
+}
+</route>
 <style></style>

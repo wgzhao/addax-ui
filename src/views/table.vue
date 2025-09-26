@@ -589,9 +589,9 @@
 * 
 * @param payload   
 * const payload = {
-  tids: props.tid,
-  status: status.value,
-  retryCnt: retryCnt.value
+tids: props.tid,
+status: status.value,
+retryCnt: retryCnt.value
 };
 */
   const handleBatchUpdate = (payload) => {
@@ -766,3 +766,13 @@
       })
   }
 </script>
+
+<route lang="json">
+{
+  "meta": {
+    "title": "采集表管理",
+    "icon": "mdi-table",
+    "requiresAuth": false
+  }
+}
+</route>

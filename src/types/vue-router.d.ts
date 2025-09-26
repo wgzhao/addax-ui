@@ -20,10 +20,8 @@ declare module 'vue-router/auto-routes' {
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/check': RouteRecordInfo<'/check', '/check', Record<never, never>, Record<never, never>>,
-    '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
     '/monitor': RouteRecordInfo<'/monitor', '/monitor', Record<never, never>, Record<never, never>>,
     '/param': RouteRecordInfo<'/param', '/param', Record<never, never>, Record<never, never>>,
-    '/personal-settings': RouteRecordInfo<'/personal-settings', '/personal-settings', Record<never, never>, Record<never, never>>,
     '/plan-task': RouteRecordInfo<'/plan-task', '/plan-task', Record<never, never>, Record<never, never>>,
     '/source': RouteRecordInfo<'/source', '/source', Record<never, never>, Record<never, never>>,
     '/system-info': RouteRecordInfo<'/system-info', '/system-info', Record<never, never>, Record<never, never>>,
@@ -50,20 +48,12 @@ declare module 'vue-router/auto-routes' {
       routes: '/check'
       views: never
     }
-    'src/views/login.vue': {
-      routes: '/login'
-      views: never
-    }
     'src/views/monitor.vue': {
       routes: '/monitor'
       views: never
     }
     'src/views/param.vue': {
       routes: '/param'
-      views: never
-    }
-    'src/views/personal-settings.vue': {
-      routes: '/personal-settings'
       views: never
     }
     'src/views/plan-task.vue': {

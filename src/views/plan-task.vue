@@ -14,9 +14,11 @@
   </v-data-table>
 </template>
 <script setup lang="ts">
+  import type { DataTableHeader } from 'vuetify'
   import Requests from '@/utils/requests'
   import { onMounted, ref } from 'vue'
-  const headers: DataTableHeader[] =
+
+  const headers: DataTableHeader[] = [
     { title: '计划任务', key: 'pnType' },
     { title: '时间定点', key: 'pnFixed' },
     { title: '执行间隔（分钟）', key: 'pnInterval' },
@@ -27,7 +29,7 @@
     { title: '执行结束时间', key: 'endTime' },
     { title: '耗时', key: 'runtime' },
     { title: '操作', key: '', value: 'actions' }
-    ]
+  ]
   const data = ref()
 
   function getType(val: number) {
@@ -59,4 +61,13 @@
     })
   })
 </script>
+<route lang="json">
+{
+  "meta": {
+    "title": "计划任务",
+    "icon": "mdi-calendar-clock",
+    "requiresAuth": true
+  }
+}
+</route>
 <style></style>

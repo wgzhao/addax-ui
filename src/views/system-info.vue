@@ -123,7 +123,15 @@
     fetchData()
   })
 </script>
-
+<route lang="json">
+{
+  "meta": {
+    "title": "系统信息",
+    "icon": "mdi-information",
+    "requiresAuth": true
+  }
+}
+</route>
 <style scoped>
   .v-data-table {
     background: transparent;

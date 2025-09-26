@@ -249,6 +249,16 @@
   })
 </script>
 
+<route lang="json">
+{
+  "meta": {
+    "title": "系统配置",
+    "icon": "mdi-settings",
+    "requiresAuth": false
+  }
+}
+</route>
+
 <style lang="css" scoped>
   /* 覆盖 .v-data-table 的斑马纹背景 */
   .v-data-table .v-data-table__divider:nth-child(odd) {

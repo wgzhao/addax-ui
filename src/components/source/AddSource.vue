@@ -148,7 +148,7 @@ const codeExistsRule = [
     if (codeError.value.length > 0) {
       return sourceService.checkCode(sourceItem.value.code)
         .then(resp => {
-          if (resp.data) {
+          if (resp) {
             return '编号已存在';
           } else {
             return true;
@@ -230,6 +230,4 @@ onMounted(() => {
       });
   }
 })
-
-
 </script>

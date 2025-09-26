@@ -20,7 +20,8 @@ export default defineConfig(({ mode }) => {
         routesFolder: [
           {
             src: "src/views",
-            path: ""
+            path: "",
+            exclude: (exclude) => exclude.concat(['**/components/**', '**/login.vue','**/personal-settings.vue'])
           }
         ],
         dts: "src/types/vue-router.d.ts",
