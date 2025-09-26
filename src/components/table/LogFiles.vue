@@ -59,7 +59,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import LogService from "@/service/logService";
+import logService from "@/service/log-service";
 
 // const dialog = defineModel({ required: true, default: true });
 const props = defineProps({ tid: String });
@@ -89,7 +89,7 @@ const getContent = (id: number) => {
   loading.value = true;
   // 不要立即清空内容，避免闪烁
 
-  LogService.getContent(id)
+  logService.getContent(id)
     .then((res: any) => {
       // 只有在请求成功后才更新内容
       fContent.value = res.data;
@@ -105,7 +105,7 @@ const getContent = (id: number) => {
 };
 
 onMounted(() => {
-  LogService.getLogFiles(props.tid).then(res => {
+  logService.getLogFiles(props.tid).then(res => {
     logList.value = res.data;
     // 如果有日志文件，自动选择并加载最新的一条（第一条）
     if (res.data && res.data.length > 0) {

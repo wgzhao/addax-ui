@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import { notify } from '@/stores/notifier';
-import OdsService from "@/service/tableService";
+import tableService from "@/service/table-service";
 
 const props = defineProps({
   tid: {
@@ -76,7 +76,7 @@ function updateItem() {
   };
   loading.value = false;
   // Here you would call your actual update service
-  OdsService.batchUpdateStatus(payload)
+  tableService.batchUpdateStatus(payload)
     .then((count) => {
       console.log(`${count} items updated successfully`);
       notify(`批量更新成功 ${count} 条记录`, 'success');

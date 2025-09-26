@@ -119,11 +119,10 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { notify } from '@/stores/notifier';
-import tableService from "@/service/tableService";
-import sourceService from "@/service/sourceService";
+import tableService from "@/service/table-service";
+import sourceService from "@/service/source-service";
 import { EtlSource, EtlTable, TableMeta } from "@/types/database";
-import Table from "@/views/table.vue";
-
+import { DataTableHeader } from "vuetify";
 const props = defineProps({
   tid: {
     type: String,
@@ -134,7 +133,7 @@ const props = defineProps({
 // Define emits for parent component communication
 const emit = defineEmits(['closeDialog', 'refresh-data']);
 
-const headers = ref([
+const headers: DataTableHeader[] = [
   { title: "源系统", key: "sid" },
   { title: "源筛选", key: "filter" },
   { title: "源用户", key: "sourceDb" },
@@ -142,7 +141,7 @@ const headers = ref([
   { title: "表注释", key: "tblComment" },
   { title: "目标库", key: "targetDb" },
   { title: "目标表", key: "targetTable" }
-]);
+];
 
 // Loading states
 const loadingTables = ref(false);

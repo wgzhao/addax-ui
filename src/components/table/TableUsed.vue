@@ -6,21 +6,22 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import OdsService from "@/service/tableService";
+import type { DataTableHeader } from "vuetify";
+import tableService from "@/service/table-service";
 
 const dialog = defineModel({ required: true, default: true });
 
 const props = defineProps({ tid: String });
 
-const headers = [
-  { title: "场景类别", key: "kind" },
-  { title: "名称", key: "used" }
+const headers: DataTableHeader[] =
+  { title: "场景类别", value: "kind" },
+  { title: "名称", value: "used" }
 ];
 
 const used = ref([]);
 
 onMounted(() => {
-  OdsService.fetchTableUsed(props.tid.split("|")[0], props.tid.split("|")[1]).then(
+  tableService.fetchTableUsed(props.tid.split("|")[0], props.tid.split("|")[1]).then(
     res => {
       used.value = res;
     }

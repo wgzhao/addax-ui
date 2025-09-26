@@ -274,6 +274,7 @@
   import tableService from '@/service/table-service'
   import taskService from '@/service/task-service'
   import { notify } from '@/stores/notifier'
+  import type { DataTableHeader } from 'vuetify'
   // 异步按需加载组件，减轻首屏体积
   const MainTableInfo = defineAsyncComponent(() => import('@/components/table/MainTable.vue'))
   const FieldsCompare = defineAsyncComponent(() => import('@/components/table/FieldsCompare.vue'))
@@ -394,7 +395,7 @@
 
   const runStatus = ref('')
 
-  const headers = ref([
+  const headers: DataTableHeader[] = [
     {
       title: '系统名称',
       key: 'name',
@@ -412,7 +413,7 @@
     { title: '剩余', key: 'retryCnt', align: 'center' as const, sortable: true, width: '2%' },
     { title: '耗时', key: 'duration', align: 'center' as const, sortable: true, width: '3%' },
     { title: '操作', key: 'action', align: 'center' as const, sortable: false, width: '40%' }
-  ])
+  ]
   // 已使用全局 Notifier 替换旧的 alertMsg
 
   const showModal = ref({
@@ -585,14 +586,14 @@
   }
 
   /**
- * 
- * @param payload   
- * const payload = {
-    tids: props.tid,
-    status: status.value,
-    retryCnt: retryCnt.value
-  };
- */
+* 
+* @param payload   
+* const payload = {
+  tids: props.tid,
+  status: status.value,
+  retryCnt: retryCnt.value
+};
+*/
   const handleBatchUpdate = (payload) => {
     payload.tids.forEach((tid) => {
       const index = table.value.findIndex((item) => item.id === tid)

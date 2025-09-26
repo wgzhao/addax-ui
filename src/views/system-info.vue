@@ -64,6 +64,7 @@
   import systemInfoService from '@/service/system-info-service'
   import type { ETLAndDS } from '@/types/database'
   import type { LoadItemsOptions } from '@/types'
+  import type { DataTableHeader } from 'vuetify'
 
   const etlAndDs = ref<ETLAndDS[]>([])
   const etlInfo = ref<any[]>([])
@@ -76,7 +77,7 @@
   const dsInfo = ref<any[]>([])
   const filter = ref('')
 
-  const etlAndDsHeaders = [
+  const etlAndDsHeaders: DataTableHeader[] = [
     { title: '类别', key: 'sysKind' },
     { title: '系统编号', key: 'sysid' },
     { title: '系统名称', key: 'sysName' },
@@ -84,7 +85,7 @@
     { title: '登录用户', key: 'dbUser' }
   ]
 
-  const etlInfoHeaders = [
+  const etlInfoHeaders: DataTableHeader[] = [
     { title: '系统名称', key: 'sysName' },
     { title: '源用户', key: 'sourceDb' },
     { title: '源表名', key: 'sourceTable' },

@@ -1,11 +1,5 @@
 <template>
-  <v-data-table
-    :items="tasks"
-    :headers="headers"
-    item-value="id"
-    density="compact"
-    :loading="loading"
-  >
+  <v-data-table :items="tasks" :headers="headers" item-value="id" density="compact" :loading="loading">
     <template v-slot:item.action="{ item }">
       <v-btn small color="primary" @click="$emit('executeTask', item.id)">采集</v-btn>
       <!-- 可扩展更多任务相关操作按钮 -->
@@ -15,9 +9,10 @@
 
 <script setup lang="ts">
 import { ref, watch, defineProps } from 'vue'
+import type { DataTableHeader } from 'vuetify'
 const props = defineProps<{ tasks: any[] }>()
 const loading = ref(false)
-const headers = [
+const headers: DataTableHeader[] = [
   { title: '任务ID', key: 'id', align: 'center', width: '10%' },
   { title: '表名', key: 'tableName', align: 'center', width: '20%' },
   { title: '状态', key: 'status', align: 'center', width: '10%' },
@@ -26,5 +21,4 @@ const headers = [
 ]
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

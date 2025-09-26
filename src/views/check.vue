@@ -8,15 +8,16 @@
 </template>
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
+  import type { DataTableHeader } from 'vuetify'
   import closeCheckService from '@/service/close-check-service'
 
   const abnormalRecord = ref([])
-  const headers = [
-    { title: '异常级别', value: 'ERR_KIND' },
-    { title: '表名', value: 'TBLNAME' },
-    { title: 'T-1记录数', value: 'CNT_LTD' },
-    { title: 'T日记录数', value: 'CNT_TD' },
-    { title: '记录比对差额', value: 'CNT_ERR' }
+  const headers: DataTableHeader[] = [
+    { title: '异常级别', key: 'ERR_KIND' },
+    { title: '表名', key: 'TBLNAME' },
+    { title: 'T-1记录数', key: 'CNT_LTD' },
+    { title: 'T日记录数', key: 'CNT_TD' },
+    { title: '记录比对差额', key: 'CNT_ERR' }
   ]
 
   onMounted(() => {

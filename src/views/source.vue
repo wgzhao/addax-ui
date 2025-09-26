@@ -91,6 +91,7 @@
 
 <script setup>
   import { computed, onMounted, ref } from 'vue'
+  import type { DataTableHeader } from 'vuetify'
   import sourceService from '@/service/source-service'
   import AddDataSource from '@/components/source/AddSource.vue'
   import { notify } from '@/stores/notifier'
@@ -107,7 +108,7 @@
   })
   const sourceItem = ref({})
   const searchValue = ref('')
-  const headers = [
+  const headers: DataTableHeader[] =
     { title: '名称', key: 'name' },
     { title: '采集编号', key: 'code' },
     { title: '连接串', key: 'url' },
@@ -115,9 +116,9 @@
     {
       title: '采集时间',
       key: 'startAt'
-    },
+      },
     { title: '操作', value: 'actions', align: 'center' }
-  ]
+    ]
   const actions = [
     { text: '详情', value: 'show' },
     { text: '编辑', value: 'edit' },

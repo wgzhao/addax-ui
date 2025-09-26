@@ -35,6 +35,7 @@ import { ref, onMounted } from "vue";
 import { notify } from "@/stores/notifier";
 import tableService from "@/service/table-service";
 import type { EtlColumn } from "@/types/database";
+import type { DataTableHeader } from "vuetify";
 // import DialogComp from "./DialogComp.vue";
 
 const props = defineProps({ tid: String });
@@ -42,7 +43,7 @@ const props = defineProps({ tid: String });
 
 const fields = ref<EtlColumn[]>();
 
-const headers = ref([
+const headers: DataTableHeader[] = [
   { title: "序号", key: "columnId" },
   { title: "表来源", key: "tid" },
   { title: "字段名", key: "columnName" },
@@ -51,7 +52,7 @@ const headers = ref([
   { title: "数值长度", key: "dataPrecision" },
   { title: "数值精度", key: "dataScale" },
   { title: "字段备注", key: "columnComment" }
-]);
+];
 
 const headers1 = ref([
   {
