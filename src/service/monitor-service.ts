@@ -26,7 +26,7 @@ class MonitorService {
   }
 
   fieldsChanges(): Promise<Array<Map<string, any>>> {
-    return Requests.get(this.prefix + '/fields-change')  as unknown as Promise<Array<Map<string, any>>>
+    return Requests.get(this.prefix + '/field-change')  as unknown as Promise<Array<Map<string, any>>>
   }
   
   smsDetail(): Promise<Array<Map<string, any>>> {

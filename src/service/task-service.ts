@@ -1,3 +1,8 @@
+interface TaskStatusResponse {
+  status: string
+  progress: string
+  result?: string
+}
 import Requests from '@/utils/requests'
 
 interface ApiResponse {
@@ -41,13 +46,18 @@ class TaskService {
     return Requests.put(`${this.prefix}/${taskId}/job`, {}) as unknown as Promise<ApiResponse>
   }
 
-  // 执行采集任务
-  executeTask(taskId: number, timeout = 60000): Promise<ExecuteTaskResponse> {
+  // 执行采集任务，支持异步参数
+  executeTask(taskId: number, timeout = 60000, type?: 'async'): Promise<ExecuteTaskResponse> {
+    const params = type === 'async' ? { type: 'async' } : undefined
     return Requests.post(
       `${this.prefix}/${taskId}/executions`,
       {},
-      { timeout }
+      { timeout, params }
     ) as unknown as Promise<ExecuteTaskResponse>
+  }
+
+  getAllTaskStatus(): Promise<Array<Map<string, any>>> {
+    return Requests.get(`${this.prefix}/status`) as unknown as Promise<Array<Map<string, any>>>
   }
 }
 

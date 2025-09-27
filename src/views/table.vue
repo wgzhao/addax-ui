@@ -215,56 +215,6 @@
   </v-dialog>
 
   <!-- ETL进度对话框 -->
-  <v-dialog v-model="etlProgressVisible" width="500" persistent>
-    <v-card>
-      <v-card-title class="text-h6 d-flex align-center">
-        <v-icon class="mr-2" color="primary">mdi-database-sync</v-icon>
-        {{ etlProgressTitle }}
-      </v-card-title>
-      <v-card-text class="pb-4">
-        <div class="mb-4">
-          <div class="text-body-1 mb-2">{{ etlProgressMessage }}</div>
-          <!-- 不确定进度条 -->
-          <v-progress-linear
-            :indeterminate="etlInProgress"
-            :model-value="etlInProgress ? undefined : 100"
-            color="primary"
-            height="8"
-            rounded
-          ></v-progress-linear>
-        </div>
-        <!-- 当前处理信息 -->
-        <div v-if="currentProcessingInfo" class="text-caption text-grey-600">
-          {{ currentProcessingInfo }}
-        </div>
-        <!-- 结果信息 -->
-        <div v-if="etlResults.length > 0" class="mt-3">
-          <v-divider class="mb-2"></v-divider>
-          <div class="text-subtitle-2 mb-2">执行结果：</div>
-          <div class="result-container" style="max-height: 200px; overflow-y: auto">
-            <v-chip
-              v-for="(result, index) in etlResults"
-              :key="index"
-              :color="result.success ? 'success' : 'error'"
-              size="small"
-              class="mr-1 mb-1"
-            >
-              <v-icon start :icon="result.success ? 'mdi-check' : 'mdi-alert'"></v-icon>
-              {{ result.message }}
-            </v-chip>
-          </div>
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn v-if="!etlInProgress" color="primary" @click="closeEtlProgress">关闭</v-btn>
-        <v-btn v-else variant="outlined" disabled>
-          <v-progress-circular indeterminate size="16" width="2" class="mr-2"></v-progress-circular>
-          执行中...
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -501,78 +451,55 @@
     }
   }
 
-  const doEtl = (item: any | null) => {
-    if (item != null) {
-      // 单个采集
-      showEtlProgress('手工采集', '正在执行单个表的数据采集...')
-      updateEtlProgress('正在执行单个表的数据采集...', `处理表: ${item.targetTable}`)
+  import taskCenter from '@/stores/task-center'
 
-      taskService
-        .executeTask(item.id, 300000)
-        .then(() => {
-          // 设置5分钟超时
-          addEtlResult(`表 ${item.targetTable} 采集成功`, true)
-          updateEtlProgress('采集完成')
-          finishEtlProgress()
+  const doEtl = async (item: any | null) => {
+    if (item != null) {
+      // 单个采集，直接异步提交任务中心
+      try {
+        await taskService.executeTask(item.id, 300000, 'async')
+        taskCenter.addTask({
+          id: String(item.id),
+          type: '采集',
+          target: item.targetTable,
+          status: '进行中',
+          progress: '已提交，等待后端处理',
+          submitTime: new Date().toISOString(),
+          result: '',
+          extra: { tid: item.id }
         })
-        .catch((res) => {
-          const errorMsg = res || '未知错误'
-          addEtlResult(`表 ${item.targetTable} 采集失败: ${errorMsg}`, false)
-          updateEtlProgress('采集失败')
-          finishEtlProgress()
-        })
+        notify('采集任务已提交，可在任务中心查看进展', 'success')
+      } catch (err) {
+        notify('采集任务提交失败: ' + (err?.message || err), 'error')
+      }
       return
     }
 
     if (selected.value.length === 0) return
 
+    // 并行批量采集，异步提交
     const tids = [...selected.value]
-    const totalCount = tids.length
-
-    // 批量采集
-    showEtlProgress('批量手工采集', `正在执行 ${totalCount} 个表的数据采集...`)
-
-    let completedCount = 0
-    let successCount = 0
-    let failureCount = 0
-
-    // 逐个执行，避免并发过多
-    const executeSequentially = async () => {
-      for (let i = 0; i < tids.length; i++) {
-        const currentTid = tids[i]
-        // 通过 id 获取表名等信息用于显示
-        const currentItem = table.value.find((item) => item.id === currentTid)
-        const currentTableName = currentItem ? currentItem.targetTable : currentTid
-        updateEtlProgress(
-          `正在处理第 ${i + 1}/${totalCount} 个表...`,
-          `当前处理: ${currentTableName}`
-        )
-
-        try {
-          await taskService.executeTask(currentTid, 300000) // 设置5分钟超时
-          successCount++
-          addEtlResult(`表 ${currentTableName} 采集成功`, true)
-        } catch (res) {
-          failureCount++
-          const errorMsg = res || '未知错误'
-          addEtlResult(`表 ${currentTableName} 采集失败: ${errorMsg}`, false)
-        }
-
-        completedCount++
-      }
-
-      // 所有任务完成
-      updateEtlProgress(`批量采集完成 - 成功: ${successCount}, 失败: ${failureCount}`)
-      finishEtlProgress()
-
-      // 清空选中项
+    try {
+      const mainTid = tids[0]
+      await taskService.executeTask(mainTid, 300000, 'async')
+      taskCenter.addTask({
+        id: String(mainTid),
+        type: '采集',
+        target: tids.map(tid => {
+          const t = table.value.find(item => item.id === tid)
+          return t ? t.targetTable : tid
+        }).join(','),
+        status: '进行中',
+        progress: '已提交，等待后端处理',
+        submitTime: new Date().toISOString(),
+        result: '',
+        extra: { tids }
+      })
+      notify('采集任务已提交，可在任务中心查看进展', 'success')
       selected.value = []
+    } catch (err) {
+      notify('采集任务提交失败: ' + (err?.message || err), 'error')
     }
-
-    executeSequentially().catch((error) => {
-      updateEtlProgress('批量采集过程中发生错误')
-      finishEtlProgress()
-    })
   }
 
   const handleRecordUpdate = (newRecord) => {
@@ -664,48 +591,6 @@ retryCnt: retryCnt.value
   const isBatchDelete = ref(false)
   const deleteConfirmMessage = ref('')
 
-  // ETL进度相关变量
-  const etlProgressVisible = ref(false)
-  const etlInProgress = ref(false)
-  const etlProgressTitle = ref('')
-  const etlProgressMessage = ref('')
-  const currentProcessingInfo = ref('')
-  const etlResults = ref([])
-
-  // ETL进度相关函数
-  function showEtlProgress(title: string, message: string) {
-    etlProgressTitle.value = title
-    etlProgressMessage.value = message
-    etlInProgress.value = true
-    etlResults.value = []
-    currentProcessingInfo.value = ''
-    etlProgressVisible.value = true
-  }
-
-  function updateEtlProgress(message: string, processingInfo?: string) {
-    etlProgressMessage.value = message
-    if (processingInfo) {
-      currentProcessingInfo.value = processingInfo
-    }
-  }
-
-  function addEtlResult(message: string, success: boolean) {
-    etlResults.value.push({ message, success })
-  }
-
-  function finishEtlProgress() {
-    etlInProgress.value = false
-    currentProcessingInfo.value = ''
-  }
-
-  function closeEtlProgress() {
-    etlProgressVisible.value = false
-    etlInProgress.value = false
-    etlResults.value = []
-    etlProgressTitle.value = ''
-    etlProgressMessage.value = ''
-    currentProcessingInfo.value = ''
-  }
 
   function confirmDelete(item) {
     itemToDelete.value = item
