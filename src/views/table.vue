@@ -279,7 +279,6 @@
   const MainTableInfo = defineAsyncComponent(() => import('@/components/table/MainTable.vue'))
   const FieldsCompare = defineAsyncComponent(() => import('@/components/table/FieldsCompare.vue'))
   const AddaxJob = defineAsyncComponent(() => import('@/components/table/AddaxJob.vue'))
-  const TableUsed = defineAsyncComponent(() => import('@/components/table/TableUsed.vue'))
   const AddaxResult = defineAsyncComponent(() => import('@/components/table/AddaxResult.vue'))
   const BatchAdd = defineAsyncComponent(() => import('@/components/table/BatchAdd.vue'))
   const LogFiles = defineAsyncComponent(() => import('@/components/table/LogFiles.vue'))
@@ -307,7 +306,6 @@
     MainTableInfo,
     FieldsCompare,
     AddaxJob,
-    TableUsed,
     AddaxResult,
     BatchAdd,
     LogFiles,
@@ -420,7 +418,6 @@
     MainTableInfo: false,
     FieldsCompare: false,
     CmdList: false,
-    TableUsed: false,
     AddaxResult: false,
     BatchAdd: false,
     LogFiles1: false,
@@ -586,8 +583,8 @@
   }
 
   /**
-* 
-* @param payload   
+*
+* @param payload
 * const payload = {
 tids: props.tid,
 status: status.value,

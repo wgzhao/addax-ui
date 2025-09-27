@@ -33,11 +33,12 @@
         </div>
 
         <v-card variant="outlined" class="code-card">
-          <pre><code
+          <pre><code>{{jobContent}}</code></pre>
+          <!-- <pre><code
             ref="codeElement"
             class="language-json hljs"
             v-html="highlightedCode"
-          ></code></pre>
+          ></code></pre> -->
         </v-card>
       </div>
 
@@ -111,7 +112,7 @@
     tableService
       .fetchAddaxJob(props.tid)
       .then((res) => {
-        jobContent.value = res || ''
+        jobContent.value = res
         if (!jobContent.value) {
           error.value = '获取到的配置内容为空'
         }
