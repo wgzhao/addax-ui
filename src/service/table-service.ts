@@ -71,6 +71,9 @@ class TableService {
     ) as unknown as Promise<string>
   }
 
+  updateSingleTable(id: number): Promise<Map<string, any>> {
+    return Requests.post(`${this.prefix}/${id}/actions/refresh`, {}, { timeout: 600000 }) as unknown as Promise<Map<string, any>>
+  }
   // 更新表结构
   updateSchema(params: { mode?: string; tid?: number }): Promise<string> {
     if (params.tid) {

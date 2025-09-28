@@ -1,13 +1,17 @@
 // 采集日志
 import Requests from '@/utils/requests'
 
+class LogService {
+  prefix: string = '/log'
+
 // find all files matching the pattern
-const getLogFiles = (tid: string) => {
-  return Requests.get(`/log/addaxLog/list/${tid}`)
+getLogFiles(tid: string) {
+  return Requests.get(`${this.prefix}/${tid}`)
 }
 // get the content of special file
-const getContent = (id: number) => {
-  return Requests.get(`/log/addaxLog/content/${id}`)
+getContent(id: number): Promise<string> {
+  return Requests.get(`${this.prefix}/${id}/content`, { timeout: 120000 }) as Promise<string>
+}
 }
 
-export default { getLogFiles, getContent }
+export default new LogService()

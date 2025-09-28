@@ -6,24 +6,13 @@
   </v-row>
   <v-data-table :items="taskStatus" :headers="headers" item-value="id" density="compact" :loading="loading">
     <template v-slot:item.status="{ item }">
-      <v-chip
-        :color="getStatusColor(item.status)"
-        size="small"
-        class="font-weight-bold"
-        text-color="white"
-      >
+      <v-chip :color="getStatusColor(item.status)" size="small" class="font-weight-bold" text-color="white">
         {{ getStatusText(item.status) }}
       </v-chip>
     </template>
     <template v-slot:item.progress="{ item }">
-      <v-progress-linear
-        :model-value="parseProgress(item.progress)"
-        height="16"
-        color="primary"
-        striped
-        rounded
-        style="min-width: 80px"
-      >
+      <v-progress-linear :model-value="parseProgress(item.progress)" height="16" color="primary" striped rounded
+        style="min-width: 80px">
         <template #default>
           <span style="font-size: 12px; color: #333">{{ parseProgress(item.progress) }}%</span>
         </template>
@@ -38,9 +27,12 @@
 
 <script setup lang="ts">
 import taskService from '@/service/task-service';
-import { ref, watch, defineProps, onMounted, onUnmounted } from 'vue'
+import { ref, watch, defineProps, onMounted, onUnmounted, computed } from 'vue'
 import type { DataTableHeader } from 'vuetify'
 // const props = defineProps<{ tasks: any[] }>()
+// 支持外部传入刷新间隔（单位：秒），默认 3 秒
+const props = defineProps<{ refreshInterval?: number }>()
+
 const loading = ref(false)
 const headers: DataTableHeader[] = [
   { title: '任务ID', key: 'id', align: 'center', width: '10%' },
@@ -50,36 +42,73 @@ const headers: DataTableHeader[] = [
   { title: ' 进展', key: 'progress', align: 'center', width: '20%' }
 ]
 
+// 明确类型，避免 TypeScript 将结果推断为 Map
+type TaskItem = {
+  id?: string | number
+  tbl?: string
+  status?: string
+  start_time?: string
+  progress?: number
+  [key: string]: any
+}
 
-const taskStatus = ref<any[]>([])
+const taskStatus = ref<TaskItem[]>([])
 
 let localTimer: any = null
+let refreshTimer: any = null
+
+const intervalMs = computed(() => {
+  const v = props.refreshInterval ?? 3
+  const n = Number(v)
+  return Number.isFinite(n) && n > 0 ? Math.floor(n * 1000) : 3000
+})
 
 function refreshTaskStatus() {
   loading.value = true
   taskService.getAllTaskStatus().then((res) => {
     const oldList = taskStatus.value
-    const newList = Array.isArray(res) ? res : []
-    const oldMap = new Map<string, any>()
-    oldList.forEach((item, idx) => oldMap.set(item.id, { item, idx }))
+    const newList = Array.isArray(res) ? (res as TaskItem[]) : []
+    const oldMap = new Map<string, { item: TaskItem; idx: number }>()
+    oldList.forEach((item, idx) => oldMap.set(String(item.id), { item, idx }))
     // 记录需要追加的新任务
-    const toAdd: any[] = []
-    newList.forEach(newItem => {
-      const found = oldMap.get(newItem.id)
+    const toAdd: TaskItem[] = []
+    newList.forEach((newItem) => {
+      // 规范化新项的 progress 为数字（0-100）
+      const normalizedProgress = parseProgress(newItem.progress)
+      const normItem: TaskItem = { ...newItem, progress: normalizedProgress }
+
+      const idKey = String(newItem.id)
+      const found = oldMap.get(idKey)
       if (found && found.item) {
-        // 只用后端进度覆盖本地进度
-        found.item.progress = newItem.progress
+        // 用后端进度覆盖本地进度（数值）
+        found.item.progress = normalizedProgress
+        // 也可以更新 status/start_time 等需要同步的字段：
+        found.item.status = newItem.status ?? found.item.status
+        found.item.start_time = newItem.start_time ?? found.item.start_time
       } else {
-        toAdd.push(newItem)
+        toAdd.push(normItem)
       }
     })
     if (toAdd.length > 0) {
       oldList.splice(oldList.length, 0, ...toAdd)
     }
     loading.value = false
+  }).catch(() => {
+    loading.value = false
   })
 }
 
+function startAutoRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer)
+    refreshTimer = null
+  }
+  // 立即执行一次，然后按配置周期刷新
+  refreshTaskStatus()
+  refreshTimer = setInterval(() => {
+    refreshTaskStatus()
+  }, intervalMs.value)
+}
 
 function startLocalProgress() {
   if (localTimer) clearInterval(localTimer)
@@ -96,17 +125,20 @@ function startLocalProgress() {
   }, 200)
 }
 
-
 onMounted(() => {
-  refreshTaskStatus()
+  startAutoRefresh()
   startLocalProgress()
 })
 
-
+// 当外部 prop 改变时重启自动刷新定时器
+watch(intervalMs, () => {
+  startAutoRefresh()
+})
 
 
 onUnmounted(() => {
   if (localTimer) clearInterval(localTimer)
+  if (refreshTimer) clearInterval(refreshTimer)
 })
 
 function getStatusColor(status: string) {
@@ -122,12 +154,14 @@ function getStatusText(status: string) {
   return status
 }
 function parseProgress(progress: any) {
-  // 支持字符串或数字
+  // 支持字符串或数字，返回 0-100 的整数
+  if (progress == null) return 0
   if (typeof progress === 'string') {
-    const num = parseInt(progress)
-    return isNaN(num) ? 0 : num
+    const num = parseInt(progress, 10)
+    if (Number.isNaN(num)) return 0
+    return Math.max(0, Math.min(100, num))
   }
-  if (typeof progress === 'number') return progress
+  if (typeof progress === 'number') return Math.max(0, Math.min(100, Math.floor(progress)))
   return 0
 }
 

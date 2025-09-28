@@ -90,9 +90,9 @@ const getContent = (id: number) => {
   // 不要立即清空内容，避免闪烁
 
   logService.getContent(id)
-    .then((res: any) => {
+    .then((res: null | string) => {
       // 只有在请求成功后才更新内容
-      fContent.value = res.data;
+      fContent.value = res;
     })
     .catch((error) => {
       console.error('Failed to load log content:', error);
