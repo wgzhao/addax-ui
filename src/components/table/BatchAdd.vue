@@ -198,7 +198,7 @@ const defaultItem = ref<EtlTable>({
   storageFormat: "orc",
   compressFormat: "lz4",
   filter: "1=1",
-  status: "N",
+  status: "U",
   kind: "A",
   updateFlag: "Y",
   createFlag: "Y",

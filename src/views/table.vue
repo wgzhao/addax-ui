@@ -191,7 +191,8 @@ function getStatusColor(status: string) {
     Y: 'success', // Y_运行结束 - 绿色
     E: 'error', // E_运行错误 - 红色
     X: 'warning', // X_禁用 - 橙色
-    W: 'purple' // W_等待 - 紫色
+    W: 'purple', // W_等待 - 紫色
+    U: 'blue-grey' // U_等待表结构更新 - 蓝灰色
   }
   return statusColorMap[status] || 'grey'
 }
