@@ -1,53 +1,34 @@
+
 <template>
-  <v-snackbar
-    v-model="notice.show"
-    :timeout="notice.timeout"
+  <v-alert
+    v-if="notice.show"
+    :type="alertType"
+    :icon="notice.icon ? '' : undefined"
+    border
+    :title="notice.title || ''"
     :color="notice.color"
-    location="top right"
-    elevation="4"
-    z-index="9999"
-    style="margin-top: 80px"
-    class="custom-snackbar"
+    prominent
+    closable
+    @click:close="hide"
+    style="position: fixed; top: 80px; right: 24px; z-index: 9999; min-width: 280px; max-width: 400px;"
   >
-    <div class="d-flex align-center">
-      <v-icon v-if="notice.icon" class="me-2">{{ notice.icon }}</v-icon>
-      <span>{{ notice.text }}</span>
-    </div>
-    <template #actions>
-      <v-btn variant="text" @click="hide">关闭</v-btn>
+    <!-- <template #prepend v-if="notice.icon">
+      <v-icon class="me-2">{{ notice.icon }}</v-icon>
     </template>
-  </v-snackbar>
+    <span>{{ notice.text }}</span> -->
+    {{ notice.text }}
+  </v-alert>
 </template>
 
 <script setup lang="ts">
   import { useNotifier } from '@/stores/notifier'
-
+  import { computed } from 'vue'
   const { notice, hide } = useNotifier()
+  // 只允许 Vuetify 支持的类型
+  const alertType = computed(() => {
+    if (notice.value.color === 'success' || notice.value.color === 'error' || notice.value.color === 'warning' || notice.value.color === 'info') {
+      return notice.value.color
+    }
+    return 'info'
+  })
 </script>
-
-<style scoped>
-  /* 深色主题下的额外优化 */
-  .v-theme--dark .custom-snackbar {
-    /* 确保文字对比度 */
-    color: rgba(255, 255, 255, 0.95) !important;
-  }
-
-  /* 浅色主题下的优化 */
-  .v-theme--light .custom-snackbar {
-    color: rgba(0, 0, 0, 0.87) !important;
-  }
-
-  /* 通用优化 */
-  .custom-snackbar {
-    backdrop-filter: blur(8px);
-    border-radius: 8px !important;
-  }
-
-  .custom-snackbar .v-btn {
-    opacity: 0.8;
-  }
-
-  .custom-snackbar .v-btn:hover {
-    opacity: 1;
-  }
-</style>

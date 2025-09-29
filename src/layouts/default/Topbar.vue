@@ -106,7 +106,7 @@
 
   // 切换主题函数
   const toggleTheme = () => {
-    theme.global.name.value = isDarkTheme.value ? 'light' : 'dark'
+    theme.change(isDarkTheme.value ? 'light' : 'dark')
     console.log('当前主题切换为：', theme.global.name.value)
   }
 
@@ -118,7 +118,7 @@
   // 在页面加载时初始化主题（从 localStorage 获取用户的选择）
   const savedTheme = localStorage.getItem('theme')
   if (savedTheme) {
-    theme.global.name.value = savedTheme
+    theme.change(savedTheme)
   }
 
   // Logout function

@@ -66,7 +66,7 @@ import sourceService from "@/service/source-service";
 import { EtlSource } from "@/types/database";
 
 const props = defineProps({
-  sid: String,
+  sid: Number,
   mode: String
 });
 
@@ -219,7 +219,7 @@ const testConnect = () => {
 }
 onMounted(() => {
   console.log("mode = ", props.mode);
-  if (props.sid != "-1") {
+  if (props.sid != -1) {
     sourceService.get(Number(props.sid))
       .then(resp => {
         sourceItem.value = resp;

@@ -19,11 +19,8 @@
           </v-chip>
         </template>
         <template v-slot:item.progress="{ item }">
-          <v-progress-linear :model-value="parseProgress(item.progress)" height="16" color="primary" striped rounded
+          <v-progress-linear :model-value="item.progress" height="16" color="primary" striped rounded
             style="min-width: 80px">
-            <template #default>
-              <span style="font-size: 12px; color: #333">{{ parseProgress(item.progress) }}%</span>
-            </template>
           </v-progress-linear>
         </template>
         <template v-slot:item.action="{ item }">
