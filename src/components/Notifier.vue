@@ -1,4 +1,3 @@
-
 <template>
   <v-alert
     v-if="notice.show"
@@ -10,7 +9,14 @@
     prominent
     closable
     @click:close="hide"
-    style="position: fixed; top: 80px; right: 24px; z-index: 9999; min-width: 280px; max-width: 400px;"
+    style="
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      z-index: 9999;
+      min-width: 280px;
+      max-width: 400px;
+    "
   >
     <!-- <template #prepend v-if="notice.icon">
       <v-icon class="me-2">{{ notice.icon }}</v-icon>
@@ -26,7 +32,12 @@
   const { notice, hide } = useNotifier()
   // 只允许 Vuetify 支持的类型
   const alertType = computed(() => {
-    if (notice.value.color === 'success' || notice.value.color === 'error' || notice.value.color === 'warning' || notice.value.color === 'info') {
+    if (
+      notice.value.color === 'success' ||
+      notice.value.color === 'error' ||
+      notice.value.color === 'warning' ||
+      notice.value.color === 'info'
+    ) {
       return notice.value.color
     }
     return 'info'

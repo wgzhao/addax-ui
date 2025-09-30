@@ -18,7 +18,7 @@ function addTask(task: TaskItem) {
 }
 
 function updateTaskStatus(taskId: string, status: string, progress: string, result?: string) {
-  const task = tasks.value.find(t => t.id === taskId)
+  const task = tasks.value.find((t) => t.id === taskId)
   if (task) {
     task.status = status as any
     task.progress = progress
@@ -27,7 +27,7 @@ function updateTaskStatus(taskId: string, status: string, progress: string, resu
 }
 
 function removeTask(taskId: string) {
-  tasks.value = tasks.value.filter(t => t.id !== taskId)
+  tasks.value = tasks.value.filter((t) => t.id !== taskId)
 }
 
 function getTasks() {

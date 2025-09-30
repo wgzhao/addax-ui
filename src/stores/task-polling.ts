@@ -10,7 +10,7 @@ export function startTaskPolling(interval = 5000) {
   if (polling) return
   polling = true
   timer = setInterval(async () => {
-    const tasks = taskCenter.tasks.value.filter(t => t.status === '进行中')
+    const tasks = taskCenter.tasks.value.filter((t) => t.status === '进行中')
     for (const task of tasks) {
       try {
         // 这里假设主任务id即为后端任务id

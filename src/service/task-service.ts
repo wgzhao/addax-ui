@@ -57,11 +57,17 @@ class TaskService {
   }
 
   executeTasksBatch(taskIds: Array<number>): Promise<ExecuteTaskResponse> {
-    return Requests.post(`${this.prefix}/executions/batch`, taskIds) as unknown as Promise<ExecuteTaskResponse>
+    return Requests.post(
+      `${this.prefix}/executions/batch`,
+      taskIds
+    ) as unknown as Promise<ExecuteTaskResponse>
   }
 
   getAllTaskStatus(): Promise<Array<Map<string, any>>> {
     return Requests.get(`${this.prefix}/status`) as unknown as Promise<Array<Map<string, any>>>
+  }
+  getLastError(taskId: number): Promise<string> {
+    return Requests.get(`${this.prefix}/${taskId}/last-error`) as unknown as Promise<string>
   }
 }
 

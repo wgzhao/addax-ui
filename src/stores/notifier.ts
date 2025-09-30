@@ -12,10 +12,13 @@ export interface Notice {
 const notice = ref<Notice>({ show: false, text: '', color: 'info', timeout: 3000 })
 
 export function useNotifier() {
-
-
-
-  function notify(text: string, color: string = 'info', timeout = 3000, title?: string, icon?: string) {
+  function notify(
+    text: string,
+    color: string = 'info',
+    timeout = 3000,
+    title?: string,
+    icon?: string
+  ) {
     notice.value = { show: true, text, color: color, timeout, title, icon }
   }
 
@@ -28,6 +31,5 @@ export function useNotifier() {
 
 // 函数式导出，便于在非 setup 场景使用
 export function notify(text: string, color: string = 'info', timeout = 3000, icon?: string) {
-
   notice.value = { show: true, text, color: color, timeout, icon }
 }

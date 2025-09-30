@@ -72,7 +72,11 @@ class TableService {
   }
 
   updateSingleTable(id: number): Promise<Map<string, any>> {
-    return Requests.post(`${this.prefix}/${id}/actions/refresh`, {}, { timeout: 600000 }) as unknown as Promise<Map<string, any>>
+    return Requests.post(
+      `${this.prefix}/${id}/actions/refresh`,
+      {},
+      { timeout: 600000 }
+    ) as unknown as Promise<Map<string, any>>
   }
   // 更新表结构
   updateSchema(params: { mode?: string; tid?: number }): Promise<string> {
@@ -97,6 +101,10 @@ class TableService {
   // 获取Addax Job模板
   fetchAddaxJob(tableId: number): Promise<string> {
     return Requests.get(`${this.prefix}/${tableId}/addax-job`) as unknown as Promise<string>
+  }
+
+  updateAddaxJob(tableId) {
+    return Requests.put(`${this.prefix}/${tableId}/addax-job`, {}) as unknown as Promise<string>
   }
 
   // --- 以下接口在变更表中未定义，暂时保留旧逻辑或标记为待处理 ---

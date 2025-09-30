@@ -23,11 +23,11 @@ export const useDictStore = defineStore('dict', () => {
   }
 
   function findTableStatus(code: string | number) {
-    return tableStatus.value.find(r => String(r.code) === String(code))
+    return tableStatus.value.find((r) => String(r.code) === String(code))
   }
 
   function findTaskStatus(code: string | number) {
-    return taskStatus.value.find(r => String(r.code) === String(code))
+    return taskStatus.value.find((r) => String(r.code) === String(code))
   }
 
   return {
