@@ -33,5 +33,9 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('authToken')
       localStorage.removeItem('authUsername')
     }
+  },
+  getters: {
+    isLoggedIn: (state) => !!state.token,
+    currentUserName: (state) => state.username
   }
 })

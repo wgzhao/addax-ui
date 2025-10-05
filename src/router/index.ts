@@ -19,6 +19,13 @@ routes.push({
   component: () => import('@/views/personal-settings.vue')
 })
 
+routes.push({
+  path: '/login',
+  name: 'Login',
+  component: () => import('@/views/login.vue'),
+  meta: { layout: 'login' }
+})
+
 const router = createRouter({
   history: createWebHistory(),
   routes

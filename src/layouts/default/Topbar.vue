@@ -24,9 +24,9 @@
           </v-btn>
         </div>
       </template>
-      <v-menu v-if="username" offset-y>
+      <v-menu v-if="authStore.currentUserName" offset-y>
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" flat>{{ username }}</v-btn>
+          <v-btn v-bind="props" flat>{{ authStore.currentUserName }}</v-btn>
         </template>
         <v-list>
           <v-list-item @click="logout">
@@ -40,7 +40,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn v-if="!username" :to="{ path: '/login' }">Login</v-btn>
+      <v-btn v-if="!authStore.isLoggedIn" @click="goLogin" >Login</v-btn>
       <!-- 深色/浅色模式切换按钮 -->
       <v-btn icon @click="toggleTheme" :title="isDarkTheme ? '切换为浅色模式' : '切换为深色模式'">
         <v-icon>mdi-theme-light-dark</v-icon>
@@ -53,6 +53,9 @@
   import { ref, computed, watch } from 'vue'
   import { useAuthStore } from '@/stores/auth'
   import { useTheme } from 'vuetify'
+  import { useRouter } from 'vue-router'
+
+  const router = useRouter()
 
   // const {global} = useTheme();
 
@@ -125,5 +128,9 @@
   const logout = () => {
     authStore.logout() // Assuming authStore has a logout method
     console.log('用户已注销')
+  }
+
+  const goLogin = () => {
+    router.push('/login')
   }
 </script>

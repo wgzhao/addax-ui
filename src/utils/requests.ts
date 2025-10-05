@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 
 // axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 // axios.defaults.timeout = 5000;
-console.log('mode = ' + import.meta.env.MODE)
+// console.log('mode = ' + import.meta.env.MODE)
 
 // 后端统一返回结构
 export interface ResponseData<T = any> {
@@ -15,11 +15,15 @@ export interface ResponseData<T = any> {
   [k: string]: any
 }
 
+// const requests = new Requests(import.meta.env.VITE_API_BASE_URL, 5000, authStore)
+
 class Requests {
   private instance: AxiosInstance
+  private authStore: ReturnType<typeof useAuthStore>
 
-  constructor(baseURL: string, timeout = 5000) {
+  constructor(baseURL: string, timeout = 5000, authStore: ReturnType<typeof useAuthStore>) {
     // 创建 Axios 实例
+    this.authStore = authStore
     this.instance = axios.create({
       baseURL,
       timeout
@@ -28,8 +32,7 @@ class Requests {
     // 配置请求拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        const authStore = useAuthStore()
-        const token = authStore.token // 从 Pinia Store 获取 Token
+        const token = this.authStore.token // 从 Pinia Store 获取 Token
         if (token) {
           config.headers.Authorization = `Bearer ${token}` // 在请求头中添加 Authorization
         }
@@ -37,7 +40,6 @@ class Requests {
         return config
       },
       (error) => {
-        console.log(error)
         return Promise.reject(error) // 请求发生错误时直接抛出
       }
     )
@@ -59,16 +61,13 @@ class Requests {
           } else if (data && data.message) {
             message = data.message
           } else {
-            message = `请求错误: ${error.response.data.code} ${error.response.data.message}`
+            message = `请求错误: ${error.response.status} ${error.response.statusText}`
           }
-        } else if (error.request) {
-          // 请求已发出，但没有收到响应
-          message = '无法连接到服务器，请检查您的网络'
         } else {
           // 设置请求时触发了一个错误
           message = error.message
         }
-        console.error('API Error:', message, error)
+        notify(message, 'error')
         // 抛出错误，以便业务代码的 .catch() 块可以捕获
         return Promise.reject(new Error(message))
       }
@@ -101,4 +100,6 @@ class Requests {
   }
 }
 
-export default new Requests(import.meta.env.VITE_API_BASE_URL)
+const authStore = useAuthStore()
+
+export default new Requests(import.meta.env.VITE_API_BASE_URL, 5000, authStore)

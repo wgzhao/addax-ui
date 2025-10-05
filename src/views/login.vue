@@ -103,7 +103,6 @@
     // reset the error message
     // clearMessages();
     authService.login(auth.value).then((res) => {
-      console.log('res', res.data)
       if (res.data == null) {
         notify('登录失败', 'error')
       } else {
