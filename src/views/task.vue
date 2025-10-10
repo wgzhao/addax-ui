@@ -5,9 +5,6 @@
         <v-btn icon @click="refreshTaskStatus" :loading="loading" class="ml-2" title="手动刷新">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
-        <v-btn small color="secondary" class="ma-0" @click="loadSampleData" title="加载示例数据">
-          示例数据
-        </v-btn>
         <v-select
           v-model="selectedInterval"
           :items="intervalOptions"
@@ -108,20 +105,6 @@
     const n = Number(v)
     return Number.isFinite(n) && n > 0 ? Math.floor(n * 1000) : 0
   })
-
-  // 用于调试/展示：注入一批示例数据（覆盖当前列表）
-  function loadSampleData() {
-    const samples: any[] = [
-      { id: 't1', tbl: 'users', status: 'R', start_time: '2025-09-28 10:00:00', progress: 0 },
-      { id: 't2', tbl: 'orders', status: 'R', start_time: '2025-09-28 10:02:00', progress: 12 },
-      { id: 't3', tbl: 'payments', status: 'W', start_time: '2025-09-28 09:58:00', progress: 45.6 },
-      { id: 't4', tbl: 'logs', status: 'R', start_time: '2025-09-28 09:50:00', progress: 100 },
-      { id: 't5', tbl: 'events', status: 'R', start_time: '2025-09-28 10:05:00', progress: 0 },
-      { id: 't6', tbl: 'metrics', status: 'R', start_time: '2025-09-28 10:06:00', progress: 35.2 }
-    ]
-    // 规范化并替换列表
-    taskStatus.value = samples.map((s) => ({ ...s, progress: parseProgress(s.progress) }))
-  }
 
   function refreshTaskStatus() {
     loading.value = true

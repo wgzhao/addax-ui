@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import taskService from '@/service/task-service';
-import { ref, watch, defineProps, onMounted, onUnmounted, computed } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import type { DataTableHeader } from 'vuetify'
 // const props = defineProps<{ tasks: any[] }>()
 // 支持外部传入刷新间隔（单位：秒），默认 3 秒

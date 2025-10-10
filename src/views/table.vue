@@ -375,6 +375,10 @@
     {
       text: 'X_禁用',
       value: 'X'
+    },
+    {
+      text: 'U_等待表结构更新',
+      value: 'U'
     }
   ]
 
@@ -403,6 +407,7 @@
     { title: '状态', key: 'status', align: 'center' as const, sortable: true, width: '3%' },
     { title: '剩余', key: 'retryCnt', align: 'center' as const, sortable: true, width: '2%' },
     { title: '耗时', key: 'duration', align: 'center' as const, sortable: true, width: '3%' },
+    { title: '最后采集', key: 'startTime', align: 'center' as const, sortable: true, width: '12%' },
     { title: '操作', key: 'action', align: 'center' as const, sortable: false, width: '40%' }
   ]
   // 已使用全局 Notifier 替换旧的 alertMsg
