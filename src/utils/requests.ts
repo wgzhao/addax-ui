@@ -54,7 +54,7 @@ class Requests {
         let message = '请求发生错误'
         if (error.response) {
           // 服务器返回了错误响应
-          const data: any = error.response
+          const data: any = error.response.data
           // 尝试从响应体中获取更具体的错误信息
           if (data && typeof data === 'string') {
             message = data
@@ -67,7 +67,7 @@ class Requests {
           // 设置请求时触发了一个错误
           message = error.message
         }
-        notify(message, 'error')
+        // notify(message, 'error')
         // 抛出错误，以便业务代码的 .catch() 块可以捕获
         return Promise.reject(new Error(message))
       }
