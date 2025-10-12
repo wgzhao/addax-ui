@@ -4,8 +4,9 @@
       <v-container>
         <v-row dense>
           <v-col cols="12" sm="6" md="2">
-            <v-text-field v-model="sourceItem.code" label="采集编号" density="compact" autocomplete="off"
-              :rules="[rules.required, rules.codeExistsRule]" :disabled="mode === 'edit'"></v-text-field>
+            <v-text-field v-model="sourceItem.code" label="采集编号" placeholder="使用两位大写字母表示" density="compact"
+              autocomplete="off" :rules="[rules.required, rules.codeExistsRule]"
+              :disabled="mode === 'edit'"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="2">
             <v-text-field v-model="sourceItem.name" label="采集名称" :rules="[rules.required]"
@@ -36,8 +37,10 @@
             <v-text-field v-model="sourceItem.username" label="用户名" density="compact" autocomplete="off"></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="3">
-            <v-text-field v-model="sourceItem.pass" label="密码" type="password" density="compact"
-              autocomplete="new-password"></v-text-field>
+            <v-text-field v-model="sourceItem.pass" :type="showPassword ? 'text' : 'password'" label="密码"
+              density="compact" autocomplete="new-password"
+              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+              @click:append-inner="showPassword = !showPassword"></v-text-field>
           </v-col>
         </v-row>
 
@@ -71,6 +74,8 @@ const props = defineProps({
 });
 
 const form = ref<any>(null);
+
+const showPassword = ref(false);
 
 const sourceItem = ref<EtlSource>({
   id: 0,

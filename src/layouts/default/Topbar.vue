@@ -8,12 +8,7 @@
             <v-btn v-bind="props" flat>{{ item.title }}</v-btn>
           </template>
           <v-list density="compact" nav v-for="(child, index) in item.children">
-            <v-list-item
-              :key="index"
-              :to="{ path: child.path }"
-              class="py-1"
-              style="min-height: 20px"
-            >
+            <v-list-item :key="index" :to="{ path: child.path }" class="py-1" style="min-height: 20px">
               <v-list-item-title>{{ child.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -40,7 +35,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn v-if="!authStore.isLoggedIn" @click="goLogin" >Login</v-btn>
+      <v-btn v-if="!authStore.isLoggedIn" @click="goLogin">Login</v-btn>
       <!-- 深色/浅色模式切换按钮 -->
       <v-btn icon @click="toggleTheme" :title="isDarkTheme ? '切换为浅色模式' : '切换为深色模式'">
         <v-icon>mdi-theme-light-dark</v-icon>
@@ -50,87 +45,83 @@
   <!-- End of Topbar -->
 </template>
 <script setup lang="ts">
-  import { ref, computed, watch } from 'vue'
-  import { useAuthStore } from '@/stores/auth'
-  import { useTheme } from 'vuetify'
-  import { useRouter } from 'vue-router'
+import { ref, computed, watch } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useTheme } from 'vuetify'
+import { useRouter } from 'vue-router'
 
-  const router = useRouter()
+const router = useRouter()
 
-  // const {global} = useTheme();
+// const {global} = useTheme();
 
-  const authStore = useAuthStore()
-  // 计算属性绑定用户名
-  const username = computed(() => authStore.username)
+const authStore = useAuthStore()
+// 计算属性绑定用户名
+const username = computed(() => authStore.username)
 
-  const urls = ref([
-    {
-      path: '/',
-      name: 'Home',
-      title: 'Home'
-    },
-    {
-      path: '/monitor',
-      name: 'ETL',
-      title: '监控与告警'
-    },
-    // {
-    //   path: "/system-info",
-    //   title: "系统一览"
-    // },
-    {
-      path: '/table',
-      title: '采集表管理'
-    },
-    {
-      path: '/task',
-      title: '采集任务管理'
-    },
-    {
-      path: '/source',
-      title: '数据源管理'
-    },
-    {
-      path: '/plan-task',
-      title: '计划任务'
-    },
-    {
-      path: '/param',
-      title: '参数管理'
-    }
-    // {
-    //   path: "/check",
-    //   title: "盘后检查"
-    // },
-  ])
-
-  const theme = useTheme()
-  const isDarkTheme = computed(() => theme.global.name.value === 'dark')
-
-  // 切换主题函数
-  const toggleTheme = () => {
-    theme.change(isDarkTheme.value ? 'light' : 'dark')
-    console.log('当前主题切换为：', theme.global.name.value)
+const urls = ref([
+  {
+    path: '/',
+    name: 'Home',
+    title: 'Home'
+  },
+  {
+    path: '/monitor',
+    name: 'ETL',
+    title: '监控与告警'
+  },
+  // {
+  //   path: "/system-info",
+  //   title: "系统一览"
+  // },
+  {
+    path: '/source',
+    title: '数据源管理'
+  },
+  {
+    path: '/table',
+    title: '采集表管理'
+  },
+  {
+    path: '/task',
+    title: '采集任务管理'
+  },
+  {
+    path: '/param',
+    title: '参数管理'
   }
+  // {
+  //   path: "/check",
+  //   title: "盘后检查"
+  // },
+])
 
-  // 如果需要记住用户选择（localStorage，可选）
-  watch(isDarkTheme, (newValue) => {
-    localStorage.setItem('theme', newValue ? 'dark' : 'light')
-  })
+const theme = useTheme()
+const isDarkTheme = computed(() => theme.global.name.value === 'dark')
 
-  // 在页面加载时初始化主题（从 localStorage 获取用户的选择）
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    theme.change(savedTheme)
-  }
+// 切换主题函数
+const toggleTheme = () => {
+  theme.change(isDarkTheme.value ? 'light' : 'dark')
+  console.log('当前主题切换为：', theme.global.name.value)
+}
 
-  // Logout function
-  const logout = () => {
-    authStore.logout() // Assuming authStore has a logout method
-    console.log('用户已注销')
-  }
+// 如果需要记住用户选择（localStorage，可选）
+watch(isDarkTheme, (newValue) => {
+  localStorage.setItem('theme', newValue ? 'dark' : 'light')
+})
 
-  const goLogin = () => {
-    router.push('/login')
-  }
+// 在页面加载时初始化主题（从 localStorage 获取用户的选择）
+const savedTheme = localStorage.getItem('theme')
+if (savedTheme) {
+  theme.change(savedTheme)
+}
+
+// Logout function
+const logout = () => {
+  authStore.logout() // Assuming authStore has a logout method
+  console.log('用户已注销')
+}
+
+const goLogin = () => {
+  router.push('/login')
+}
 </script>

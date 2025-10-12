@@ -22,7 +22,6 @@ declare module 'vue-router/auto-routes' {
     '/check': RouteRecordInfo<'/check', '/check', Record<never, never>, Record<never, never>>,
     '/monitor': RouteRecordInfo<'/monitor', '/monitor', Record<never, never>, Record<never, never>>,
     '/param': RouteRecordInfo<'/param', '/param', Record<never, never>, Record<never, never>>,
-    '/plan-task': RouteRecordInfo<'/plan-task', '/plan-task', Record<never, never>, Record<never, never>>,
     '/source': RouteRecordInfo<'/source', '/source', Record<never, never>, Record<never, never>>,
     '/system-info': RouteRecordInfo<'/system-info', '/system-info', Record<never, never>, Record<never, never>>,
     '/table': RouteRecordInfo<'/table', '/table', Record<never, never>, Record<never, never>>,
@@ -54,10 +53,6 @@ declare module 'vue-router/auto-routes' {
     }
     'src/views/param.vue': {
       routes: '/param'
-      views: never
-    }
-    'src/views/plan-task.vue': {
-      routes: '/plan-task'
       views: never
     }
     'src/views/source.vue': {
