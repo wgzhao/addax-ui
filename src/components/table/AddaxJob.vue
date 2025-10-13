@@ -27,9 +27,6 @@
               prepend-icon="mdi-content-copy">
               复制
             </v-btn>
-            <v-btn size="small" variant="outlined" color="info" @click="updateJob" prepend-icon="mdi-refresh">
-              更新 Job
-            </v-btn>
           </div>
         </div>
 
@@ -95,26 +92,14 @@ const highlightedCode = computed(() => {
 // 复制到剪贴板，内容为 jobContent.value 字符串
 async function copyToClipboard() {
   try {
-    await navigator.clipboard.writeText(jobContent.value)
+    let text = jobContent.value
+    if (typeof text === 'object') {
+      text = JSON.stringify(text, null, 2)
+    }
+    await navigator.clipboard.writeText(text)
     notify('配置已复制到剪贴板', 'success', 2000, 'mdi-check')
   } catch (err) {
     notify('复制失败，请手动复制', 'error', 3000, 'mdi-alert')
-  }
-}
-
-// 更新 Job 按钮逻辑
-async function updateJob() {
-  if (!props.tid) return
-  loading.value = true
-  try {
-    await tableService.updateAddaxJob(props.tid)
-    notify('Job 已更新', 'success', 2000, 'mdi-check')
-    // 刷新内容
-    await reloadJob()
-  } catch (err) {
-    notify('Job 更新失败: ' + (err?.message || err), 'error', 3000, 'mdi-alert')
-  } finally {
-    loading.value = false
   }
 }
 

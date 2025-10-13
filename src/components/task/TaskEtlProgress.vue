@@ -8,13 +8,8 @@
       <v-card-text class="pb-4">
         <div class="mb-4">
           <div class="text-body-1 mb-2">{{ message }}</div>
-          <v-progress-linear
-            :indeterminate="inProgress"
-            :model-value="inProgress ? undefined : 100"
-            color="primary"
-            height="8"
-            rounded
-          ></v-progress-linear>
+          <v-progress-linear :indeterminate="inProgress" :model-value="inProgress ? undefined : 100" color="primary"
+            height="8" rounded></v-progress-linear>
         </div>
         <div v-if="currentProcessingInfo" class="text-caption text-grey-600">
           {{ currentProcessingInfo }}
@@ -23,13 +18,8 @@
           <v-divider class="mb-2"></v-divider>
           <div class="text-subtitle-2 mb-2">执行结果：</div>
           <div class="result-container" style="max-height: 200px; overflow-y: auto">
-            <v-chip
-              v-for="(result, index) in results"
-              :key="index"
-              :color="result.success ? 'success' : 'error'"
-              size="small"
-              class="mr-1 mb-1"
-            >
+            <v-chip v-for="(result, index) in results" :key="index" :color="result.success ? 'success' : 'error'"
+              size="small" class="mr-1 mb-1">
               <v-icon start :icon="result.success ? 'mdi-check' : 'mdi-alert'" />
               {{ result.message }}
             </v-chip>
@@ -49,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
+import { defineEmits } from 'vue'
 const props = defineProps<{
   visible: boolean
   title: string
@@ -64,5 +54,4 @@ function emitClose(val: boolean) {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
