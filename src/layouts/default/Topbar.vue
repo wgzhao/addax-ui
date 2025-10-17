@@ -86,6 +86,10 @@ const urls = ref([
     title: '采集任务管理'
   },
   {
+    path: '/settings',
+    title: '系统管理'
+  },
+  {
     path: '/param',
     title: '参数管理'
   }
