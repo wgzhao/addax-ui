@@ -71,12 +71,10 @@ export default defineConfig(({ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url))
       },
       extensions: [
-        ".js",
         ".json",
         ".jsx",
-        ".mjs",
+        ".mts",
         ".ts",
-        ".tsx",
         ".vue",
         ".json"
       ]

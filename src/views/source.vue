@@ -40,7 +40,7 @@
   <!-- form -->
 
   <v-dialog v-model="isShow">
-    <v-card :style="{ justify: 'center', width: '80vw', height: 'auto' }" :title="title">
+    <v-card :style="{ width: '80vw', height: 'auto' }" :title="title">
       <v-card-text>
         <AddDataSource v-bind="params" @save="handleSave" @close-dialog="closeDialog" />
       </v-card-text>

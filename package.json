@@ -39,6 +39,7 @@
     "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.35.0",
     "eslint-config-vuetify": "^4.2.0",
+    "eslint-plugin-vuetify": "^2.5.3",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.6.2",
     "sass-embedded": "^1.92.1",

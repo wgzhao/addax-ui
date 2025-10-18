@@ -35,18 +35,15 @@ class SettingsService {
   async getSettings(): Promise<SystemConfig> {
     try {
       const response = await Requests.get<SystemConfig>(`${this.baseUrl}/sys-config`)
-      console.log('API响应原始数据:', response)
-      
+
       // 由于 Requests 工具已经返回了 response.data，
       // 我们需要检查返回的数据结构
       if (response && response.data) {
-        console.log('使用 response.data:', response.data)
         return response.data
       } else if (response) {
-        console.log('直接使用 response:', response)
         return response as unknown as SystemConfig
       }
-      
+
       throw new Error('无效的响应格式')
     } catch (error) {
       console.error('获取配置失败:', error)
@@ -89,9 +86,10 @@ class SettingsService {
   /**
    * 测试HiveServer2连接
    */
-  async testHiveConnection(config: HiveServer2Config): Promise<boolean> {
-    const response = await Requests.post<boolean>(`${this.baseUrl}/test-hive-connect`, config)
-    return response.data
+  testHiveConnection(config: HiveServer2Config): Promise<any> {
+    return Requests.post(`${this.baseUrl}/test-hive-connect`, config, {
+      timeout: 10000
+    }) as unknown as Promise<any>
   }
 
   /**
@@ -101,7 +99,6 @@ class SettingsService {
     const response = await Requests.post<boolean>(`${this.baseUrl}/validate/addax`, { path })
     return response.data
   }
-
 
   /**
    * 获取系统默认配置
@@ -123,7 +120,9 @@ class SettingsService {
    * 导出配置
    */
   async exportConfig(): Promise<Blob> {
-    const response = await Requests.get(`${this.baseUrl}/config/export`, undefined, { responseType: 'blob' })
+    const response = await Requests.get(`${this.baseUrl}/config/export`, undefined, {
+      responseType: 'blob'
+    })
     return response as any // 对于blob类型的特殊处理
   }
 
