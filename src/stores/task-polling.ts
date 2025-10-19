@@ -14,7 +14,7 @@ export function startTaskPolling(interval = 5000) {
     for (const task of tasks) {
       try {
         // 这里假设主任务id即为后端任务id
-        const res = await taskService.getTaskStatus(task.id)
+        const res = await taskService.getAllTaskStatus(task.id)
         if (res.status && res.status !== task.status) {
           taskCenter.updateTaskStatus(task.id, res.status, res.progress, res.result)
         } else if (res.progress) {

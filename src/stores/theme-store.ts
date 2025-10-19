@@ -1,15 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-// const themes = ref({
-//   light: {
-//     name: "light",
-//     icon: "fas fa-sun"
-//   },
-//   dark: {
-//     name: "dark",
-//     icon: "fas fa-moon"
-//   }
-// });
+
 export const themeStore = defineStore({
   id: 'curTheme',
   state: () => {

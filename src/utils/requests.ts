@@ -1,19 +1,17 @@
 // import axios from "axios";
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig
+} from 'axios'
 import { notify } from '@/stores/notifier'
 import { useAuthStore } from '@/stores/auth'
 
 // axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 // axios.defaults.timeout = 5000;
 // console.log('mode = ' + import.meta.env.MODE)
-
-// 后端统一返回结构
-export interface ResponseData<T = any> {
-  code: number
-  message: string
-  data: T
-  [k: string]: any
-}
 
 // const requests = new Requests(import.meta.env.VITE_API_BASE_URL, 5000, authStore)
 
@@ -31,7 +29,7 @@ class Requests {
 
     // 配置请求拦截器
     this.instance.interceptors.request.use(
-      (config) => {
+      (config: InternalAxiosRequestConfig) => {
         const token = this.authStore.token // 从 Pinia Store 获取 Token
         if (token) {
           config.headers.Authorization = `Bearer ${token}` // 在请求头中添加 Authorization
@@ -74,29 +72,24 @@ class Requests {
     )
   }
 
-  // GET 方法
-  get<T = any>(url: string, params?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.get<ResponseData<T>>(url, { params, ...config }).then((r) => r as any)
+  get<T = any>(url: string, params?: any, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.get<T>(url, { params, ...config }) as Promise<T>
   }
 
-  // POST 方法
-  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.post<ResponseData<T>>(url, data, { ...config }).then((r) => r as any)
+  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.post<T>(url, data, { ...config }) as Promise<T>
   }
 
-  // PUT 方法
-  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.put<ResponseData<T>>(url, data, { ...config }).then((r) => r as any)
+  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.put<T>(url, data, { ...config }) as Promise<T>
   }
 
-  // DELETE 方法
-  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.delete<ResponseData<T>>(url, { ...config }).then((r) => r as any)
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.delete<T>(url, { ...config }) as Promise<T>
   }
 
-  // PATCH 方法
-  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ResponseData<T>> {
-    return this.instance.patch<ResponseData<T>>(url, data, { ...config }).then((r) => r as any)
+  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    return this.instance.patch<T>(url, data, { ...config }) as Promise<T>
   }
 }
 
