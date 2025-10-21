@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 package-lock.json
 .gitignore
+tsconfig.node.tsbuildinfo
+tsconfig.tsbuildinfo
+tsconfig.node.tsbuildinfo
+src/types/components.d.ts

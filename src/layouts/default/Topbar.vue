@@ -58,7 +58,18 @@ const authStore = useAuthStore()
 // 计算属性绑定用户名
 const username = computed(() => authStore.username)
 
-const urls = ref([
+// 定义菜单项类型
+interface MenuItem {
+  path?: string
+  name?: string
+  title: string
+  children?: {
+    path: string
+    title: string
+  }[]
+}
+
+const urls = ref<MenuItem[]>([
   {
     path: '/',
     name: 'Home',
@@ -86,13 +97,22 @@ const urls = ref([
     title: '采集任务管理'
   },
   {
-    path: '/settings',
-    title: '系统管理'
+    title: '系统配置',
+    children: [
+      {
+        path: '/settings/sys-settings',
+        title: '系统参数配置'
+      },
+      {
+        path: '/settings/job-settings',
+        title: 'HDFS 写入模板配置'
+      }
+    ]
   },
-  {
-    path: '/param',
-    title: '参数管理'
-  }
+  // {
+  //   path: '/param',
+  //   title: '参数管理'
+  // }
   // {
   //   path: "/check",
   //   title: "盘后检查"
