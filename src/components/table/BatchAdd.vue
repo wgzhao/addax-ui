@@ -152,10 +152,10 @@ const successMessage = ref('');
 const search = ref(''); // 新增：搜索关键字
 const selectedTables = ref<EtlTable[]>([]); // 新增：已选择的表格
 const targetDb = ref(''); // 新增：目标库名
-const partName = ref('dt'); // 新增：分区字段名
+const partName = ref('logdate'); // 新增：分区字段名
 const partFormat = ref('yyyyMMdd'); // 新增：分区格式
-const storageFormat = ref('orc'); // 新增：存储格式
-const compressFormat = ref('lz4'); // 新增：压缩格式
+const storageFormat = ref('parquet'); // 新增：存储格式
+const compressFormat = ref('snappy'); // 新增：压缩格式
 const partitionFormats = ref(['yyyyMMdd', 'yyyy-MM-dd', 'yyyy/MM/dd']);
 const storageFormats = ref(['orc', 'parquet', 'avro', 'textfile']);
 const compressFormats = ref(['lz4', 'snappy', 'gzip', 'zstd', 'zlib']);
@@ -193,10 +193,10 @@ const defaultItem = ref<EtlTable>({
   targetDb: "",
   targetTable: "",
   partKind: "D",
-  partName: "dt",
+  partName: "logdate",
   partFormat: "yyyyMMdd",
-  storageFormat: "orc",
-  compressFormat: "lz4",
+  storageFormat: "parquet",
+  compressFormat: "SNAPPY",
   filter: "1=1",
   status: "U",
   kind: "A",
@@ -292,8 +292,9 @@ const saveItems = async () => {
 
 const handleSuccessConfirm = () => {
   showSuccessDialog.value = false;
-  emit('closeDialog');
+  // emit('closeDialog');
   emit('refresh-data');
+  selectedTables.value = [];
 };
 
 const getTables = async () => {
