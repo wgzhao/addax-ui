@@ -200,8 +200,6 @@ const defaultItem = ref<EtlTable>({
   filter: "1=1",
   status: "U",
   kind: "A",
-  updateFlag: "Y",
-  createFlag: "Y",
   retryCnt: 3,
   sid: null,
   duration: 0,

@@ -203,10 +203,8 @@ export interface EtlTable {
   storageFormat?: string // 目标表存储格式，默认是 orc
   compressFormat?: string // 目标表的压缩格式，默认是 lz4
   filter?: string // 采集过滤条件，即where条件
-  status?: string // 当前采集状态：N-还没有采集;W-等待采集;E-采集发生错误;R-正在采集;X-不再采集
+  status?: string // 当前采集状态：N-还没有采集;W-等待采集;E-采集发生错误;R-正在采集;X-不再采集; U-等待表更新
   kind?: string // 采集类型:A-自动采集(默认值);M-手工采集;R-实时采集
-  updateFlag?: string // 表的元数据信息更新标志
-  createFlag?: string // 目标表创建标志
   retryCnt?: number // 采集的重试次数
   startTime?: Date // 本次采集的开始时间
   endTime?: Date // 本次采集的结束时间
