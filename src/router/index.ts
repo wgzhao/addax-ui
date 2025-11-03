@@ -52,12 +52,27 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  // 如果没有 Token 且尝试访问非登录页面，则跳转到登录页
-  if (!authStore.token && to.path !== '/login') {
-    next('/login')
-  } else {
+
+  // 如果访问登录页面，直接放行
+  if (to.path === '/login') {
     next()
+    return
   }
+
+  // 检查是否有 token
+  if (!authStore.token) {
+    next('/login')
+    return
+  }
+
+  // 可选：检查 JWT token 是否过期（客户端预检查）
+  if (authStore.isTokenExpired && authStore.isTokenExpired()) {
+    authStore.logout()
+    next('/login')
+    return
+  }
+
+  next()
 })
 
 export default router

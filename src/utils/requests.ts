@@ -50,22 +50,42 @@ class Requests {
       (error: AxiosError) => {
         // 统一处理非 2xx 状态码的错误
         let message = '请求发生错误'
+
         if (error.response) {
-          // 服务器返回了错误响应
-          const data: any = error.response.data
+          const { status, data } = error.response
+
+          // 处理 401 未授权错误 - Token 过期或无效
+          if (status === 401) {
+            // 清除本地存储的认证信息
+            this.authStore.logout()
+
+            // 显示提示消息
+            notify('登录已过期，请重新登录', 'warning')
+
+            // 跳转到登录页面
+            // 使用动态导入避免循环依赖
+            import('@/router').then((routerModule) => {
+              routerModule.default.push('/login')
+            })
+
+            return Promise.reject(new Error('登录已过期'))
+          }
+
+          // 处理其他错误状态码
+          const responseData: any = data
           // 尝试从响应体中获取更具体的错误信息
-          if (data && typeof data === 'string') {
-            message = data
-          } else if (data && data.message) {
-            message = data.message
+          if (responseData && typeof responseData === 'string') {
+            message = responseData
+          } else if (responseData && responseData.message) {
+            message = responseData.message
           } else {
-            message = `请求错误: ${error.response.status} ${error.response.statusText}`
+            message = `请求错误: ${status} ${error.response.statusText}`
           }
         } else {
           // 设置请求时触发了一个错误
           message = error.message
         }
-        // notify(message, 'error')
+
         // 抛出错误，以便业务代码的 .catch() 块可以捕获
         return Promise.reject(new Error(message))
       }

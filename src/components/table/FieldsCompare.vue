@@ -1,7 +1,8 @@
 <template>
   <!-- 字段对比 -->
   <!-- <dialog-comp title="字段对比" v-model="dialog"> -->
-  <v-data-table :headers="headers" :items="fields" hide-default-footer density="compact" no-data-text="无数据">
+  <v-data-table :headers="headers" :items="fields" hide-default-footer density="compact" no-data-text="无数据"
+    :items-per-page="-1">
     <template v-slot:item="{ item }">
       <tr>
         <td rowspan="3">{{ item.columnId }}</td>

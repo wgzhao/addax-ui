@@ -24,7 +24,7 @@
           <v-select
             v-model="runStatus"
             :items="statusOptions"
-            item-title="text"
+            item-title="label"
             item-value="value"
             density="compact"
             style="min-width: 150px"
@@ -257,6 +257,7 @@
   import { ref, shallowRef, defineAsyncComponent } from 'vue'
   import { debounce } from '@/utils/debounce'
   import { createSort } from '@/utils/'
+  import { BATCH_UPDATE_STATUS_OPTIONS } from '@/utils'
   import tableService from '@/service/table-service'
   import taskService from '@/service/task-service'
   import { notify } from '@/stores/notifier'
@@ -347,40 +348,8 @@
     }
   ]
 
-  const statusOptions = [
-    {
-      text: '',
-      value: ''
-    },
-    {
-      text: 'R_正在运行',
-      value: 'R'
-    },
-    {
-      text: 'Y_运行结束',
-      value: 'Y'
-    },
-    {
-      text: 'E_运行错误',
-      value: 'E'
-    },
-    {
-      text: 'W_等待',
-      value: 'W'
-    },
-    {
-      text: 'N_未运行',
-      value: 'N'
-    },
-    {
-      text: 'X_禁用',
-      value: 'X'
-    },
-    {
-      text: 'U_等待表结构更新',
-      value: 'U'
-    }
-  ]
+  // 使用公共的批量更新状态选项
+  const statusOptions = BATCH_UPDATE_STATUS_OPTIONS
 
   const runStatus = ref('')
 

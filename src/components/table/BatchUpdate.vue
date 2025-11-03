@@ -9,7 +9,7 @@
       <v-container>
         <v-row>
           <v-col cols="12" md="6">
-            <v-select v-model="status" :items="statusOptions" item-title="text" item-value="value" density="compact"
+            <v-select v-model="status" :items="statusOptions" item-title="label" item-value="value" density="compact"
               label="状态" hint="选择要更新的状态值" persistent-hint></v-select>
           </v-col>
           <v-col cols="12" md="6">
@@ -33,6 +33,7 @@
 import { ref, computed, onMounted } from "vue";
 import { notify } from '@/stores/notifier';
 import tableService from "@/service/table-service";
+import { BATCH_UPDATE_STATUS_OPTIONS } from "@/utils";
 
 const props = defineProps({
   tid: {
@@ -53,15 +54,8 @@ const isValid = computed(() => {
   return status.value || (retryCnt.value !== null && retryCnt.value !== undefined);
 });
 
-const statusOptions = [
-  { text: "请选择状态", value: "" },
-  { text: "R_正在运行", value: "R" },
-  { text: "Y_运行结束", value: "Y" },
-  { text: "E_运行错误", value: "E" },
-  { text: "W_等待", value: "W" },
-  { text: "N_未运行", value: "N" },
-  { text: "X_禁用", value: "X" }
-];
+// 使用公共的批量更新状态选项
+const statusOptions = BATCH_UPDATE_STATUS_OPTIONS;
 
 const emit = defineEmits(["closeDialog", "update:batch"]);
 function updateItem() {

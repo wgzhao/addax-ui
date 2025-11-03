@@ -59,7 +59,6 @@ class SettingsService {
     return true
   }
 
-
   /**
    * 测试HiveServer2连接
    */
@@ -77,14 +76,15 @@ class SettingsService {
     return response.data
   }
 
-
-
   /*
    * 保存作业配置模板
    */
   async saveHdfsWriterConfig(configData: string): Promise<boolean> {
     try {
-      const response = await Requests.post<boolean>(`${this.baseUrl}/addax-hdfs-writer-template`, configData)
+      const response = await Requests.post<boolean>(
+        `${this.baseUrl}/addax-hdfs-writer-template`,
+        configData
+      )
       // 处理不同的返回结构
       if (response && typeof response === 'object' && 'data' in response) {
         return (response as any).data

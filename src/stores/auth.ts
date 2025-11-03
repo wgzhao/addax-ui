@@ -32,6 +32,21 @@ export const useAuthStore = defineStore('auth', {
       this.username = null
       localStorage.removeItem('authToken')
       localStorage.removeItem('authUsername')
+    },
+
+    // 检查 token 是否可能已过期（可选的客户端检查）
+    isTokenExpired(): boolean {
+      if (!this.token) return true
+
+      try {
+        // 如果使用 JWT token，可以解析其过期时间
+        const payload = JSON.parse(atob(this.token.split('.')[1]))
+        const currentTime = Date.now() / 1000
+        return payload.exp < currentTime
+      } catch (error) {
+        // 如果不是 JWT 或解析失败，假设有效（让服务器验证）
+        return false
+      }
     }
   },
   getters: {
