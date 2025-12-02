@@ -1,5 +1,7 @@
 # Addax UI - ETL 数据管理前端
 
+**本项目已经合并到后端项目一起**，请移步到[frontend](https://github.com/wgzhao/addax-admin/frontend)
+
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.4+-4FC08D.svg)](https://vuejs.org/)
 [![Vuetify](https://img.shields.io/badge/Vuetify-3.6+-1867C0.svg)](https://vuetifyjs.com/)
